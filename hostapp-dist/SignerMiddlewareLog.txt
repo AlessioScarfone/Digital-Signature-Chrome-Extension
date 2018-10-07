@@ -229,3 +229,13 @@
 2018/10/05 22:58:41, AbstractSignFactory: Create signed file: aut_07 (7)-signed.pdf
 2018/10/05 22:58:41, signer: End of signing process.
 2018/10/05 22:58:41, signer: {"local_path_newFile":"C:\\Users\\aless\\Downloads\\aut_07 (7)-signed.pdf"}
+2018/10/07 10:35:01, signer: ------------ Start Main --------------
+2018/10/07 10:35:01, signer: Connect with Chrome extension
+2018/10/07 10:35:01, com.unical.argparser.MiddlewareChrome: Start
+2018/10/07 10:35:01, com.unical.argparser.MiddlewareChrome: Blocked communication
+2018/10/07 10:35:01, com.unical.argparser.MiddlewareChrome: Host received 
+2018/10/07 10:40:28, signer: ------------ Start Main --------------
+2018/10/07 10:40:28, signer: Connect with Chrome extension
+2018/10/07 10:40:28, com.unical.argparser.MiddlewareChrome: Start
+2018/10/07 10:40:28, com.unical.argparser.MiddlewareChrome: Blocked communication
+2018/10/07 10:40:28, com.unical.argparser.MiddlewareChrome: Host received 

@@ -1,9 +1,9 @@
 console.log("Start...")
 app = 'com.unical.digitalsignature.signer';
 
-document.addEventListener("DOMContentLoaded", function () {
 
-    document.getElementById('sign-btn').addEventListener('click', run);
+$(document).ready(function(){
+    // $('#pades-btn').on('click', run);
 
     function run() {
         //1) get tab url
