@@ -1,9 +1,20 @@
 console.log("Start...")
 app = 'com.unical.digitalsignature.signer';
 
+var signature_data = {
+    type : ""
+    //TODO add other field
+};
+
 
 $(document).ready(function(){
     // $('#pades-btn').on('click', run);
+
+    $('.signature-type-btns').on('click', selectSignatureType);
+
+    $('.signature-type-btns').on('click', function(){
+        console.log(signature_data);
+    });
 
     function run() {
         //1) get tab url
