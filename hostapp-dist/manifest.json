@@ -1,0 +1,9 @@
+{
+  "name": "com.unical.digitalsignature.signer",
+  "description": "Native application for interact with PKCS11 token and sign pdf",
+  "path": "extension.bat",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://ddjlcceejbfdcjgnkjocneccahoefkej/"
+  ]
+}

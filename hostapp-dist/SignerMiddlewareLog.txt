@@ -1,0 +1,231 @@
+2018/10/05 22:29:31, signer: ------------ Start Main --------------
+2018/10/05 22:29:31, signer: Connect with Chrome extension
+2018/10/05 22:29:31, com.unical.argparser.MiddlewareChrome: Start
+2018/10/05 22:29:31, com.unical.argparser.MiddlewareChrome: Host received {"file":"C:\\Users\\aless\\Downloads\\aut_07 (4).pdf","password":"38805537","visible":false,"verticalPosition":"Bottom","horizontalPosition":"Left","pageNumber":1,"signatureField":""}
+2018/10/05 22:29:31, signer: args extract from JSON
+2018/10/05 22:29:31, signer: -p
+2018/10/05 22:29:31, signer: 38805537
+2018/10/05 22:29:31, signer: pades
+2018/10/05 22:29:31, signer: C:\Users\aless\Downloads\aut_07 (4).pdf
+2018/10/05 22:29:31, signer: Use the default driver located in: driver\Windows\bit4xpki.dll
+2018/10/05 22:29:31, signer: Selected Sign Format: PADES
+2018/10/05 22:29:31, signer: Start Signature Procedure
+2018/10/05 22:29:31, signer: 
+
+2018/10/05 22:29:42, signer: Certificate to use:  
+2018/10/05 22:29:43, signer: SCARFONE ALESSIO
+2018/10/05 22:29:46, PadesSignFactory: No available field in the pdf.
+2018/10/05 22:29:52, signer: Start of signing process...
+2018/10/05 22:29:52, AbstractSignFactory: Create signed file: aut_07 (4)-signed.pdf
+2018/10/05 22:29:52, signer: End of signing process.
+2018/10/05 22:29:52, signer: {"text":"C:\Users\aless\Downloads\aut_07 (4)-signed.pdf"}
+2018/10/05 22:33:16, signer: ------------ Start Main --------------
+2018/10/05 22:33:16, signer: Connect with Chrome extension
+2018/10/05 22:33:16, com.unical.argparser.MiddlewareChrome: Start
+2018/10/05 22:33:16, com.unical.argparser.MiddlewareChrome: Host received {"file":"C:\\Users\\aless\\Downloads\\aut_07 (5).pdf","password":"38805537","visible":false,"verticalPosition":"Bottom","horizontalPosition":"Left","pageNumber":1,"signatureField":""}
+2018/10/05 22:33:16, signer: args extract from JSON
+2018/10/05 22:33:16, signer: -p
+2018/10/05 22:33:16, signer: 38805537
+2018/10/05 22:33:16, signer: pades
+2018/10/05 22:33:16, signer: C:\Users\aless\Downloads\aut_07 (5).pdf
+2018/10/05 22:33:17, signer: Use the default driver located in: driver\Windows\bit4xpki.dll
+2018/10/05 22:33:17, signer: Selected Sign Format: PADES
+2018/10/05 22:33:17, signer: Start Signature Procedure
+2018/10/05 22:33:17, signer: 
+
+2018/10/05 22:33:27, signer: Certificate to use:  
+2018/10/05 22:33:28, signer: SCARFONE ALESSIO
+2018/10/05 22:33:31, PadesSignFactory: No available field in the pdf.
+2018/10/05 22:33:37, signer: Start of signing process...
+2018/10/05 22:33:37, AbstractSignFactory: Create signed file: aut_07 (5)-signed.pdf
+2018/10/05 22:33:37, signer: End of signing process.
+2018/10/05 22:33:37, signer: {"text":"C:\Users\aless\Downloads\aut_07 (5)-signed.pdf"}
+2018/10/05 22:38:45, signer: ------------ Start Main --------------
+2018/10/05 22:38:45, signer: Connect with Chrome extension
+2018/10/05 22:38:45, com.unical.argparser.MiddlewareChrome: Start
+2018/10/05 22:38:45, com.unical.argparser.MiddlewareChrome: Host received {"file":"C:\\Users\\aless\\Downloads\\aut_07 (6).pdf","password":"38805537","visible":false,"verticalPosition":"Bottom","horizontalPosition":"Left","pageNumber":1,"signatureField":""}
+2018/10/05 22:38:45, signer: args extract from JSON
+2018/10/05 22:38:45, signer: -p
+2018/10/05 22:38:45, signer: 38805537
+2018/10/05 22:38:45, signer: pades
+2018/10/05 22:38:45, signer: C:\Users\aless\Downloads\aut_07 (6).pdf
+2018/10/05 22:38:45, signer: Use the default driver located in: driver\Windows\bit4xpki.dll
+2018/10/05 22:38:45, signer: Selected Sign Format: PADES
+2018/10/05 22:38:45, signer: Start Signature Procedure
+2018/10/05 22:38:45, signer: 
+
+2018/10/05 22:38:56, signer: Certificate to use:  
+2018/10/05 22:38:56, signer: SCARFONE ALESSIO
+2018/10/05 22:39:00, PadesSignFactory: No available field in the pdf.
+2018/10/05 22:39:06, signer: Start of signing process...
+2018/10/05 22:39:06, AbstractSignFactory: Create signed file: aut_07 (6)-signed.pdf
+2018/10/05 22:39:06, signer: End of signing process.
+2018/10/05 22:39:06, signer: {"text":"C:\\Users\\aless\\Downloads\\aut_07 (6)-signed.pdf"}
+2018/10/05 22:46:14, signer: ------------ Start Main --------------
+2018/10/05 22:46:14, signer: Connect with Chrome extension
+2018/10/05 22:46:14, com.unical.argparser.MiddlewareChrome: Start
+2018/10/05 22:46:14, com.unical.argparser.MiddlewareChrome: Host received {"file":"C:\\Users\\aless\\Downloads\\aut_07.pdf","password":"38805537","visible":false,"verticalPosition":"Bottom","horizontalPosition":"Left","pageNumber":1,"signatureField":""}
+2018/10/05 22:46:14, signer: args extract from JSON
+2018/10/05 22:46:14, signer: -p
+2018/10/05 22:46:14, signer: 38805537
+2018/10/05 22:46:14, signer: pades
+2018/10/05 22:46:14, signer: C:\Users\aless\Downloads\aut_07.pdf
+2018/10/05 22:46:14, signer: Use the default driver located in: driver\Windows\bit4xpki.dll
+2018/10/05 22:46:14, signer: Selected Sign Format: PADES
+2018/10/05 22:46:14, signer: Start Signature Procedure
+2018/10/05 22:46:14, signer: 
+
+2018/10/05 22:46:25, signer: Certificate to use:  
+2018/10/05 22:46:26, signer: SCARFONE ALESSIO
+2018/10/05 22:46:29, PadesSignFactory: No available field in the pdf.
+2018/10/05 22:46:35, signer: Start of signing process...
+2018/10/05 22:46:35, AbstractSignFactory: Create signed file: aut_07-signed.pdf
+2018/10/05 22:46:35, signer: End of signing process.
+2018/10/05 22:46:35, signer: {"local_path_newFile":"C:\\Users\\aless\\Downloads\\aut_07-signed.pdf"}
+2018/10/05 22:48:49, signer: ------------ Start Main --------------
+2018/10/05 22:48:49, signer: Connect with Chrome extension
+2018/10/05 22:48:49, com.unical.argparser.MiddlewareChrome: Start
+2018/10/05 22:48:49, com.unical.argparser.MiddlewareChrome: Host received {"file":"C:\\Users\\aless\\Downloads\\aut_07 (1).pdf","password":"38805537","visible":false,"verticalPosition":"Bottom","horizontalPosition":"Left","pageNumber":1,"signatureField":""}
+2018/10/05 22:48:49, signer: args extract from JSON
+2018/10/05 22:48:49, signer: -p
+2018/10/05 22:48:49, signer: 38805537
+2018/10/05 22:48:49, signer: pades
+2018/10/05 22:48:49, signer: C:\Users\aless\Downloads\aut_07 (1).pdf
+2018/10/05 22:48:50, signer: Use the default driver located in: driver\Windows\bit4xpki.dll
+2018/10/05 22:48:50, signer: Selected Sign Format: PADES
+2018/10/05 22:48:50, signer: Start Signature Procedure
+2018/10/05 22:48:50, signer: 
+
+2018/10/05 22:49:00, signer: Certificate to use:  
+2018/10/05 22:49:01, signer: SCARFONE ALESSIO
+2018/10/05 22:49:04, PadesSignFactory: No available field in the pdf.
+2018/10/05 22:49:10, signer: Start of signing process...
+2018/10/05 22:49:10, AbstractSignFactory: Create signed file: aut_07 (1)-signed.pdf
+2018/10/05 22:49:10, signer: End of signing process.
+2018/10/05 22:49:10, signer: {"local_path_newFile":"C:\\Users\\aless\\Downloads\\aut_07 (1)-signed.pdf"}
+2018/10/05 22:49:55, signer: ------------ Start Main --------------
+2018/10/05 22:49:55, signer: Connect with Chrome extension
+2018/10/05 22:49:55, com.unical.argparser.MiddlewareChrome: Start
+2018/10/05 22:49:55, com.unical.argparser.MiddlewareChrome: Host received {"file":"C:\\Users\\aless\\Downloads\\aut_07 (2).pdf","password":"38805537","visible":false,"verticalPosition":"Bottom","horizontalPosition":"Left","pageNumber":1,"signatureField":""}
+2018/10/05 22:49:55, signer: args extract from JSON
+2018/10/05 22:49:55, signer: -p
+2018/10/05 22:49:55, signer: 38805537
+2018/10/05 22:49:55, signer: pades
+2018/10/05 22:49:55, signer: C:\Users\aless\Downloads\aut_07 (2).pdf
+2018/10/05 22:49:55, signer: Use the default driver located in: driver\Windows\bit4xpki.dll
+2018/10/05 22:49:55, signer: Selected Sign Format: PADES
+2018/10/05 22:49:55, signer: Start Signature Procedure
+2018/10/05 22:49:55, signer: 
+
+2018/10/05 22:50:06, signer: Certificate to use:  
+2018/10/05 22:50:06, signer: SCARFONE ALESSIO
+2018/10/05 22:50:10, PadesSignFactory: No available field in the pdf.
+2018/10/05 22:50:16, signer: Start of signing process...
+2018/10/05 22:50:16, AbstractSignFactory: Create signed file: aut_07 (2)-signed.pdf
+2018/10/05 22:50:16, signer: End of signing process.
+2018/10/05 22:50:16, signer: {"local_path_newFile":"C:\\Users\\aless\\Downloads\\aut_07 (2)-signed.pdf"}
+2018/10/05 22:50:56, signer: ------------ Start Main --------------
+2018/10/05 22:50:56, signer: Connect with Chrome extension
+2018/10/05 22:50:56, com.unical.argparser.MiddlewareChrome: Start
+2018/10/05 22:50:56, com.unical.argparser.MiddlewareChrome: Host received {"file":"C:\\Users\\aless\\Downloads\\aut_07 (3).pdf","password":"38805537","visible":false,"verticalPosition":"Bottom","horizontalPosition":"Left","pageNumber":1,"signatureField":""}
+2018/10/05 22:50:56, signer: args extract from JSON
+2018/10/05 22:50:56, signer: -p
+2018/10/05 22:50:56, signer: 38805537
+2018/10/05 22:50:56, signer: pades
+2018/10/05 22:50:56, signer: C:\Users\aless\Downloads\aut_07 (3).pdf
+2018/10/05 22:50:56, signer: Use the default driver located in: driver\Windows\bit4xpki.dll
+2018/10/05 22:50:56, signer: Selected Sign Format: PADES
+2018/10/05 22:50:57, signer: Start Signature Procedure
+2018/10/05 22:50:57, signer: 
+
+2018/10/05 22:51:07, signer: Certificate to use:  
+2018/10/05 22:51:08, signer: SCARFONE ALESSIO
+2018/10/05 22:51:11, PadesSignFactory: No available field in the pdf.
+2018/10/05 22:51:17, signer: Start of signing process...
+2018/10/05 22:51:17, AbstractSignFactory: Create signed file: aut_07 (3)-signed.pdf
+2018/10/05 22:51:17, signer: End of signing process.
+2018/10/05 22:51:17, signer: {"local_path_newFile":"C:\\Users\\aless\\Downloads\\aut_07 (3)-signed.pdf"}
+2018/10/05 22:53:00, signer: ------------ Start Main --------------
+2018/10/05 22:53:00, signer: Connect with Chrome extension
+2018/10/05 22:53:00, com.unical.argparser.MiddlewareChrome: Start
+2018/10/05 22:53:00, com.unical.argparser.MiddlewareChrome: Host received {"file":"C:\\Users\\aless\\Downloads\\aut_07 (4).pdf","password":"38805537","visible":false,"verticalPosition":"Bottom","horizontalPosition":"Left","pageNumber":1,"signatureField":""}
+2018/10/05 22:53:00, signer: args extract from JSON
+2018/10/05 22:53:00, signer: -p
+2018/10/05 22:53:00, signer: 38805537
+2018/10/05 22:53:00, signer: pades
+2018/10/05 22:53:00, signer: C:\Users\aless\Downloads\aut_07 (4).pdf
+2018/10/05 22:53:00, signer: Use the default driver located in: driver\Windows\bit4xpki.dll
+2018/10/05 22:53:00, signer: Selected Sign Format: PADES
+2018/10/05 22:53:00, signer: Start Signature Procedure
+2018/10/05 22:53:00, signer: 
+
+2018/10/05 22:53:11, signer: Certificate to use:  
+2018/10/05 22:53:11, signer: SCARFONE ALESSIO
+2018/10/05 22:53:15, PadesSignFactory: No available field in the pdf.
+2018/10/05 22:53:21, signer: Start of signing process...
+2018/10/05 22:53:21, AbstractSignFactory: Create signed file: aut_07 (4)-signed.pdf
+2018/10/05 22:53:21, signer: End of signing process.
+2018/10/05 22:53:21, signer: {"local_path_newFile":"C:\\Users\\aless\\Downloads\\aut_07 (4)-signed.pdf"}
+2018/10/05 22:55:29, signer: ------------ Start Main --------------
+2018/10/05 22:55:29, signer: Connect with Chrome extension
+2018/10/05 22:55:29, com.unical.argparser.MiddlewareChrome: Start
+2018/10/05 22:55:29, com.unical.argparser.MiddlewareChrome: Host received {"file":"C:\\Users\\aless\\Downloads\\aut_07 (5).pdf","password":"38805537","visible":false,"verticalPosition":"Bottom","horizontalPosition":"Left","pageNumber":1,"signatureField":""}
+2018/10/05 22:55:29, signer: args extract from JSON
+2018/10/05 22:55:29, signer: -p
+2018/10/05 22:55:29, signer: 38805537
+2018/10/05 22:55:29, signer: pades
+2018/10/05 22:55:29, signer: C:\Users\aless\Downloads\aut_07 (5).pdf
+2018/10/05 22:55:29, signer: Use the default driver located in: driver\Windows\bit4xpki.dll
+2018/10/05 22:55:29, signer: Selected Sign Format: PADES
+2018/10/05 22:55:29, signer: Start Signature Procedure
+2018/10/05 22:55:29, signer: 
+
+2018/10/05 22:55:40, signer: Certificate to use:  
+2018/10/05 22:55:41, signer: SCARFONE ALESSIO
+2018/10/05 22:55:44, PadesSignFactory: No available field in the pdf.
+2018/10/05 22:55:50, signer: Start of signing process...
+2018/10/05 22:55:50, AbstractSignFactory: Create signed file: aut_07 (5)-signed.pdf
+2018/10/05 22:55:50, signer: End of signing process.
+2018/10/05 22:55:50, signer: {"local_path_newFile":"C:\\Users\\aless\\Downloads\\aut_07 (5)-signed.pdf"}
+2018/10/05 22:56:24, signer: ------------ Start Main --------------
+2018/10/05 22:56:24, signer: Connect with Chrome extension
+2018/10/05 22:56:24, com.unical.argparser.MiddlewareChrome: Start
+2018/10/05 22:56:24, com.unical.argparser.MiddlewareChrome: Host received {"file":"C:\\Users\\aless\\Downloads\\aut_07 (6).pdf","password":"38805537","visible":false,"verticalPosition":"Bottom","horizontalPosition":"Left","pageNumber":1,"signatureField":""}
+2018/10/05 22:56:24, signer: args extract from JSON
+2018/10/05 22:56:24, signer: -p
+2018/10/05 22:56:24, signer: 38805537
+2018/10/05 22:56:24, signer: pades
+2018/10/05 22:56:24, signer: C:\Users\aless\Downloads\aut_07 (6).pdf
+2018/10/05 22:56:24, signer: Use the default driver located in: driver\Windows\bit4xpki.dll
+2018/10/05 22:56:24, signer: Selected Sign Format: PADES
+2018/10/05 22:56:24, signer: Start Signature Procedure
+2018/10/05 22:56:24, signer: 
+
+2018/10/05 22:56:35, signer: Certificate to use:  
+2018/10/05 22:56:36, signer: SCARFONE ALESSIO
+2018/10/05 22:56:39, PadesSignFactory: No available field in the pdf.
+2018/10/05 22:56:45, signer: Start of signing process...
+2018/10/05 22:56:45, AbstractSignFactory: Create signed file: aut_07 (6)-signed.pdf
+2018/10/05 22:56:45, signer: End of signing process.
+2018/10/05 22:56:45, signer: {"local_path_newFile":"C:\\Users\\aless\\Downloads\\aut_07 (6)-signed.pdf"}
+2018/10/05 22:58:21, signer: ------------ Start Main --------------
+2018/10/05 22:58:21, signer: Connect with Chrome extension
+2018/10/05 22:58:21, com.unical.argparser.MiddlewareChrome: Start
+2018/10/05 22:58:21, com.unical.argparser.MiddlewareChrome: Host received {"file":"C:\\Users\\aless\\Downloads\\aut_07 (7).pdf","password":"38805537","visible":false,"verticalPosition":"Bottom","horizontalPosition":"Left","pageNumber":1,"signatureField":""}
+2018/10/05 22:58:21, signer: args extract from JSON
+2018/10/05 22:58:21, signer: -p
+2018/10/05 22:58:21, signer: 38805537
+2018/10/05 22:58:21, signer: pades
+2018/10/05 22:58:21, signer: C:\Users\aless\Downloads\aut_07 (7).pdf
+2018/10/05 22:58:21, signer: Use the default driver located in: driver\Windows\bit4xpki.dll
+2018/10/05 22:58:21, signer: Selected Sign Format: PADES
+2018/10/05 22:58:21, signer: Start Signature Procedure
+2018/10/05 22:58:21, signer: 
+
+2018/10/05 22:58:32, signer: Certificate to use:  
+2018/10/05 22:58:32, signer: SCARFONE ALESSIO
+2018/10/05 22:58:35, PadesSignFactory: No available field in the pdf.
+2018/10/05 22:58:41, signer: Start of signing process...
+2018/10/05 22:58:41, AbstractSignFactory: Create signed file: aut_07 (7)-signed.pdf
+2018/10/05 22:58:41, signer: End of signing process.
+2018/10/05 22:58:41, signer: {"local_path_newFile":"C:\\Users\\aless\\Downloads\\aut_07 (7)-signed.pdf"}
