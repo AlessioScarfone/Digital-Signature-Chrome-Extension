@@ -28,7 +28,7 @@ $(document).ready(function () {
     });
 
     $("#confirm-btn-1").on('click', function () {
-        if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false)) 
+        if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false))
             nextStep('step-2-cades');
         if (signature_data.type == "pades" && signature_data.visible == true) {
             //TODO 
@@ -36,10 +36,21 @@ $(document).ready(function () {
 
     });
 
-    $("#confirm-btn-2-cades").on('click',function(){
+    var confirm_btn_2 = $("#confirm-btn-2-cades");
+    confirm_btn_2.on('click', function () {
         console.log("RUN");
+        console.log(signature_data);
         //TODO
-    })
+    });
+
+    $("#pass-1").on('input', function () {
+        console.log($(this).val().length);
+        if ($(this).val().length != 0) {
+            confirm_btn_2.removeAttr("disabled");
+        } else {
+            confirm_btn_2.prop("disabled", true);
+        }
+    });
 
     function run() {
         //1) get tab url

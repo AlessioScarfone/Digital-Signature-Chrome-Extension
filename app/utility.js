@@ -14,7 +14,6 @@ function selectSignatureType(e) {
 
     //after first initializzation active btn confirm
     $("#confirm-btn-1").removeAttr("disabled");
-
 }
 
 function hide(id) {
