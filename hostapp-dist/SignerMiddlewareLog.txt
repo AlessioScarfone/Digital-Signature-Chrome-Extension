@@ -239,3 +239,33 @@
 2018/10/07 10:40:28, com.unical.argparser.MiddlewareChrome: Start
 2018/10/07 10:40:28, com.unical.argparser.MiddlewareChrome: Blocked communication
 2018/10/07 10:40:28, com.unical.argparser.MiddlewareChrome: Host received 
+2018/10/08 14:40:25, signer: ------------ Start Main --------------
+2018/10/08 14:40:25, signer: Connect with Chrome extension
+2018/10/08 14:40:25, com.unical.argparser.MiddlewareChrome: Start
+2018/10/08 14:40:25, signer: ------------ Start Main --------------
+2018/10/08 14:40:25, signer: ------------ Start Main --------------
+2018/10/08 14:40:25, com.unical.argparser.MiddlewareChrome: Blocked communication
+2018/10/08 14:40:25, signer: Connect with Chrome extension
+2018/10/08 14:40:25, signer: Connect with Chrome extension
+2018/10/08 14:40:25, com.unical.argparser.MiddlewareChrome: Start
+2018/10/08 14:40:25, com.unical.argparser.MiddlewareChrome: Host received 
+2018/10/08 14:40:25, com.unical.argparser.MiddlewareChrome: Start
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Blocked communication
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Blocked communication
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Host received 
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Host received 
+2018/10/08 14:40:26, signer: ------------ Start Main --------------
+2018/10/08 14:40:26, signer: Connect with Chrome extension
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Start
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Blocked communication
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Host received 
+2018/10/08 14:40:26, signer: ------------ Start Main --------------
+2018/10/08 14:40:26, signer: Connect with Chrome extension
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Start
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Blocked communication
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Host received 
+2018/10/08 14:40:26, signer: ------------ Start Main --------------
+2018/10/08 14:40:26, signer: Connect with Chrome extension
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Start
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Blocked communication
+2018/10/08 14:40:26, com.unical.argparser.MiddlewareChrome: Host received 

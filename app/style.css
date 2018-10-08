@@ -1,0 +1,16 @@
+.hide{
+    display: none;
+}
+
+.hidden{
+    visibility: hidden;
+}
+
+section{
+    padding-top: 2.5em !important;
+    padding-bottom: 2.5em !important;
+}
+
+hr{
+    margin: 1.5em; 
+}

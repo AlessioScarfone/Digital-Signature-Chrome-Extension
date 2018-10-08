@@ -2,19 +2,44 @@ console.log("Start...")
 app = 'com.unical.digitalsignature.signer';
 
 var signature_data = {
-    type : ""
+    type: "",
+    filename: "",
+    password: "",
+    visible: false,
+    verticalPosition: "Bottom",
+    horizontalPosition: "Left",
+    pageNumber: 1,
+    signatureField: ""
     //TODO add other field
 };
 
 
-$(document).ready(function(){
+$(document).ready(function () {
     // $('#pades-btn').on('click', run);
 
     $('.signature-type-btns').on('click', selectSignatureType);
 
-    $('.signature-type-btns').on('click', function(){
-        console.log(signature_data);
+    $('#use-visible-signature-checkbox').change(function () {
+        if ($(this).is(":checked")) {
+            // console.log("changed");
+            signature_data.visible = true;
+        } else
+            signature_data.visible = false;
     });
+
+    $("#confirm-btn-1").on('click', function () {
+        if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false)) 
+            nextStep('step-2-cades');
+        if (signature_data.type == "pades" && signature_data.visible == true) {
+            //TODO 
+        }
+
+    });
+
+    $("#confirm-btn-2-cades").on('click',function(){
+        console.log("RUN");
+        //TODO
+    })
 
     function run() {
         //1) get tab url
@@ -76,7 +101,8 @@ $(document).ready(function(){
                     });
                 } else {
                     console.log(item[0].filename);
-                    sendExtMessage(item[0].filename, port);
+                    signature_data.filename = item[0].filename;
+                    sendExtMessage(signature_data, port);
                 }
             })
         }
@@ -89,15 +115,7 @@ $(document).ready(function(){
 
     function sendExtMessage(filename, port) {
         console.log("Send message...")
-        port.postMessage({
-            file: filename,
-            password: "38805537",
-            visible: false,
-            verticalPosition: "Bottom",
-            horizontalPosition: "Left",
-            pageNumber: 1,
-            signatureField: ""
-        });
+        port.postMessage(signature_data);
     }
 
 });
