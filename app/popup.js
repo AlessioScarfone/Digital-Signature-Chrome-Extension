@@ -12,6 +12,44 @@ var signature_data = {
     //TODO add other field
 };
 
+class Sections {
+    constructor() {
+        this._section = {
+                first: document.getElementById("step-1"),
+                second: document.getElementById("step-2"),
+                third: document.getElementById("step-3")
+            },
+
+            this._currentSection = this._section.first;
+    }
+
+    get section() {
+        return this._section;
+    }
+
+    get currentSection() {
+        return this._currentSection;
+    }
+
+    /**Set the current section with a section in _section property of the object */
+    updateSection(nextSection) {
+        for (const key in this._section) {
+            if (this._section.hasOwnProperty(key)) {
+                if (this._section[key] === nextSection) {
+                    this._currentSection = nextSection;
+                    this._currentSection.classList.remove('hide');
+                    return;
+                }
+            }
+        }
+        console.error("UpdateCurrentSection: No valid section");
+    }
+
+    hideCurrentSection() {
+        this._currentSection.classList.add('hide');
+    };
+}
+
 /*
    Posso fare un oggetto che al suo interno ha linkate le varie sezioni (il div piu esterno) e 
    accedendo a questo gestisco quale mostrare e quale no. Cosi facendo potrei mantenere lo stesso 
@@ -28,44 +66,6 @@ var signature_data = {
    */
 
 document.addEventListener('DOMContentLoaded', function () {
-
-    class Sections {
-        constructor() {
-            this._section = {
-                    first: document.getElementById("step-1"),
-                    second: document.getElementById("step-2"),
-                    third: document.getElementById("step-3")
-                },
-
-                this._currentSection = this._section.first;
-        }
-
-        get section() {
-            return this._section;
-        }
-
-        get currentSection() {
-            return this._currentSection;
-        }
-
-        /**Set the current section with a section in _section property of the object */
-        updateSection(nextSection) {
-            for (const key in this._section) {
-                if (this._section.hasOwnProperty(key)) {
-                    if (this._section[key] === nextSection) {
-                        this._currentSection = nextSection;
-                        this._currentSection.classList.remove('hide');
-                        return;
-                    }
-                }
-            }
-            console.error("UpdateCurrentSection: No valid section");
-        }
-
-        hideCurrentSection() {
-            this._currentSection.classList.add('hide');
-        };
-    }
 
     var sections = new Sections();
 
