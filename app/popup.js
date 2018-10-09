@@ -1,6 +1,21 @@
 console.log("Start...")
 app = 'com.unical.digitalsignature.signer';
 
+/*
+Posso fare un oggetto che al suo interno ha linkate le varie sezioni (il div piu esterno) e 
+accedendo a questo gestisco quale mostrare e quale no. Cosi facendo potrei mantenere lo stesso 
+btn-confirm da aggiornare man mano in base alla sezione attuale
+Poi per ogni sezione posso fare un suo oggetto che gestisce tutti i vari componenti, magari dividendoli in file
+
+Sezioni:
+1. iniziale, scelta pades (in caso visibile) o cades.
+*. schermata di loading.
+2. cades, pades non visibile -> pass e conferma.
+3. pades visibile. logo o solo testo e usa campo o posiziona firma:
+    if CAMPO -> 3.1 seleziona campo, logo se necessario.
+    if POS   -> 3.2 seleziona poszione, logo se necessario, pagina e coordinate verticali e orizzontali.
+*/ 
+
 var signature_data = {
     type: "",
     filename: "",
