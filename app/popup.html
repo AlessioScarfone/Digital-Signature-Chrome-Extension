@@ -2,13 +2,12 @@
 <html>
 
 <head>
-  <script src="lib/jquery-3.3.1.min.js"></script>
+  <script src="utility.js"></script>
+  <script src="popup.js"></script>
   <link rel="stylesheet" type="text/css" href="lib/bulma-0.7.1/css/bulma.css">
   <link rel="stylesheet" type="text/css" href="lib/bulma-extension/bulma-switch.min.css">
   <link rel="stylesheet" type="text/css" href="style.css">
   <script defer src="lib/fontawesome-free-5.3.1-web/js/all.min.js"></script>
-  <script src="popup.js"></script>
-  <script src="utility.js"></script>
 </head>
 
 <body>
@@ -29,12 +28,10 @@
           <label for="use-visible-signature-checkbox"> <b>Use Visible Signature</b> </label>
         </div>
         <hr />
-        <div class="has-text-centered">
-          <button id="confirm-btn-1" class="button is-success is-outlined" disabled>Confirm</button>
-        </div>
+        
       </div>
 
-      <div id="step-2-cades" class="hide">
+      <div id="step-2" class="hide">
         <div class="field">
           <p class="control has-icons-left">
             <input id="pass-1" class="input" type="password" placeholder="Password">
@@ -44,11 +41,16 @@
           </p>
         </div>
         <hr />
-        <div class="has-text-centered">
-          <button id="confirm-btn-2-cades" class="button is-success is-outlined" disabled>Confirm</button>
-        </div>
       </div>
 
+      <div class="step-3 hide">
+        <h1>Work in progre - Pades Visibile</h1>
+      </div>
+
+
+      <div class="has-text-centered">
+        <button id="confirm-btn" class="button is-success is-outlined" disabled>Confirm</button>
+      </div>
 
     
     </div> <!-- close container -->

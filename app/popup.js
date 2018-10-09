@@ -1,5 +1,4 @@
 console.log("Start...")
-app = 'com.unical.digitalsignature.signer';
 
 /*
 Posso fare un oggetto che al suo interno ha linkate le varie sezioni (il div piu esterno) e 
@@ -14,7 +13,21 @@ Sezioni:
 3. pades visibile. logo o solo testo e usa campo o posiziona firma:
     if CAMPO -> 3.1 seleziona campo, logo se necessario.
     if POS   -> 3.2 seleziona poszione, logo se necessario, pagina e coordinate verticali e orizzontali.
-*/ 
+*/
+var Sections = {
+    section: {
+        first: document.getElementById("step-1"),
+        second: document.getElementById("step-2"),
+        third: document.getElementById("step-3")
+    },
+    currentSection = Sections.section.first,
+
+    hideCurrent: function () {
+        this.currentSection.classList.add('hide');
+    }
+}
+
+
 
 var signature_data = {
     type: "",
@@ -28,120 +41,81 @@ var signature_data = {
     //TODO add other field
 };
 
-
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
     // $('#pades-btn').on('click', run);
+    var signatureTypeBtns = document.querySelectorAll('.signature-type-btns');
+    var confirm_btn = document.getElementById("confirm-btn");
+    signatureTypeBtns.forEach(el => el.addEventListener('click', selectSignatureTypeEvent))
 
-    $('.signature-type-btns').on('click', selectSignatureType);
+    function selectSignatureTypeEvent() {
+        var el = this;
+        console.log("click: ");
+        console.log(el);
+        signatureTypeBtns.forEach(e => {
+            e.classList.add('is-outlined');
+            e.classList.remove('is-selected')
+        });
+        //update state of selected btn
+        el.classList.remove('is-outlined');
+        el.classList.add('is-selected');
+        signature_data.type = el.getAttribute('data-signature-type');
 
-    $('#use-visible-signature-checkbox').change(function () {
-        if ($(this).is(":checked")) {
-            // console.log("changed");
+        if (signature_data.type == "pades")
+            show("use-visible-signature-field");
+        else {
+            hide("use-visible-signature-field");
+            signature_data.visible = false;
+        }
+
+        //after first initializzation active btn confirm
+        confirm_btn.disabled = false;
+    }
+
+    confirm_btn.addEventListener('click', function () {
+        Sections.hideCurrent();
+        if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false))
+            Sections.currentSection == Sections.section.second;
+        if (signature_data.type == "pades" && signature_data.visible == true) {
+            Sections.currentSection == Sections.section.third;
+        }
+        confirm_btn.disabled = true;
+    });
+
+
+
+    document.getElementById('use-visible-signature-checkbox').addEventListener("change", function () {
+        if (this.checked) {
+            console.log("changed");
             signature_data.visible = true;
         } else
             signature_data.visible = false;
     });
 
-    $("#confirm-btn-1").on('click', function () {
-        if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false))
-            nextStep('step-2-cades');
-        if (signature_data.type == "pades" && signature_data.visible == true) {
-            //TODO 
-        }
+    // $("confirm-btn-1").on('click', function () {
+    //     if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false))
+    //         nextStep('step-2-cades');
+    //     if (signature_data.type == "pades" && signature_data.visible == true) {
+    //         //TODO 
+    //     }
 
-    });
+    // });
 
-    var confirm_btn_2 = $("#confirm-btn-2-cades");
-    confirm_btn_2.on('click', function () {
-        console.log("RUN");
-        console.log(signature_data);
-        //TODO
-    });
+    // var confirm_btn_2 = $("#confirm-btn-2-cades");
+    // confirm_btn_2.on('click', function () {
+    //     console.log("RUN");
+    //     console.log(signature_data);
+    //     //TODO
+    // });
 
-    $("#pass-1").on('input', function () {
-        console.log($(this).val().length);
-        if ($(this).val().length != 0) {
-            confirm_btn_2.removeAttr("disabled");
-        } else {
-            confirm_btn_2.prop("disabled", true);
-        }
-    });
-
-    function run() {
-        //1) get tab url
-        console.log("GET TAB URL...")
-        chrome.tabs.query({
-            active: true,
-            currentWindow: true
-        }, function (tab) {
-            pdfURL = tab[0].url;
-            console.log(pdfURL);
-            downloadPDF(pdfURL)
-        });
-
-        //setup connection with native app
-        var port = chrome.runtime.connectNative(app);
-        console.log(port);
-        port.onMessage.addListener(function (msg) {
-            var msgJSON = JSON.stringify(msg);
-            console.log(msg);
-
-            if (msg.hasOwnProperty('local_path_newFile')) {
-                //open signed pdf
-                path = "file:///" + msg.local_path_newFile;
-                chrome.tabs.create({
-                    index: 0,
-                    url: path,
-                    active: false
-                }, function () {});
-
-            }
-
-        });
-        port.onDisconnect.addListener(function () {
-            console.log("Disconnected: " + chrome.runtime.lastError.message);
-        });
-
-        //2) download pdf 
-        function downloadPDF(pdfUrl) {
-            console.log("DOWNLOAD...")
-            chrome.downloads.download({
-                url: pdfUrl
-            }, function (downloadItemID) {
-                getLocalPath(downloadItemID);
-            });
-        }
+    // $("#pass-1").on('input', function () {
+    //     console.log($(this).val().length);
+    //     if ($(this).val().length != 0) {
+    //         confirm_btn_2.removeAttr("disabled");
+    //     } else {
+    //         confirm_btn_2.prop("disabled", true);
+    //     }
+    // });
 
 
-        //3) get download file local path
-        function getLocalPath(downloadItemID) {
-            console.log("GET LOCAL PATH...")
-            chrome.downloads.search({
-                id: downloadItemID,
-                state: "complete"
-            }, function (item) {
-                if (item.length == 0) {
-                    console.log("non ha finito ancora, wait");
-                    sleep(2000).then(() => { //wait X second
-                        getLocalPath(downloadItemID);
-                    });
-                } else {
-                    console.log(item[0].filename);
-                    signature_data.filename = item[0].filename;
-                    sendExtMessage(signature_data, port);
-                }
-            })
-        }
-    }
-
-    // sleep time expects milliseconds
-    function sleep(time) {
-        return new Promise((resolve) => setTimeout(resolve, time));
-    }
-
-    function sendExtMessage(filename, port) {
-        console.log("Send message...")
-        port.postMessage(signature_data);
-    }
 
 });
