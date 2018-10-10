@@ -36,24 +36,27 @@ class BackgroundCommandHandler {
     this._ports.push(port);
 
     console.log(port);
+    var obj = this;
 
     port.onMessage.addListener(function (msg) {
       console.log("RECEIVED FROM NATIVE APP:");
       console.log(msg);
-      if (msg.hasOwnProperty(response_signature_type) && msg.response_signature_type == "pades" && msg.hasOwnProperty(response_local_path)) {
+
+      //open signed pdf if is signed with pades format
+      if (msg.hasOwnProperty("signature_type") && msg.signature_type == "pades" && msg.hasOwnProperty('local_path_newFile')) {
         //open signed pdf -> if the file isn't a pdf not open
-        path = "file:///" + msg.local_path_newFile;
+        var path = "file:///" + msg.local_path_newFile;
         chrome.tabs.create({
           index: 0,
           url: path,
           active: false
         }, function () {});
-
       }
-
     });
+
     port.onDisconnect.addListener(function () {
       console.log("Disconnected: " + chrome.runtime.lastError.message);
+      removePortFromList(obj, port.name);
     });
 
 
@@ -63,17 +66,30 @@ class BackgroundCommandHandler {
   closeConnection(portName) {
     port = this.findPort(portName);
     port.disconnect()
+    this.removePort(port.name);
+  }
+
+  removePort(portName) {
+    var toDelete = null;
+    for (let i = 0; i < this._ports.length; i++) {
+      const element = this._ports[i];
+      if (element !== undefined && element.name == portName)
+        toDelete = i;
+      break;
+    }
+    console.log("REMOVE PORT at pos:" + toDelete);
+    if (toDelete !== null)
+      delete this._ports[toDelete];
   }
 
   findPort(portName) {
     for (let i = 0; i < this._ports.length; i++) {
       const element = this._ports[i];
-      if (element.name == portName)
+      if (element !== undefined && element.name == portName)
         return element;
     }
     return undefined;
   }
-
 
   downloadFileAndSign(portName, pdfURL, data) {
     var port = this.findPort(portName);
@@ -82,7 +98,7 @@ class BackgroundCommandHandler {
 
     //2) download pdf 
     function downloadPDF(pdfUrl) {
-      console.log("DOWNLOAD...")
+      console.log("Start download document...")
       chrome.downloads.download({
         url: pdfUrl
       }, function (downloadItemID) {
@@ -110,8 +126,9 @@ class BackgroundCommandHandler {
           console.log(data);
           port.postMessage(data);
         }
-      })
+      });
     }
+
     // sleep time expects milliseconds
     function sleep(time) {
       return new Promise((resolve) => setTimeout(resolve, time));
@@ -119,7 +136,14 @@ class BackgroundCommandHandler {
   }
 
 }
+
+function removePortFromList(bch,portName){
+  bch.removePort(portName);
+}
+
+
 //  ---- end BackgroundCommandHandler Declaration ---
+
 
 var bch = new BackgroundCommandHandler();
 chrome.runtime.onMessage.addListener(

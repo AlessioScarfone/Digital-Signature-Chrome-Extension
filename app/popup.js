@@ -12,6 +12,7 @@ var signature_data = {
     //TODO add other field
 };
 
+//TODO autogenerate port name
 var port = "name_1";
 
 class Sections {
