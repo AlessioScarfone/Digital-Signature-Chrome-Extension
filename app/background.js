@@ -43,7 +43,7 @@ class BackgroundCommandHandler {
       console.log(msg);
 
       //open signed pdf if is signed with pades format
-      if (msg.hasOwnProperty("signature_type") && msg.signature_type == "pades" && msg.hasOwnProperty('local_path_newFile')) {
+      if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end" && msg.signature_type == "pades" ) {
         //open signed pdf -> if the file isn't a pdf not open
         var path = "file:///" + msg.local_path_newFile;
         chrome.tabs.create({
