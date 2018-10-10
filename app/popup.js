@@ -166,15 +166,31 @@ document.addEventListener('DOMContentLoaded', function () {
         }, function (tab) {
             pdfURL = tab[0].url;
             console.log(pdfURL);
-            console.log("SEND MESSAGE");
-            chrome.runtime.sendMessage({
-                action: "download",
-                port: port,
-                url: pdfURL,
-                data: signature_data
-            }, function (response) {
-                console.log(response.ack);
-            });
+
+            if (pdfURL.startsWith("file:///")) {
+                // file is local
+                pdfURL = pdfURL.substr("file:///".length);
+                console.log("send message - file is local:");
+                signature_data.filename = pdfURL;
+                chrome.runtime.sendMessage({
+                    action: "sign",
+                    port: port,
+                    data: signature_data
+                }, function (response) {
+                    console.log(response.ack);
+                });
+            } else {
+                //download pdf and then sign it
+                console.log("send message:");
+                chrome.runtime.sendMessage({
+                    action: "download_and_sign",
+                    port: port,
+                    url: pdfURL,
+                    data: signature_data
+                }, function (response) {
+                    console.log(response.ack);
+                });
+            }
         });
 
     }

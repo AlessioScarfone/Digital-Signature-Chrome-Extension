@@ -43,7 +43,7 @@ class BackgroundCommandHandler {
       console.log(msg);
 
       //open signed pdf if is signed with pades format
-      if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end" && msg.signature_type == "pades" ) {
+      if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end" && msg.signature_type == "pades") {
         //open signed pdf -> if the file isn't a pdf not open
         var path = "file:///" + msg.local_path_newFile;
         chrome.tabs.create({
@@ -92,7 +92,6 @@ class BackgroundCommandHandler {
   }
 
   downloadFileAndSign(portName, pdfURL, data) {
-    var port = this.findPort(portName);
     //1) get tab url
     downloadPDF(pdfURL)
 
@@ -122,11 +121,10 @@ class BackgroundCommandHandler {
         } else {
           console.log(item[0].filename);
           data.filename = item[0].filename;
-          console.log("Send message to native app...")
-          console.log(data);
-          port.postMessage(data);
+          signFile(portName,data);
         }
       });
+
     }
 
     // sleep time expects milliseconds
@@ -135,9 +133,16 @@ class BackgroundCommandHandler {
     }
   }
 
+  sendDataForSign(portName,data) {
+    var port = this.findPort(portName);
+    console.log("Send message to native app...")
+    console.log(data);
+    port.postMessage(data);
+  };
+
 }
 
-function removePortFromList(bch,portName){
+function removePortFromList(bch, portName) {
   bch.removePort(portName);
 }
 
@@ -156,8 +161,11 @@ chrome.runtime.onMessage.addListener(
       case 'disconnect':
         bch.closeConnection(request.port);
         break;
-      case 'download':
+      case 'download_and_sign':
         bch.downloadFileAndSign(request.port, request.url, request.data);
+        break;
+      case 'sign':
+        bch.sendDataForSign(request.port, request.data);
         break;
 
       default:
