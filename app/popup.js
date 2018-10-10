@@ -12,6 +12,8 @@ var signature_data = {
     //TODO add other field
 };
 
+var port = "name_1";
+
 class Sections {
     constructor() {
         this._section = {
@@ -115,12 +117,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 //TODO expand for get signature field
                 sections.updateSection(sections.section.third);
             }
+
+            console.log("init connection with native app");
+            chrome.runtime.sendMessage({
+                action: "init",
+                port: port
+            }, function (response) {
+                console.log(response);
+            });
         }
 
         // 2 or 3 -> L
         else if (sections.currentSection == sections.section.second || sections.currentSection == sections.section.third) {
             sections.updateSection(sections.section.loading);
-            confirm_btn.classList.add
+            confirm_btn.classList.add('hide');
         }
 
         // L -> E
@@ -147,10 +157,34 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function sign() {
-        console.log("SEND MESSAGE");
-        chrome.runtime.sendMessage(signature_data, function (response) {
-            console.log(response.ack);
+        signature_data.password = document.getElementById("pass-1").value;
+        console.log("GET TAB URL...")
+        chrome.tabs.query({
+            active: true,
+            currentWindow: true
+        }, function (tab) {
+            pdfURL = tab[0].url;
+            console.log(pdfURL);
+            console.log("SEND MESSAGE");
+            chrome.runtime.sendMessage({
+                action: "download",
+                port: port,
+                url: pdfURL,
+                data: signature_data
+            }, function (response) {
+                console.log(response.ack);
+            });
         });
+
     }
+
+
+    chrome.runtime.onMessage.addListener(
+        function (request, sender, sendResponse) {
+            console.log(request);
+            sendResponse({
+                ack: "success"
+            });
+        });
 
 });
