@@ -1,3 +1,5 @@
+console.log("Start background");
+
 chrome.runtime.onInstalled.addListener(function () {
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
     chrome.declarativeContent.onPageChanged.addRules([{
@@ -10,3 +12,13 @@ chrome.runtime.onInstalled.addListener(function () {
     }]);
   });
 });
+
+
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    console.log(request);
+    console.log(sender);
+    sendResponse({
+      ack: "success"
+    });
+  });

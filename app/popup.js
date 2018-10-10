@@ -15,9 +15,11 @@ var signature_data = {
 class Sections {
     constructor() {
         this._section = {
-                first: document.getElementById("step-1"),
-                second: document.getElementById("step-2"),
-                third: document.getElementById("step-3")
+                first: document.getElementById("step-1"), //start
+                second: document.getElementById("step-2"), //cades or pades (no visible)
+                third: document.getElementById("step-3"), //visible pades
+                loading: document.getElementById("loading"), //loading
+                end: document.getElementById("operation-completed")
             },
 
             this._currentSection = this._section.first;
@@ -75,8 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function selectSignatureTypeEvent() {
         var el = this;
-        console.log("click: ");
-        console.log(el);
         signatureTypeBtns.forEach(e => {
             e.classList.add('is-outlined');
             e.classList.remove('is-selected')
@@ -87,9 +87,9 @@ document.addEventListener('DOMContentLoaded', function () {
         signature_data.type = el.getAttribute('data-signature-type');
 
         if (signature_data.type == "pades")
-            show("use-visible-signature-field");
+            document.getElementById("use-visible-signature-field").classList.remove('hide');
         else {
-            hide("use-visible-signature-field");
+            document.getElementById("use-visible-signature-field").classList.add('hide');
             signature_data.visible = false;
         }
 
@@ -99,33 +99,58 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('use-visible-signature-checkbox').addEventListener("change", function () {
         if (this.checked) {
-            console.log("changed");
             signature_data.visible = true;
         } else
             signature_data.visible = false;
     });
 
     confirm_btn.addEventListener('click', function () {
-        console.log(sections.section);
         sections.hideCurrentSection();
-        if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false))
-            sections.updateSection(sections.section.second);
-        if (signature_data.type == "pades" && signature_data.visible == true) {
-            sections.updateSection(sections.section.third);
+
+        // 1 -> 2 or 3
+        if (sections.currentSection == sections.section.first) {
+            if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false))
+                sections.updateSection(sections.section.second);
+            if (signature_data.type == "pades" && signature_data.visible == true) {
+                //TODO expand for get signature field
+                sections.updateSection(sections.section.third);
+            }
+        }
+
+        // 2 or 3 -> L
+        else if (sections.currentSection == sections.section.second || sections.currentSection == sections.section.third) {
+            sections.updateSection(sections.section.loading);
+            confirm_btn.classList.add
+        }
+
+        // L -> E
+        else if (sections.currentSection == sections.section.loading) {
+            sections.updateSection(sections.section.end);
         }
         confirm_btn.disabled = true;
     });
 
+    var signEventAttached = false
 
-    // $("#pass-1").on('input', function () {
-    //     console.log($(this).val().length);
-    //     if ($(this).val().length != 0) {
-    //         confirm_btn_2.removeAttr("disabled");
-    //     } else {
-    //         confirm_btn_2.prop("disabled", true);
-    //     }
-    // });
+    document.getElementById("pass-1").addEventListener('input', function () {
+        if (this.value.length != 0) {
+            confirm_btn.disabled = false;
+            if (signEventAttached == false) {
+                confirm_btn.addEventListener('click', sign);
+                signEventAttached = true;
+            }
+        } else {
+            confirm_btn.disabled = true;
+            confirm_btn.removeEventListener('click', sign);
+            signEventAttached = false;
+        }
+    });
 
-    // $('#pades-btn').on('click', run);
+    function sign() {
+        console.log("SEND MESSAGE");
+        chrome.runtime.sendMessage(signature_data, function (response) {
+            console.log(response.ack);
+        });
+    }
 
 });
