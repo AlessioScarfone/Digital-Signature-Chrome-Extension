@@ -52,6 +52,13 @@ class BackgroundCommandHandler {
           active: false
         }, function () {});
       }
+      if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end") {
+
+        chrome.runtime.sendMessage({
+          state: "end",
+        }, function (response) {});
+
+      }
     });
 
     port.onDisconnect.addListener(function () {
@@ -121,7 +128,7 @@ class BackgroundCommandHandler {
         } else {
           console.log(item[0].filename);
           data.filename = item[0].filename;
-          signFile(portName,data);
+          signFile(portName, data);
         }
       });
 
@@ -133,14 +140,14 @@ class BackgroundCommandHandler {
     }
   }
 
-  sendDataForSign(portName,data) {
+  sendDataForSign(portName, data) {
     var port = this.findPort(portName);
     console.log("Send message to native app...")
     console.log(data);
     port.postMessage(data);
   };
 
-}
+} //close class 
 
 function removePortFromList(bch, portName) {
   bch.removePort(portName);
@@ -151,6 +158,8 @@ function removePortFromList(bch, portName) {
 
 
 var bch = new BackgroundCommandHandler();
+
+//listener message Popup -> Background
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     console.log(request);
@@ -164,7 +173,7 @@ chrome.runtime.onMessage.addListener(
       case 'download_and_sign':
         bch.downloadFileAndSign(request.port, request.url, request.data);
         break;
-      case 'sign':
+      case 'sign': //used for directly sign a local file
         bch.sendDataForSign(request.port, request.data);
         break;
 

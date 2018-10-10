@@ -41,7 +41,10 @@ class Sections {
         for (const key in this._section) {
             if (this._section.hasOwnProperty(key)) {
                 if (this._section[key] === nextSection) {
+                    //hide "old" current section
+                    this.hideCurrentSection();
                     this._currentSection = nextSection;
+                    //show "old" current section
                     this._currentSection.classList.remove('hide');
                     return;
                 }
@@ -108,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     confirm_btn.addEventListener('click', function () {
-        sections.hideCurrentSection();
+        // sections.hideCurrentSection();
 
         // 1 -> 2 or 3
         if (sections.currentSection == sections.section.first) {
@@ -134,10 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
             confirm_btn.classList.add('hide');
         }
 
-        // L -> E
-        else if (sections.currentSection == sections.section.loading) {
-            sections.updateSection(sections.section.end);
-        }
         confirm_btn.disabled = true;
     });
 
@@ -195,10 +194,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-
+    //listener message Background -> Popup
     chrome.runtime.onMessage.addListener(
         function (request, sender, sendResponse) {
             console.log(request);
+            if (request.hasOwnProperty("state") && request.state == "end") {
+                sections.updateSection(sections.section.end);
+                confirm_btn.classList.add('hide');
+            }
             sendResponse({
                 ack: "success"
             });
