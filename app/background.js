@@ -99,9 +99,10 @@ class BackgroundCommandHandler {
   }
 
   downloadFileAndSign(portName, pdfURL, data) {
+    var port = this.findPort(portName);
     //1) get tab url
     downloadPDF(pdfURL)
-
+    
     //2) download pdf 
     function downloadPDF(pdfUrl) {
       console.log("Start download document...")
@@ -111,7 +112,7 @@ class BackgroundCommandHandler {
         getLocalPath(downloadItemID);
       });
     }
-
+    
 
     //3) get download file local path
     function getLocalPath(downloadItemID) {
@@ -128,10 +129,11 @@ class BackgroundCommandHandler {
         } else {
           console.log(item[0].filename);
           data.filename = item[0].filename;
-          signFile(portName, data);
+          console.log("Send message to native app...")
+          console.log(data);
+          port.postMessage(data);
         }
       });
-
     }
 
     // sleep time expects milliseconds
@@ -156,24 +158,30 @@ function removePortFromList(bch, portName) {
 
 //  ---- end BackgroundCommandHandler Declaration ---
 
-
 var bch = new BackgroundCommandHandler();
+
+popup_message_type = {
+  init: 'init',
+  disconnect: 'disconnect',
+  download_and_sign: 'download_and_sign',
+  sign: 'sign'
+}
 
 //listener message Popup -> Background
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     console.log(request);
     switch (request.action) {
-      case 'init':
+      case popup_message_type.init:
         bch.openConnection(request.port);
         break;
-      case 'disconnect':
+      case popup_message_type.disconnect:
         bch.closeConnection(request.port);
         break;
-      case 'download_and_sign':
+      case popup_message_type.download_and_sign:
         bch.downloadFileAndSign(request.port, request.url, request.data);
         break;
-      case 'sign': //used for directly sign a local file
+      case popup_message_type.sign: //used for directly sign a local file
         bch.sendDataForSign(request.port, request.data);
         break;
 

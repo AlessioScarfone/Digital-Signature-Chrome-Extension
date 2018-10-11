@@ -1,5 +1,29 @@
 console.log("Start...")
 
+/*
+   Posso fare un oggetto che al suo interno ha linkate le varie sezioni (il div piu esterno) e 
+   accedendo a questo gestisco quale mostrare e quale no. Cosi facendo potrei mantenere lo stesso 
+   btn-confirm da aggiornare man mano in base alla sezione attuale
+   Poi per ogni sezione posso fare un suo oggetto che gestisce tutti i vari componenti, magari dividendoli in file
+
+   Sezioni:
+   1. iniziale, scelta pades (in caso visibile) o cades.
+   *. schermata di loading.
+   2. cades, pades non visibile -> pass e conferma.
+   3. pades visibile. logo o solo testo e usa campo o posiziona firma:
+       if CAMPO -> 3.1 seleziona campo, logo se necessario.
+       if POS   -> 3.2 seleziona poszione, logo se necessario, pagina e coordinate verticali e orizzontali.
+
+
+       TODO: aggiungi uno stato al background per memorizzare se c'è gia una firma in corso in modo da ripristinare lo stato 
+       del popup al loanding se necessario. Quindi all'apertura del popup leggi lo stato e in caso ripristina al loading 
+       o parti dall'inizio 
+
+       FIXME: avvia piu firme consecutive e verifica se le porte vengono correttamente cancellate e riaperte 
+       (prova firme multiple dello stesso tipo e mischiate)
+
+   */
+
 var signature_data = {
     type: "",
     filename: "",
@@ -9,10 +33,14 @@ var signature_data = {
     horizontalPosition: "Left",
     pageNumber: 1,
     signatureField: ""
-    //TODO add other field
+    //TODO: add other field
 };
 
-//TODO autogenerate port name
+
+var background = chrome.extension.getBackgroundPage();
+var popup_message_type = background.popup_message_type;
+
+//TODO: autogenerate port name
 var port = "name_1";
 
 class Sections {
@@ -58,20 +86,6 @@ class Sections {
     };
 }
 
-/*
-   Posso fare un oggetto che al suo interno ha linkate le varie sezioni (il div piu esterno) e 
-   accedendo a questo gestisco quale mostrare e quale no. Cosi facendo potrei mantenere lo stesso 
-   btn-confirm da aggiornare man mano in base alla sezione attuale
-   Poi per ogni sezione posso fare un suo oggetto che gestisce tutti i vari componenti, magari dividendoli in file
-
-   Sezioni:
-   1. iniziale, scelta pades (in caso visibile) o cades.
-   *. schermata di loading.
-   2. cades, pades non visibile -> pass e conferma.
-   3. pades visibile. logo o solo testo e usa campo o posiziona firma:
-       if CAMPO -> 3.1 seleziona campo, logo se necessario.
-       if POS   -> 3.2 seleziona poszione, logo se necessario, pagina e coordinate verticali e orizzontali.
-   */
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -79,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var signatureTypeBtns = document.querySelectorAll('.signature-type-btns');
     var confirm_btn = document.getElementById("confirm-btn");
-    signatureTypeBtns.forEach(el => el.addEventListener('click', selectSignatureTypeEvent))
+    signatureTypeBtns.forEach(el => el.addEventListener('click', selectSignatureTypeEvent));
 
     function selectSignatureTypeEvent() {
         var el = this;
@@ -124,7 +138,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             console.log("init connection with native app");
             chrome.runtime.sendMessage({
-                action: "init",
+                // action: "init",
+                action: popup_message_type.init,
                 port: port
             }, function (response) {
                 console.log(response);
@@ -172,7 +187,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log("send message - file is local:");
                 signature_data.filename = pdfURL;
                 chrome.runtime.sendMessage({
-                    action: "sign",
+                    // action: "sign",
+                    action: popup_message_type.sign,
                     port: port,
                     data: signature_data
                 }, function (response) {
@@ -182,7 +198,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 //download pdf and then sign it
                 console.log("send message:");
                 chrome.runtime.sendMessage({
-                    action: "download_and_sign",
+                    // action: "download_and_sign",
+                    action: popup_message_type.download_and_sign,
                     port: port,
                     url: pdfURL,
                     data: signature_data
