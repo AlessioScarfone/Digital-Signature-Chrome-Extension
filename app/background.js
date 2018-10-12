@@ -13,32 +13,31 @@ chrome.runtime.onInstalled.addListener(function () {
   });
 });
 
+const app = 'com.unical.digitalsignature.signer';
 
-var app = 'com.unical.digitalsignature.signer';
+//TODO: se inutili si possono cancellare
+// let response_local_path = 'local_path_newFile';
+// let response_signature_type = "signature_type";
 
-var response_local_path = 'local_path_newFile';
-var response_signature_type = "signature_type";
-
+//possible value of appCurrentState: start , loading 
+var appCurrentState = "start";
 
 class BackgroundCommandHandler {
 
   constructor() {
-    this._ports = [];
+    this._port = null;
   }
 
-  get ports() {
-    return this._ports;
+  get getPort() {
+    return this._port;
   }
 
-  openConnection(portName) {
-    var port = chrome.runtime.connectNative(app);
-    port.name = portName;
-    this._ports.push(port);
+  openConnection() {
+    this._port = chrome.runtime.connectNative(app);
 
-    console.log(port);
-    var obj = this;
+    console.log(this._port);
 
-    port.onMessage.addListener(function (msg) {
+    this._port.onMessage.addListener(function (msg) {
       console.log("RECEIVED FROM NATIVE APP:");
       console.log(msg);
 
@@ -53,7 +52,7 @@ class BackgroundCommandHandler {
         }, function () {});
       }
       if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end") {
-
+        appCurrentState = "start";
         chrome.runtime.sendMessage({
           state: "end",
         }, function (response) {});
@@ -61,45 +60,20 @@ class BackgroundCommandHandler {
       }
     });
 
-    port.onDisconnect.addListener(function () {
+    this._port.onDisconnect.addListener(function () {
       console.log("Disconnected: " + chrome.runtime.lastError.message);
-      removePortFromList(obj, port.name);
     });
 
-
-    return port;
+    return this._port;
   }
 
-  closeConnection(portName) {
-    port = this.findPort(portName);
-    port.disconnect()
-    this.removePort(port.name);
+  closeConnection() {
+    this._port.disconnect();
   }
 
-  removePort(portName) {
-    var toDelete = null;
-    for (let i = 0; i < this._ports.length; i++) {
-      const element = this._ports[i];
-      if (element !== undefined && element.name == portName)
-        toDelete = i;
-      break;
-    }
-    console.log("REMOVE PORT at pos:" + toDelete);
-    if (toDelete !== null)
-      delete this._ports[toDelete];
-  }
-
-  findPort(portName) {
-    for (let i = 0; i < this._ports.length; i++) {
-      const element = this._ports[i];
-      if (element !== undefined && element.name == portName)
-        return element;
-    }
-    return undefined;
-  }
-
-  downloadFileAndSign(portName, pdfURL, data) {
-    var port = this.findPort(portName);
+  downloadFileAndSign(pdfURL, data) {
+    appCurrentState = "loading";
+    var port = this._port;
     //1) get tab url
     downloadPDF(pdfURL)
     
@@ -142,25 +116,20 @@ class BackgroundCommandHandler {
     }
   }
 
-  sendDataForSign(portName, data) {
-    var port = this.findPort(portName);
+  sendDataForSign(data) {
+    appCurrentState = "loading";
     console.log("Send message to native app...")
     console.log(data);
-    port.postMessage(data);
+    this._port.postMessage(data);
   };
 
 } //close class 
-
-function removePortFromList(bch, portName) {
-  bch.removePort(portName);
-}
-
 
 //  ---- end BackgroundCommandHandler Declaration ---
 
 var bch = new BackgroundCommandHandler();
 
-popup_message_type = {
+var popup_message_type = {
   init: 'init',
   disconnect: 'disconnect',
   download_and_sign: 'download_and_sign',
@@ -173,16 +142,16 @@ chrome.runtime.onMessage.addListener(
     console.log(request);
     switch (request.action) {
       case popup_message_type.init:
-        bch.openConnection(request.port);
+        bch.openConnection();
         break;
       case popup_message_type.disconnect:
-        bch.closeConnection(request.port);
+        bch.closeConnection();
         break;
       case popup_message_type.download_and_sign:
-        bch.downloadFileAndSign(request.port, request.url, request.data);
+        bch.downloadFileAndSign(request.url, request.data);
         break;
       case popup_message_type.sign: //used for directly sign a local file
-        bch.sendDataForSign(request.port, request.data);
+        bch.sendDataForSign(request.data);
         break;
 
       default:

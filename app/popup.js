@@ -1,10 +1,10 @@
 console.log("Start...")
 
 /*
-   Posso fare un oggetto che al suo interno ha linkate le varie sezioni (il div piu esterno) e 
+   Posso fare un oggetto che al suo interno ha linkate le letie sezioni (il div piu esterno) e 
    accedendo a questo gestisco quale mostrare e quale no. Cosi facendo potrei mantenere lo stesso 
    btn-confirm da aggiornare man mano in base alla sezione attuale
-   Poi per ogni sezione posso fare un suo oggetto che gestisce tutti i vari componenti, magari dividendoli in file
+   Poi per ogni sezione posso fare un suo oggetto che gestisce tutti i leti componenti, magari dividendoli in file
 
    Sezioni:
    1. iniziale, scelta pades (in caso visibile) o cades.
@@ -36,12 +36,9 @@ var signature_data = {
     //TODO: add other field
 };
 
-
 var background = chrome.extension.getBackgroundPage();
 var popup_message_type = background.popup_message_type;
-
-//TODO: autogenerate port name
-var port = "name_1";
+var _appCurrentState = background.appCurrentState;
 
 class Sections {
     constructor() {
@@ -90,9 +87,18 @@ class Sections {
 document.addEventListener('DOMContentLoaded', function () {
 
     var sections = new Sections();
-
     var signatureTypeBtns = document.querySelectorAll('.signature-type-btns');
     var confirm_btn = document.getElementById("confirm-btn");
+
+    (function checkCurrenState() {
+        console.log(_appCurrentState)
+        if (_appCurrentState != "start") {
+            console.log("App is already in loading.");
+            sections.updateSection(sections.section.loading);
+            confirm_btn.classList.add('hide');
+        }
+    }());
+
     signatureTypeBtns.forEach(el => el.addEventListener('click', selectSignatureTypeEvent));
 
     function selectSignatureTypeEvent() {
@@ -140,7 +146,6 @@ document.addEventListener('DOMContentLoaded', function () {
             chrome.runtime.sendMessage({
                 // action: "init",
                 action: popup_message_type.init,
-                port: port
             }, function (response) {
                 console.log(response);
             });
@@ -178,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
             active: true,
             currentWindow: true
         }, function (tab) {
-            pdfURL = tab[0].url;
+            var pdfURL = tab[0].url;
             console.log(pdfURL);
 
             if (pdfURL.startsWith("file:///")) {
@@ -189,7 +194,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 chrome.runtime.sendMessage({
                     // action: "sign",
                     action: popup_message_type.sign,
-                    port: port,
                     data: signature_data
                 }, function (response) {
                     console.log(response.ack);
@@ -200,7 +204,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 chrome.runtime.sendMessage({
                     // action: "download_and_sign",
                     action: popup_message_type.download_and_sign,
-                    port: port,
                     url: pdfURL,
                     data: signature_data
                 }, function (response) {
