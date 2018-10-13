@@ -19,6 +19,21 @@ hr {
     margin: 1.5em;
 }
 
+#operation-completed .title{
+    padding-top: 1.2em;
+}
+
+#confirm-btn{
+    margin-right: 12px;
+}
+
+#back-btn{
+    margin-top: 4px;
+}
+
+
+/* loading */
+
 .lds-ring {
     /* display: inline-block; */
     position: relative;

@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var sections = new Sections();
     var signatureTypeBtns = document.querySelectorAll('.signature-type-btns');
     var confirm_btn = document.getElementById("confirm-btn");
+    var back_btn = document.getElementById("back-btn");
 
     (function checkCurrenState() {
         console.log(_appCurrentState)
@@ -135,11 +136,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 1 -> 2 or 3
         if (sections.currentSection == sections.section.first) {
-            if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false))
+            if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false)){
                 sections.updateSection(sections.section.second);
+                back_btn.classList.remove("hide");
+            }
             if (signature_data.type == "pades" && signature_data.visible == true) {
                 //TODO expand for get signature field
                 sections.updateSection(sections.section.third);
+                back_btn.classList.remove("hide");
             }
 
             console.log("init connection with native app");
@@ -155,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (sections.currentSection == sections.section.second || sections.currentSection == sections.section.third) {
             sections.updateSection(sections.section.loading);
             confirm_btn.classList.add('hide');
+            back_btn.classList.add("hide");
         }
 
         confirm_btn.disabled = true;
