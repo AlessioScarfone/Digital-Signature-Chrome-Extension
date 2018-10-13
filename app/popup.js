@@ -170,7 +170,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             if (signature_data.type == "pades" && signature_data.visible == true) {
                 //TODO: expand for get signature field
-                sections.updateSection(sections.section.third);
+                getTabData(getPdfInfo);
+                // sections.updateSection(sections.section.third);
                 back_btn.classList.remove("hidden");
             }
 
@@ -206,12 +207,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (this.value.length != 0) {
             confirm_btn.disabled = false;
             if (signEventAttached == false) {
-                confirm_btn.addEventListener('click', sign);
+                confirm_btn.addEventListener('click', getTabData(sign));
                 signEventAttached = true;
             }
         } else {
             confirm_btn.disabled = true;
-            confirm_btn.removeEventListener('click', sign);
+            confirm_btn.removeEventListener('click', getTabData(sign));
             signEventAttached = false;
         }
     });
@@ -225,8 +226,98 @@ document.addEventListener('DOMContentLoaded', function () {
         signature_data.horizontalPosition = this.value;
     }));
 
-    function sign() {
+    // function sign() {
+    //     signature_data.password = document.getElementById("pass-1").value;
+    //     console.log("GET TAB URL...")
+    //     chrome.tabs.query({
+    //         active: true,
+    //         currentWindow: true
+    //     }, function (tab) {
+    //         var pdfURL = tab[0].url;
+    //         console.log(pdfURL);
+
+    //         if (pdfURL.startsWith("file:///")) {
+    //             // file is local
+    //             pdfURL = pdfURL.substr("file:///".length);
+    //             console.log("send message - file is local:");
+    //             signature_data.filename = pdfURL;
+    //             chrome.runtime.sendMessage({
+    //                 // action: "sign",
+    //                 action: popup_message_type.sign,
+    //                 data: signature_data
+    //             }, function (response) {
+    //                 console.log(response.ack);
+    //             });
+    //         } else {
+    //             //download pdf and then sign it
+    //             console.log("send message:");
+    //             chrome.runtime.sendMessage({
+    //                 // action: "download_and_sign",
+    //                 action: popup_message_type.download_and_sign,
+    //                 url: pdfURL,
+    //                 data: signature_data
+    //             }, function (response) {
+    //                 console.log(response.ack);
+    //             });
+    //         }
+    //     });
+
+    // }
+
+    function sign(tabData) {
         signature_data.password = document.getElementById("pass-1").value;
+        if (tabData.location == "remote") {
+            // download pdf and then sign it
+            console.log("send message:");
+            chrome.runtime.sendMessage({
+                // action: "download_and_sign",
+                action: popup_message_type.download_and_sign,
+                url: tabData.url,
+                data: signature_data
+            }, function (response) {
+                console.log(response.ack);
+            });
+        } else if (tabData.location == "local") {
+            chrome.runtime.sendMessage({
+                action: popup_message_type.sign,
+                data: signature_data
+            }, function (response) {
+                console.log(response.ack);
+            });
+        }
+    }
+
+    function getPdfInfo(tabData) {
+        sections.updateSection(sections.section.loading);
+        if (tabData.location == "remote") {
+            chrome.runtime.sendMessage({
+                action: popup_message_type.download_and_getInfo,
+                url: tabData.url,
+                data: signature_data
+            }, function (response) {
+                // console.log(response);
+            });
+        }
+        if (tabData.location == "local") {
+            chrome.runtime.sendMessage({
+                action: popup_message_type.info,
+                data: signature_data
+            }, function (response) {
+                // console.log(response);
+            });
+        }
+    }
+
+
+    function updateSignatureFieldList(fields){
+        sections.updateSection(sections.section.third);
+        console.log(fields);
+        document.getElementById("page-input").max = fields.page;
+        document.getElementById("page-input").placeholder = "0 - "+fields.page;
+        //TODO: fill fields list and add canvas
+    }
+
+    function getTabData(callback) {
         console.log("GET TAB URL...")
         chrome.tabs.query({
             active: true,
@@ -234,34 +325,22 @@ document.addEventListener('DOMContentLoaded', function () {
         }, function (tab) {
             var pdfURL = tab[0].url;
             console.log(pdfURL);
-
+            var tabData = {};
             if (pdfURL.startsWith("file:///")) {
                 // file is local
                 pdfURL = pdfURL.substr("file:///".length);
                 console.log("send message - file is local:");
                 signature_data.filename = pdfURL;
-                chrome.runtime.sendMessage({
-                    // action: "sign",
-                    action: popup_message_type.sign,
-                    data: signature_data
-                }, function (response) {
-                    console.log(response.ack);
-                });
+                tabData.location = "local";
             } else {
-                //download pdf and then sign it
-                console.log("send message:");
-                chrome.runtime.sendMessage({
-                    // action: "download_and_sign",
-                    action: popup_message_type.download_and_sign,
-                    url: pdfURL,
-                    data: signature_data
-                }, function (response) {
-                    console.log(response.ack);
-                });
+                tabData.location = "remote";
             }
+            tabData.url = pdfURL;
+            if (callback)
+                callback(tabData);
         });
-
     }
+
 
     //listener message Background -> Popup
     chrome.runtime.onMessage.addListener(
@@ -272,9 +351,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 // confirm_btn.classList.add('hide');
                 hideConfirmButtonSection();
             }
-            sendResponse({
-                ack: "success"
-            });
+            if (request.hasOwnProperty("state") && request.state == "info") {
+                updateSignatureFieldList(request);
+            }
+            // sendResponse({
+            //     ack: "success"
+            // });
         });
 
 
