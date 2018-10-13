@@ -61,6 +61,11 @@ class Sections {
         return this._currentSection;
     }
 
+    goback() {
+        if (this._currentSection === this._section.second || this._currentSection === this._section.third)
+            this.updateSection(this._section.first);
+    }
+
     /**Set the current section with a section in _section property of the object */
     updateSection(nextSection) {
         for (const key in this._section) {
@@ -136,14 +141,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 1 -> 2 or 3
         if (sections.currentSection == sections.section.first) {
-            if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false)){
+            if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false)) {
                 sections.updateSection(sections.section.second);
-                back_btn.classList.remove("hide");
+                back_btn.classList.remove("hidden");
             }
             if (signature_data.type == "pades" && signature_data.visible == true) {
                 //TODO expand for get signature field
                 sections.updateSection(sections.section.third);
-                back_btn.classList.remove("hide");
+                back_btn.classList.remove("hidden");
             }
 
             console.log("init connection with native app");
@@ -159,11 +164,17 @@ document.addEventListener('DOMContentLoaded', function () {
         else if (sections.currentSection == sections.section.second || sections.currentSection == sections.section.third) {
             sections.updateSection(sections.section.loading);
             confirm_btn.classList.add('hide');
-            back_btn.classList.add("hide");
+            back_btn.classList.add("hidden");
         }
 
         confirm_btn.disabled = true;
     });
+
+    back_btn.addEventListener("click", (e) => {
+        sections.goback();      //return to first section   
+        back_btn.classList.add("hidden"); //hide this btn
+        confirm_btn.disabled = false;   //active confirm btn (a signature type is already selected)
+    })
 
     var signEventAttached = false
 

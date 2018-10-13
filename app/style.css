@@ -24,7 +24,11 @@ hr {
 }
 
 #confirm-btn{
-    margin-right: 12px;
+    margin-right: 27px;
+}
+
+#use-visible-signature-field{
+    margin-left: 24px;
 }
 
 #back-btn{
