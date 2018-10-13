@@ -75,6 +75,7 @@ class Sections {
                     this._currentSection = nextSection;
                     //show "old" current section
                     this._currentSection.classList.remove('hide');
+
                     return;
                 }
             }
@@ -102,7 +103,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (_appCurrentState != "start") {
             console.log("App is already in loading.");
             sections.updateSection(sections.section.loading);
-            confirm_btn.classList.add('hide');
+            hideConfirmButtonSection();
+            // confirm_btn.classList.add('hide');
         }
     }());
 
@@ -289,6 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getPdfInfo(tabData) {
         sections.updateSection(sections.section.loading);
+        hideConfirmButtonSection();
         if (tabData.location == "remote") {
             chrome.runtime.sendMessage({
                 action: popup_message_type.download_and_getInfo,
