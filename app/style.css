@@ -10,46 +10,50 @@
     visibility: hidden;
 }
 
-section {
-    padding-top: 2.5em !important;
-    padding-bottom: 2.5em !important;
+.section {
+    padding:1.5rem 1.5rem !important;
 }
 
-hr {
+.bottom-hr {
     margin-bottom: 1.5em;
-    margin-top: 0;
+    margin-top: 15px;
 }
 
-#operation-completed .title{
+.top-hr {
+    margin-top: 1.5em;
+    margin-bottom: 15px;
+}
+
+#operation-completed .title {
     padding-top: 1.2em;
 }
 
-#confirm-btn{
+#confirm-btn {
     margin-right: 27px;
 }
 
-#back-btn{
+#back-btn {
     margin-top: 4px;
 }
 
-.start-trasform-sign-type{
+.start-trasform-sign-type {
     transform: translateY(10%);
     transition: transform 0.5s ease-in-out;
 }
 
-.trasform-sign-type{
+.trasform-sign-type {
     transform: translateY(-10%) !important;
     transition: transform 0.5s ease-in-out;
 }
 
-#use-visible-signature-field{
+#use-visible-signature {
     margin-left: 32px;
     position: relative;
     /* margin-top: -12px; */
-    top:-18px;
+    top: -18px;
 }
 
-.start-trasform{
+.start-trasform {
     transform: translateY(-25%);
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
     opacity: 0;
@@ -61,6 +65,52 @@ hr {
     transform: translateY(15%);
 }
 
+
+/* Switch*/
+.switch label b {
+    position: relative;
+    bottom: 2px;
+}
+
+.step p {
+    margin-bottom: 1.2em;
+    margin-left: 5px;
+    font-size: 1.1em;
+    width: fit-content;
+    /* box-shadow: inset 0 -6px 0 rgba(47, 161, 238, 0.4); */
+}
+
+/* STEP 3 */
+#step-3 .switch {
+    margin-left: 7px;
+}
+
+
+input[type="number"] {
+    width: 80%;
+}
+
+input[type="number"]+.icon {
+    left: 5px;
+    position: relative;
+    bottom: 3px;
+}
+
+input[type="number"]:valid+.icon #valid-icon {
+    display: inline;
+}
+
+input[type="number"]:valid+.icon #invalid-icon {
+    display: none;
+}
+
+input[type="number"]:invalid+.icon #valid-icon {
+    display: none;
+}
+
+input[type="number"]:invalid+.icon #invalid-icon {
+    display: inline;
+}
 
 /* loading */
 

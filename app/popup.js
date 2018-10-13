@@ -1,5 +1,4 @@
 console.log("Start...")
-
 /*
    Posso fare un oggetto che al suo interno ha linkate le letie sezioni (il div piu esterno) e 
    accedendo a questo gestisco quale mostrare e quale no. Cosi facendo potrei mantenere lo stesso 
@@ -90,11 +89,13 @@ class Sections {
 
 
 document.addEventListener('DOMContentLoaded', function () {
+    console.log(window.FontAwesomeConfig.searchPseudoElements);
 
     var sections = new Sections();
     var signatureTypeBtns = document.querySelectorAll('.signature-type-btns');
     var confirm_btn = document.getElementById("confirm-btn");
     var back_btn = document.getElementById("back-btn");
+    var use_visible_signature_switch = document.getElementById("use-visible-signature");
 
     (function checkCurrenState() {
         console.log(_appCurrentState)
@@ -118,19 +119,21 @@ document.addEventListener('DOMContentLoaded', function () {
         el.classList.add('is-selected');
         signature_data.type = el.getAttribute('data-signature-type');
 
-        if (signature_data.type == "pades"){
-            // document.getElementById("use-visible-signature-field").classList.remove('hide');
+        if (signature_data.type == "pades") {
+            // document.getElementById("use-visible-signature").classList.remove('hide');
             el.parentElement.classList.remove("start-trasform-sign-type");
             el.parentElement.classList.add("trasform-sign-type");
-            document.getElementById("use-visible-signature-field").classList.remove('start-transform');
-            document.getElementById("use-visible-signature-field").classList.add('transform');
-        }
-        else {
-            // document.getElementById("use-visible-signature-field").classList.add('hide');
+            use_visible_signature_switch.classList.remove('start-transform');
+            use_visible_signature_switch.classList.add('transform');
+        } else { //click on cades
+            // document.getElementById("use-visible-signature").classList.add('hide');
             el.parentElement.classList.remove("trasform-sign-type");
             el.parentElement.classList.add("start-trasform-sign-type");
-            document.getElementById("use-visible-signature-field").classList.add('start-transform');
-            document.getElementById("use-visible-signature-field").classList.remove('transform');
+            use_visible_signature_switch.classList.add('start-transform');
+            use_visible_signature_switch.classList.remove('transform');
+            if (document.getElementById('use-visible-signature-checkbox').checked)
+                document.getElementById('use-visible-signature-checkbox').click();
+
             signature_data.visible = false;
         }
 
@@ -143,6 +146,17 @@ document.addEventListener('DOMContentLoaded', function () {
             signature_data.visible = true;
         } else
             signature_data.visible = false;
+    });
+
+    document.getElementById('use-signature-field-checkbox').addEventListener("change", function () {
+        if (this.checked) {
+            document.getElementById('setting-no-field').classList.add('hide');
+            document.getElementById('setting-with-field').classList.remove('hide');
+            //go in loading and find field
+        } else {
+            document.getElementById('setting-no-field').classList.remove('hide');
+            document.getElementById('setting-with-field').classList.add('hide');
+        }
     });
 
     confirm_btn.addEventListener('click', function () {
@@ -180,9 +194,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     back_btn.addEventListener("click", (e) => {
-        sections.goback();      //return to first section   
+        sections.goback(); //return to first section   
         back_btn.classList.add("hidden"); //hide this btn
-        confirm_btn.disabled = false;   //active confirm btn (a signature type is already selected)
+        confirm_btn.disabled = false; //active confirm btn (a signature type is already selected)
     })
 
     var signEventAttached = false

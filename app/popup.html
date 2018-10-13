@@ -5,8 +5,10 @@
   <script src="popup.js"></script>
   <link rel="stylesheet" type="text/css" href="lib/bulma-0.7.1/css/bulma.css">
   <link rel="stylesheet" type="text/css" href="lib/bulma-extension/bulma-switch.min.css">
+  <link rel="stylesheet" type="text/css" href="lib/bulma-extension/bulma-checkradio.min.css">
   <link rel="stylesheet" type="text/css" href="style.css">
   <script defer src="lib/fontawesome-free-5.3.1-web/js/all.min.js"></script>
+
 </head>
 
 <body>
@@ -14,24 +16,24 @@
   <section class="section">
     <div class="container">
       <h4 class="title is-4">Digital Signatore Tool</h4>
-      <h5 class="subtitle is-5">Select signature type:</h5>
-      <hr />
+      <hr class="top-hr" />
 
-      <div id="step-1" class="current-step start-trasform-sign-type">
+
+      <div id="step-1" class="step current-step start-trasform-sign-type">
+        <p>Select signature type:</p>
         <div class="buttons has-addons is-centered">
           <button data-signature-type='pades' id="pades-btn" class="button is-info is-outlined signature-type-btns">Pades</button>
           <button data-signature-type='cades' id="cades-btn" class="button is-info is-outlined signature-type-btns">Cades</button>
         </div>
 
-        <div class="field start-trasform" id="use-visible-signature-field">
+        <div class="field start-trasform switch" id="use-visible-signature">
           <input id="use-visible-signature-checkbox" type="checkbox" name="use-visible-signature-checkbox" class="switch is-rounded is-outlined is-info is-small">
           <label for="use-visible-signature-checkbox"> <b>Use Visible Signature</b> </label>
         </div>
-        <hr />
 
       </div>
 
-      <div id="step-2" class="hide">
+      <div id="step-2" class="step hide">
         <div class="field">
           <p class="control has-icons-left">
             <input id="pass-1" class="input" type="password" placeholder="Password">
@@ -40,12 +42,58 @@
             </span>
           </p>
         </div>
-        <hr />
       </div>
 
-      <div id="step-3" class="hide">
-        <h1>Work in progress - Pades Visibile</h1>
-      </div>
+      <div id="step-3" class="step hide">
+        <p>Visible signature settings:</p>
+
+        <div class="field switch" id="use-signature-field">
+          <input id="use-signature-field-checkbox" type="checkbox" name="use-signature-field-checkbox" class="switch is-info is-small is-thin">
+          <label for="use-signature-field-checkbox"> <b>Use Signature Field</b> </label>
+        </div>
+
+        <!-- no field setting -->
+        <div id="setting-no-field">
+          <div class="field">
+            <label class="label is-small">Page Number </label>
+            <div class="control">
+              <input class="input is-small" type="number" placeholder="0" min="0" max="1" required>
+              <span class="icon is-medium">
+                <i class="fas fa-check has-text-success" id="valid-icon"></i>
+                <i class="fas fa-times has-text-danger" id="invalid-icon"></i>
+              </span>
+            </div>
+          </div>
+
+          <label class="label is-small">Vertical Position </label>
+          <div class="field">
+            <input class="is-checkradio is-small is-info" id="top-radio" type="radio" name="vert-pos-radio" checked="checked">
+            <label for="top-radio">Top</label>
+            <input class="is-checkradio is-small is-info" id="middle-radio" type="radio" name="vert-pos-radio">
+            <label for="middle-radio">Middle</label>
+            <input class="is-checkradio is-small is-info" id="bottom-radio" type="radio" name="vert-pos-radio">
+            <label for="bottom-radio">Bottom</label>
+          </div>
+
+
+          <label class="label is-small">Horizontal Position </label>
+          <div class="field">
+            <input class="is-checkradio is-small is-info" id="left-radio" type="radio" name="hor-pos-radio" checked="checked">
+            <label for="left-radio">Left</label>
+            <input class="is-checkradio is-small is-info" id="center-radio" type="radio" name="hor-pos-radio">
+            <label for="center-radio">Center</label>
+            <input class="is-checkradio is-small is-info" id="right-radio" type="radio" name="hor-pos-radio">
+            <label for="right-radio">Right</label>
+          </div>
+        </div>
+
+        <!-- with field setting -->
+        <div id="setting-with-field" class="hide">
+          <h1>WORK IN PROGRESS</h1>
+        </div>
+
+
+      </div> <!-- END step 3 -->
 
       <div id="loading" class="hide level-item">
         <div class="lds-ring">
@@ -58,7 +106,7 @@
 
       <div id="operation-completed" class="has-text-centered hide">
         <div class="icon has-text-success has-text-centered">
-          <i class="fas fa-check-square fas fa-3x"></i>
+          <i class="fas fa-check-square fa-3x"></i>
         </div>
         <h1 class="title is-5 ">Operation Completed!</h1>
 
@@ -66,6 +114,7 @@
 
 
       <div class="has-text-centered">
+        <hr class="bottom-hr" />
         <button id="back-btn" class="button is-info is-small is-pulled-left hidden"> <span class="icon"><i class="fas fa-chevron-circle-left"></i></span>
         </button>
         <button id="confirm-btn" class="button is-success is-outlined" disabled>Confirm</button>
