@@ -8,7 +8,6 @@
   <link rel="stylesheet" type="text/css" href="lib/bulma-extension/bulma-checkradio.min.css">
   <link rel="stylesheet" type="text/css" href="style.css">
   <script defer src="lib/fontawesome-free-5.3.1-web/js/all.min.js"></script>
-
 </head>
 
 <body>
@@ -18,7 +17,7 @@
       <h4 class="title is-4">Digital Signatore Tool</h4>
       <hr class="top-hr" />
 
-
+      <!-- STEP 1 Select Signature Format-->
       <div id="step-1" class="step current-step start-trasform-sign-type">
         <p>Select signature type:</p>
         <div class="buttons has-addons is-centered">
@@ -30,9 +29,9 @@
           <input id="use-visible-signature-checkbox" type="checkbox" name="use-visible-signature-checkbox" class="switch is-rounded is-outlined is-info is-small">
           <label for="use-visible-signature-checkbox"> <b>Use Visible Signature</b> </label>
         </div>
-
       </div>
 
+      <!-- STEP 2 - Cades or not visible Pades -->
       <div id="step-2" class="step hide">
         <div class="field">
           <p class="control has-icons-left">
@@ -44,6 +43,7 @@
         </div>
       </div>
 
+       <!-- STEP 3 - Visible Signature Setting  -->
       <div id="step-3" class="step hide">
         <p>Visible signature settings:</p>
 
@@ -67,22 +67,22 @@
 
           <label class="label is-small">Vertical Position </label>
           <div class="field">
-            <input class="is-checkradio is-small is-info" id="top-radio" type="radio" name="vert-pos-radio" checked="checked">
+            <input class="is-checkradio is-small is-info" value="Top" id="top-radio" type="radio" name="vert-pos-radio" checked="checked">
             <label for="top-radio">Top</label>
-            <input class="is-checkradio is-small is-info" id="middle-radio" type="radio" name="vert-pos-radio">
+            <input class="is-checkradio is-small is-info" value="Middle" id="middle-radio" type="radio" name="vert-pos-radio">
             <label for="middle-radio">Middle</label>
-            <input class="is-checkradio is-small is-info" id="bottom-radio" type="radio" name="vert-pos-radio">
+            <input class="is-checkradio is-small is-info" value="Bottom" id="bottom-radio" type="radio" name="vert-pos-radio">
             <label for="bottom-radio">Bottom</label>
           </div>
 
 
           <label class="label is-small">Horizontal Position </label>
           <div class="field">
-            <input class="is-checkradio is-small is-info" id="left-radio" type="radio" name="hor-pos-radio" checked="checked">
+            <input class="is-checkradio is-small is-info" value="Left" id="left-radio" type="radio" name="hor-pos-radio" checked="checked">
             <label for="left-radio">Left</label>
-            <input class="is-checkradio is-small is-info" id="center-radio" type="radio" name="hor-pos-radio">
+            <input class="is-checkradio is-small is-info" value="Center" id="center-radio" type="radio" name="hor-pos-radio">
             <label for="center-radio">Center</label>
-            <input class="is-checkradio is-small is-info" id="right-radio" type="radio" name="hor-pos-radio">
+            <input class="is-checkradio is-small is-info" value="Right" id="right-radio" type="radio" name="hor-pos-radio">
             <label for="right-radio">Right</label>
           </div>
         </div>
@@ -91,10 +91,9 @@
         <div id="setting-with-field" class="hide">
           <h1>WORK IN PROGRESS</h1>
         </div>
-
-
       </div> <!-- END step 3 -->
 
+      <!-- Loading -->
       <div id="loading" class="hide level-item">
         <div class="lds-ring">
           <div></div>
@@ -104,6 +103,7 @@
         </div>
       </div>
 
+      <!-- Operation Complete -->
       <div id="operation-completed" class="has-text-centered hide">
         <div class="icon has-text-success has-text-centered">
           <i class="fas fa-check-square fa-3x"></i>
@@ -112,8 +112,8 @@
 
       </div>
 
-
-      <div class="has-text-centered">
+      <!-- Confirm and Back Button -->
+      <div class="has-text-centered" id="confirm-btn-section">
         <hr class="bottom-hr" />
         <button id="back-btn" class="button is-info is-small is-pulled-left hidden"> <span class="icon"><i class="fas fa-chevron-circle-left"></i></span>
         </button>

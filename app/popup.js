@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 back_btn.classList.remove("hidden");
             }
             if (signature_data.type == "pades" && signature_data.visible == true) {
-                //TODO expand for get signature field
+                //TODO: expand for get signature field
                 sections.updateSection(sections.section.third);
                 back_btn.classList.remove("hidden");
             }
@@ -186,8 +186,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // 2 or 3 -> L
         else if (sections.currentSection == sections.section.second || sections.currentSection == sections.section.third) {
             sections.updateSection(sections.section.loading);
-            confirm_btn.classList.add('hide');
-            back_btn.classList.add("hidden");
+            // confirm_btn.classList.add('hide');
+            // back_btn.classList.add("hidden");
+            hideConfirmButtonSection();
         }
 
         confirm_btn.disabled = true;
@@ -214,6 +215,15 @@ document.addEventListener('DOMContentLoaded', function () {
             signEventAttached = false;
         }
     });
+
+    // event for radio button for position of signature 
+    document.querySelectorAll("input[type='radio'][name='vert-pos-radio']").forEach((el) => el.addEventListener('click', function () {
+        signature_data.verticalPosition = this.value;
+    }));
+
+    document.querySelectorAll("input[type='radio'][name='hor-pos-radio']").forEach((el) => el.addEventListener('click', function () {
+        signature_data.horizontalPosition = this.value;
+    }));
 
     function sign() {
         signature_data.password = document.getElementById("pass-1").value;
@@ -259,11 +269,18 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(request);
             if (request.hasOwnProperty("state") && request.state == "end") {
                 sections.updateSection(sections.section.end);
-                confirm_btn.classList.add('hide');
+                // confirm_btn.classList.add('hide');
+                hideConfirmButtonSection();
             }
             sendResponse({
                 ack: "success"
             });
         });
+
+
+    function hideConfirmButtonSection() {
+        confirm_btn.classList.add('hide');
+        back_btn.classList.add("hidden");
+    }
 
 });
