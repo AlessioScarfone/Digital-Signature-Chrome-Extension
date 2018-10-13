@@ -32,10 +32,6 @@ hr {
     margin-top: 4px;
 }
 
-#step-1{
-    /* margin-top: -12px; */
-}
-
 .start-trasform-sign-type{
     transform: translateY(10%);
     transition: transform 0.5s ease-in-out;
