@@ -118,10 +118,19 @@ document.addEventListener('DOMContentLoaded', function () {
         el.classList.add('is-selected');
         signature_data.type = el.getAttribute('data-signature-type');
 
-        if (signature_data.type == "pades")
-            document.getElementById("use-visible-signature-field").classList.remove('hide');
+        if (signature_data.type == "pades"){
+            // document.getElementById("use-visible-signature-field").classList.remove('hide');
+            el.parentElement.classList.remove("start-trasform-sign-type");
+            el.parentElement.classList.add("trasform-sign-type");
+            document.getElementById("use-visible-signature-field").classList.remove('start-transform');
+            document.getElementById("use-visible-signature-field").classList.add('transform');
+        }
         else {
-            document.getElementById("use-visible-signature-field").classList.add('hide');
+            // document.getElementById("use-visible-signature-field").classList.add('hide');
+            el.parentElement.classList.remove("trasform-sign-type");
+            el.parentElement.classList.add("start-trasform-sign-type");
+            document.getElementById("use-visible-signature-field").classList.add('start-transform');
+            document.getElementById("use-visible-signature-field").classList.remove('transform');
             signature_data.visible = false;
         }
 

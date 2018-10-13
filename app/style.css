@@ -16,7 +16,8 @@ section {
 }
 
 hr {
-    margin: 1.5em;
+    margin-bottom: 1.5em;
+    margin-top: 0;
 }
 
 #operation-completed .title{
@@ -27,12 +28,41 @@ hr {
     margin-right: 27px;
 }
 
-#use-visible-signature-field{
-    margin-left: 24px;
-}
-
 #back-btn{
     margin-top: 4px;
+}
+
+#step-1{
+    /* margin-top: -12px; */
+}
+
+.start-trasform-sign-type{
+    transform: translateY(10%);
+    transition: transform 0.5s ease-in-out;
+}
+
+.trasform-sign-type{
+    transform: translateY(-10%) !important;
+    transition: transform 0.5s ease-in-out;
+}
+
+#use-visible-signature-field{
+    margin-left: 32px;
+    position: relative;
+    /* margin-top: -12px; */
+    top:-18px;
+}
+
+.start-trasform{
+    transform: translateY(-25%);
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    opacity: 0;
+}
+
+.transform {
+    opacity: 1;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    transform: translateY(15%);
 }
 
 
