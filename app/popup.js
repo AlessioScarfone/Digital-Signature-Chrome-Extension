@@ -29,7 +29,7 @@ var signature_data = {
     password: "",
     visible: false,
     useField: false,
-    verticalPosition: "Bottom",
+    verticalPosition: "Top",
     horizontalPosition: "Left",
     pageNumber: 1,
     signatureField: ""
@@ -150,13 +150,15 @@ document.addEventListener('DOMContentLoaded', function () {
             signature_data.visible = false;
     });
 
-    
+
     use_field_switch.addEventListener("change", function () {
         if (this.checked) {
             signature_data.useField = true;
             document.getElementById('setting-no-field').classList.add('hide');
             document.getElementById('setting-with-field').classList.remove('hide');
-            //go in loading and find field
+            //clear inputs in no-field section
+            confirm_btn.disabled = true;
+            document.getElementById("page-input").value = "";
         } else {
             signature_data.useField = false;
             document.getElementById('setting-no-field').classList.remove('hide');
@@ -230,6 +232,8 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll("input[type='radio'][name='hor-pos-radio']").forEach((el) => el.addEventListener('click', function () {
         signature_data.horizontalPosition = this.value;
     }));
+
+
 
     // function sign() {
     //     signature_data.password = document.getElementById("pass-1").value;
@@ -315,19 +319,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    function updateSignatureFieldList(fields){
+    function updateSignatureFieldList(fields) {
         sections.updateSection(sections.section.third);
         confirm_btn.classList.remove("hide");
         back_btn.classList.remove("hidden");
         console.log(fields);
         console.log(fields.fields);
-        if(fields.fields == undefined){
+        if (fields.fields == undefined) {
             use_field_switch.disabled = true;
             document.querySelector("#use-signature-field p.has-text-danger").classList.remove("hide");
         }
+        const page_input = document.getElementById("page-input");
         //TODO: fill fields list and add canvas
-        document.getElementById("page-input").max = fields.page;
-        document.getElementById("page-input").placeholder = "0 - "+fields.page;
+        //TODO: load image
+        page_input.max = fields.page;
+        page_input.placeholder = "0 - " + fields.page;
+        page_input.addEventListener('input', (e) => {
+            if (e.target.checkValidity())
+                confirm_btn.disabled = false;
+            else
+                confirm_btn.disabled = true;
+
+        })
 
     }
 
