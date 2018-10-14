@@ -32,7 +32,7 @@
       </div>
 
       <!-- STEP 2 - Cades or not visible Pades -->
-      <div id="step-2" class="step hide">
+      <div id="pass" class="step hide">
         <div class="field">
           <p class="control has-icons-left">
             <input id="pass-1" class="input" type="password" placeholder="Password">
@@ -43,7 +43,7 @@
         </div>
       </div>
 
-       <!-- STEP 3 - Visible Signature Setting  -->
+      <!-- STEP 3 - Visible Signature Setting  -->
       <div id="step-3" class="step hide">
         <p>Visible signature settings:</p>
 
@@ -58,7 +58,7 @@
           <div class="field">
             <label class="label is-small">Page Number </label>
             <div class="control">
-              <input id = "page-input" class="input is-small" type="number" placeholder="0" min="0" max="1" required>
+              <input id="page-input" class="input is-small" type="number" placeholder="0" min="0" max="1" required>
               <span class="icon is-medium">
                 <i class="fas fa-check has-text-success" id="valid-icon"></i>
                 <i class="fas fa-times has-text-danger" id="invalid-icon"></i>
@@ -68,7 +68,8 @@
 
           <label class="label is-small">Vertical Position </label>
           <div class="field">
-            <input class="is-checkradio is-small is-info" value="Top" id="top-radio" type="radio" name="vert-pos-radio" checked="checked">
+            <input class="is-checkradio is-small is-info" value="Top" id="top-radio" type="radio" name="vert-pos-radio"
+              checked="checked">
             <label for="top-radio">Top</label>
             <input class="is-checkradio is-small is-info" value="Middle" id="middle-radio" type="radio" name="vert-pos-radio">
             <label for="middle-radio">Middle</label>
@@ -79,7 +80,8 @@
 
           <label class="label is-small">Horizontal Position </label>
           <div class="field">
-            <input class="is-checkradio is-small is-info" value="Left" id="left-radio" type="radio" name="hor-pos-radio" checked="checked">
+            <input class="is-checkradio is-small is-info" value="Left" id="left-radio" type="radio" name="hor-pos-radio"
+              checked="checked">
             <label for="left-radio">Left</label>
             <input class="is-checkradio is-small is-info" value="Center" id="center-radio" type="radio" name="hor-pos-radio">
             <label for="center-radio">Center</label>
@@ -116,9 +118,18 @@
       <!-- Confirm and Back Button -->
       <div class="has-text-centered" id="confirm-btn-section">
         <hr class="bottom-hr" />
+        
         <button id="back-btn" class="button is-info is-small is-pulled-left hidden"> <span class="icon"><i class="fas fa-chevron-circle-left"></i></span>
         </button>
-        <button id="confirm-btn" class="button is-success is-outlined" disabled>Confirm</button>
+
+        <button class="button is-success is-pulled-right is-outlined" id="next-btn" disabled>
+          <span>Next</span>
+          <span class="icon is-medium">
+            <i class="far fa-arrow-alt-circle-right"></i>
+          </span>
+        </button>
+
+        <button id="confirm-btn" class="button is-success is-outlined hide" disabled>Confirm</button>
       </div>
 
 
