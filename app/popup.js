@@ -335,28 +335,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getTabData(callback) {
         console.log("GET TAB URL...")
-        chrome.tabs.query({
-            active: true,
-            currentWindow: true
-        }, function (tab) {
-            var pdfURL = tab[0].url;
-            console.log(pdfURL);
-            var tabData = {};
-            if (pdfURL.startsWith("file:///")) {
-                // file is local
-                pdfURL = pdfURL.substr("file:///".length);
-                console.log("File is local:");
-                console.log(pdfURL);
-                signature_data.filename = pdfURL;
-                tabData.location = "local";
-            } else {
-                tabData.location = "remote";
-            }
-            tabData.url = pdfURL;
-            console.log(tabData);
+        var tabData = {};
+
+        //check if file is already downloaded for get pdf info
+        if (signature_data.filename != "" && !signature_data.filename.startsWith("http") && !signature_data.filename.startsWith("file")) {
+            tabData.location = "local";
+            tabData.url = signature_data.filename;
             if (callback)
                 callback(tabData);
-        });
+        } else {
+            chrome.tabs.query({
+                active: true,
+                currentWindow: true
+            }, function (tab) {
+                var pdfURL = tab[0].url;
+                console.log(pdfURL);
+                if (pdfURL.startsWith("file:///")) {
+                    // file is local
+                    pdfURL = pdfURL.substr("file:///".length);
+                    console.log("File is local:");
+                    console.log(pdfURL);
+                    signature_data.filename = pdfURL;
+                    tabData.location = "local";
+                } else {
+                    tabData.location = "remote";
+                }
+                tabData.url = pdfURL;
+                console.log(tabData);
+                if (callback)
+                    callback(tabData);
+            });
+        }
     }
 
     function updateSignatureFieldList(fields) {
