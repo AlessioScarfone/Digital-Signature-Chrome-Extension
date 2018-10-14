@@ -15,13 +15,8 @@ chrome.runtime.onInstalled.addListener(function () {
 
 const app = 'com.unical.digitalsignature.signer';
 
-//TODO: se inutili si possono cancellare
-// let response_local_path = 'local_path_newFile';
-// let response_signature_type = "signature_type";
-
 //possible value of appCurrentState: start , loading 
 var appCurrentState = "start";
-
 var port = null;
 
 function openConnection() {

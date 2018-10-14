@@ -28,6 +28,7 @@ var signature_data = {
     filename: "",
     password: "",
     visible: false,
+    useField: false,
     verticalPosition: "Bottom",
     horizontalPosition: "Left",
     pageNumber: 1,
@@ -90,13 +91,12 @@ class Sections {
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    console.log(window.FontAwesomeConfig.searchPseudoElements);
-
     var sections = new Sections();
-    var signatureTypeBtns = document.querySelectorAll('.signature-type-btns');
-    var confirm_btn = document.getElementById("confirm-btn");
-    var back_btn = document.getElementById("back-btn");
-    var use_visible_signature_switch = document.getElementById("use-visible-signature");
+    const signatureTypeBtns = document.querySelectorAll('.signature-type-btns');
+    const confirm_btn = document.getElementById("confirm-btn");
+    const back_btn = document.getElementById("back-btn");
+    const use_visible_signature_switch = document.getElementById("use-visible-signature");
+    const use_field_switch = document.getElementById('use-signature-field-checkbox');
 
     (function checkCurrenState() {
         console.log(_appCurrentState)
@@ -150,12 +150,15 @@ document.addEventListener('DOMContentLoaded', function () {
             signature_data.visible = false;
     });
 
-    document.getElementById('use-signature-field-checkbox').addEventListener("change", function () {
+    
+    use_field_switch.addEventListener("change", function () {
         if (this.checked) {
+            signature_data.useField = true;
             document.getElementById('setting-no-field').classList.add('hide');
             document.getElementById('setting-with-field').classList.remove('hide');
             //go in loading and find field
         } else {
+            signature_data.useField = false;
             document.getElementById('setting-no-field').classList.remove('hide');
             document.getElementById('setting-with-field').classList.add('hide');
         }
@@ -314,10 +317,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateSignatureFieldList(fields){
         sections.updateSection(sections.section.third);
+        confirm_btn.classList.remove("hide");
+        back_btn.classList.remove("hidden");
         console.log(fields);
+        console.log(fields.fields);
+        if(fields.fields == undefined){
+            use_field_switch.disabled = true;
+            document.querySelector("#use-signature-field p.has-text-danger").classList.remove("hide");
+        }
+        //TODO: fill fields list and add canvas
         document.getElementById("page-input").max = fields.page;
         document.getElementById("page-input").placeholder = "0 - "+fields.page;
-        //TODO: fill fields list and add canvas
+
     }
 
     function getTabData(callback) {
