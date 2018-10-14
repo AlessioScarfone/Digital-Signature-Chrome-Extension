@@ -31,9 +31,8 @@ var signature_data = {
     useField: false,
     verticalPosition: "Top",
     horizontalPosition: "Left",
-    pageNumber: "1",
+    pageNumber: 1,
     signatureField: ""
-    //TODO: add other field
 };
 
 var background = chrome.extension.getBackgroundPage();
@@ -43,14 +42,14 @@ var _appCurrentState = background.appCurrentState;
 class Sections {
     constructor() {
         this._section = {
-                first: document.getElementById("step-1"), //start
+                select_signature_type: document.getElementById("select-signature-type-section"), //start
                 pass: document.getElementById("pass"), //cades or pades (no visible)
-                third: document.getElementById("step-3"), //visible pades
+                pades_visible: document.getElementById("pades-visible"), //visible pades
                 loading: document.getElementById("loading"), //loading
                 end: document.getElementById("operation-completed")
             },
 
-            this._currentSection = this._section.first;
+            this._currentSection = this._section.select_signature_type;
     }
 
     get section() {
@@ -62,8 +61,8 @@ class Sections {
     }
 
     goback() {
-        if (this._currentSection === this._section.pass || this._currentSection === this._section.third)
-            this.updateSection(this._section.first);
+        if (this._currentSection === this._section.pass || this._currentSection === this._section.pades_visible)
+            this.updateSection(this._section.select_signature_type);
     }
 
     /**Set the current section with a section in _section property of the object */
@@ -175,8 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
     next_btn.addEventListener('click', function () {
         // sections.hideCurrentSection();
 
-        // 1 -> 2 or 3
-        if (sections.currentSection == sections.section.first) {
+        // select signature type  -> pass or pades_visible
+        if (sections.currentSection == sections.section.select_signature_type) {
             if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false)) {
                 sections.updateSection(sections.section.pass);
                 back_btn.classList.remove("hidden");
@@ -201,12 +200,20 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // 2 or 3 -> L
-        else if (sections.currentSection == sections.section.pass || sections.currentSection == sections.section.third) {
+        // pass -> Loading
+        else if (sections.currentSection == sections.section.pass) {
             sections.updateSection(sections.section.loading);
             // confirm_btn.classList.add('hide');
             // back_btn.classList.add("hidden");
             hideConfirmButtonSection();
+        }
+
+        // pades_visible -> pass
+        else if (sections.currentSection == sections.section.pades_visible) {
+            sections.updateSection(sections.section.pass);
+            back_btn.classList.remove("hidden");
+            next_btn.classList.add("hide");
+            confirm_btn.classList.remove("hide");
         }
 
         confirm_btn.disabled = true;
@@ -346,13 +353,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 tabData.location = "remote";
             }
             tabData.url = pdfURL;
+            console.log(tabData);
             if (callback)
                 callback(tabData);
         });
     }
 
     function updateSignatureFieldList(fields) {
-        sections.updateSection(sections.section.third);
+        sections.updateSection(sections.section.pades_visible);
         next_btn.classList.remove("hide");
         next_btn.disabled = true;
         back_btn.classList.remove("hidden");
@@ -368,7 +376,8 @@ document.addEventListener('DOMContentLoaded', function () {
         page_input.max = fields.page;
         page_input.placeholder = "0 - " + fields.page;
         page_input.addEventListener('input', (e) => {
-            console.log(e.target.value);
+            signature_data.pageNumber = parseInt(e.target.value);
+
             if (e.target.checkValidity())
                 next_btn.disabled = false;
             else
@@ -384,14 +393,28 @@ document.addEventListener('DOMContentLoaded', function () {
         function (request, sender, sendResponse) {
             console.log("<<< received:")
             console.log(request);
-            if (request.hasOwnProperty("state") && request.state == "end") {
-                sections.updateSection(sections.section.end);
-                // confirm_btn.classList.add('hide');
-                hideConfirmButtonSection();
+
+
+            if (request.hasOwnProperty("state")) {
+                switch (request.state) {
+                    case "end":
+                        sections.updateSection(sections.section.end);
+                        // confirm_btn.classList.add('hide');
+                        hideConfirmButtonSection();
+                        break;
+                    case "info":
+                        updateSignatureFieldList(request);
+                        break;
+                    case "update":
+                        //update signature
+                        signature_data = request.data;
+                        break;
+
+                    default:
+                        break;
+                }
             }
-            if (request.hasOwnProperty("state") && request.state == "info") {
-                updateSignatureFieldList(request);
-            }
+
             // sendResponse({
             //     ack: "success"
             // });

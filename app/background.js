@@ -168,8 +168,16 @@ function requestPDFInfo(data) {
   appCurrentState = "loading";
   console.log("Send message to native app...")
   console.log(data);
+
+  //update signature data of popup
+  chrome.runtime.sendMessage({
+    state: "update",
+    data: data
+  }, function (response) {});
+
   data.action = "info";
   port.postMessage(data);
+
 };
 
 
@@ -213,7 +221,6 @@ chrome.runtime.onMessage.addListener(
         console.log("Invalid action");
         break;
     }
-
     sendResponse({
       ack: "success",
       received: request.action,
