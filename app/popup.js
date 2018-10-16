@@ -32,7 +32,8 @@ var signature_data = {
     verticalPosition: "Top",
     horizontalPosition: "Left",
     pageNumber: 1,
-    signatureField: ""
+    signatureField: "",
+    image = ""
 };
 
 var background = chrome.extension.getBackgroundPage();
@@ -245,6 +246,23 @@ document.addEventListener('DOMContentLoaded', function () {
         signature_data.horizontalPosition = this.value;
     }));
 
+    //TODO: load image
+    var img_input = document.getElementsByClassName("file-input")[0];
+    img_input.addEventListener('change', (e) => {
+        console.log(img_input.files);
+        if (img_input.files.length > 0) {
+            document.getElementById('filename').textContent = img_input.files[0].name;
+            var base64url = URL.createObjectURL(event.target.files[0]);
+            console.log(base64url);
+            var split = base64url.split("\/");
+            var base64obj = split[split.length - 1];
+            console.log(base64obj);
+            signature_data.image = base64obj;
+            // signature_data.img_input = img_input.files[0].name;
+            img_input.parentNode.parentNode.classList.add("is-success");
+        }
+    });
+
     // function sign() {
     //     signature_data.password = document.getElementById("pass-1").value;
     //     console.log("GET TAB URL...")
@@ -374,14 +392,23 @@ document.addEventListener('DOMContentLoaded', function () {
         next_btn.disabled = true;
         back_btn.classList.remove("hidden");
         console.log(fields);
-        console.log(fields.fields);
+        // console.log(fields.fields);
         if (fields.fields == undefined) {
             use_field_switch.disabled = true;
             document.querySelector("#use-signature-field p.has-text-danger").classList.remove("hide");
+        } else {
+            //create list of signable fields
+            let parent = document.querySelector("#setting-with-field .select select");
+            fields.fields.forEach(el => {
+                // console.log(el);
+                let node = document.createElement("option");
+                let text = document.createTextNode(el.name);
+                node.appendChild(text);
+                parent.appendChild(node);
+            });
         }
         const page_input = document.getElementById("page-input");
-        //TODO: fill fields list and add canvas
-        //TODO: load image
+        //TODO: add canvas
         page_input.max = fields.page;
         page_input.placeholder = "0 - " + fields.page;
         page_input.addEventListener('input', (e) => {
@@ -392,7 +419,7 @@ document.addEventListener('DOMContentLoaded', function () {
             else
                 next_btn.disabled = true;
 
-        })
+        });
 
     }
 

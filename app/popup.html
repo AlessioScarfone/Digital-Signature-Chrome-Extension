@@ -92,8 +92,33 @@
 
         <!-- with field setting -->
         <div id="setting-with-field" class="hide">
-          <h1>WORK IN PROGRESS</h1>
+          <div class="field level-item is-centered">
+            <div class="control">
+              <div class="select is-info">
+                <select>
+                  <!-- signable fields dynamically created -->
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- image uploader -->
+        <div class="file has-name is-boxed is-centered">
+          <label class="file-label">
+            <input class="file-input" type="file" name="resume">
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-upload"></i>
+              </span>
+              <span class="file-label">
+                Choose a file
+              </span>
+            </span>
+            <span class="file-name" id="filename"></span>
+          </label>
+        </div>
+
       </div> <!-- END step 3 -->
 
       <!-- Loading -->
@@ -118,7 +143,7 @@
       <!-- Confirm and Back Button -->
       <div class="has-text-centered" id="confirm-btn-section">
         <hr class="bottom-hr" />
-        
+
         <button id="back-btn" class="button is-info is-small is-pulled-left hidden"> <span class="icon"><i class="fas fa-chevron-circle-left"></i></span>
         </button>
 

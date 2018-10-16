@@ -89,6 +89,10 @@ body{
     margin-left: 7px;
 }
 
+#pades-visible .file{
+    margin-top: 5px;
+}
+
 input[type="number"] {
     width: 80%;
 }
