@@ -1,5 +1,6 @@
 .vscode
 /hostapp-dist/SignerMiddlewareLog.txt
+/hostapp-dist/driver
 /hostapp-src/src/test
 /hostapp-src/build_script
 /app/css/lib/sass
