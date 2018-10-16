@@ -1,5 +1,5 @@
 # Digital-Signature-Chrome-Extension
 
-Coming soon...
+### Coming soon...
 
-Work in progress... :construction_worker: :computer:
+#### Work in progress... :construction_worker: :computer:
