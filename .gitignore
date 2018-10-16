@@ -1,4 +1,6 @@
 /hostapp-dist/SignerMiddlewareLog.txt
+/hostapp-src/src/test
+/hostapp-src/build_script
 /app/css/lib/sass
 /app/css/lib/*.zip
 /app/css/lib/fontawesome-free-5.3.1-web/*.zip
