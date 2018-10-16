@@ -1,3 +1,4 @@
+.vscode
 /hostapp-dist/SignerMiddlewareLog.txt
 /hostapp-src/src/test
 /hostapp-src/build_script
