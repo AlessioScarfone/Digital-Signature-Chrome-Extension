@@ -33,7 +33,7 @@ var signature_data = {
     horizontalPosition: "Left",
     pageNumber: 1,
     signatureField: "",
-    image = ""
+    image: ""
 };
 
 var background = chrome.extension.getBackgroundPage();
@@ -157,12 +157,15 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('setting-no-field').classList.add('hide');
             document.getElementById('setting-with-field').classList.remove('hide');
             //clear inputs in no-field section
-            confirm_btn.disabled = true;
             document.getElementById("page-input").value = "";
-        } else {
+            signature_data.signatureField = document.querySelector(".select select").value;
+            confirm_btn.disabled = false;
+        } else {       //back to no-field section
             signature_data.useField = false;
             document.getElementById('setting-no-field').classList.remove('hide');
             document.getElementById('setting-with-field').classList.add('hide');
+            signature_data.signatureField = "";
+            confirm_btn.disabled = true;
         }
     });
 
@@ -246,60 +249,27 @@ document.addEventListener('DOMContentLoaded', function () {
         signature_data.horizontalPosition = this.value;
     }));
 
-    //TODO: load image
-    var img_input = document.getElementsByClassName("file-input")[0];
+    const img_input = document.getElementsByClassName("file-input")[0];
+    const reader = new FileReader();
     img_input.addEventListener('change', (e) => {
+        img_input.parentNode.parentNode.classList.remove("is-success");
+        img_input.disabled = true;
         console.log(img_input.files);
         if (img_input.files.length > 0) {
-            document.getElementById('filename').textContent = img_input.files[0].name;
-            var base64url = URL.createObjectURL(event.target.files[0]);
-            console.log(base64url);
-            var split = base64url.split("\/");
-            var base64obj = split[split.length - 1];
-            console.log(base64obj);
-            signature_data.image = base64obj;
-            // signature_data.img_input = img_input.files[0].name;
-            img_input.parentNode.parentNode.classList.add("is-success");
+            // document.getElementById('filename').textContent = img_input.files[0].name;
+            var file = event.target.files[0];
+            // console.log(event.target.files[0]);
+
+            reader.readAsDataURL(file);
+            reader.onloadend = function () {
+                base64data = reader.result;
+                console.log(base64data);
+                signature_data.image = base64data;
+                img_input.parentNode.parentNode.classList.add("is-success");
+                img_input.disabled = false;
+            }
         }
     });
-
-    // function sign() {
-    //     signature_data.password = document.getElementById("pass-1").value;
-    //     console.log("GET TAB URL...")
-    //     chrome.tabs.query({
-    //         active: true,
-    //         currentWindow: true
-    //     }, function (tab) {
-    //         var pdfURL = tab[0].url;
-    //         console.log(pdfURL);
-
-    //         if (pdfURL.startsWith("file:///")) {
-    //             // file is local
-    //             pdfURL = pdfURL.substr("file:///".length);
-    //             console.log("send message - file is local:");
-    //             signature_data.filename = pdfURL;
-    //             chrome.runtime.sendMessage({
-    //                 // action: "sign",
-    //                 action: popup_message_type.sign,
-    //                 data: signature_data
-    //             }, function (response) {
-    //                 console.log(response.ack);
-    //             });
-    //         } else {
-    //             //download pdf and then sign it
-    //             console.log("send message:");
-    //             chrome.runtime.sendMessage({
-    //                 // action: "download_and_sign",
-    //                 action: popup_message_type.download_and_sign,
-    //                 url: pdfURL,
-    //                 data: signature_data
-    //             }, function (response) {
-    //                 console.log(response.ack);
-    //             });
-    //         }
-    //     });
-
-    // }
 
     function sign(tabData) {
         signature_data.password = document.getElementById("pass-1").value;
@@ -409,8 +379,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const page_input = document.getElementById("page-input");
         //TODO: add canvas
-        page_input.max = fields.page;
-        page_input.placeholder = "0 - " + fields.page;
+        page_input.max = fields.page + 1;
+        page_input.min = 1;
+        page_input.placeholder = "1 - " + (fields.page + 1);
         page_input.addEventListener('input', (e) => {
             signature_data.pageNumber = parseInt(e.target.value);
 
