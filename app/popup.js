@@ -379,9 +379,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const page_input = document.getElementById("page-input");
         //TODO: add canvas
-        page_input.max = fields.page + 1;
+        page_input.max = fields.page;
         page_input.min = 1;
-        page_input.placeholder = "1 - " + (fields.page + 1);
+        page_input.placeholder = "1 - " + (fields.page);
         page_input.addEventListener('input', (e) => {
             signature_data.pageNumber = parseInt(e.target.value);
 
