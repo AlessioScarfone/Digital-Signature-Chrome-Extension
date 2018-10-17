@@ -1,26 +1,8 @@
 console.log("Start...")
 /*
-   Posso fare un oggetto che al suo interno ha linkate le letie sezioni (il div piu esterno) e 
-   accedendo a questo gestisco quale mostrare e quale no. Cosi facendo potrei mantenere lo stesso 
-   btn-confirm da aggiornare man mano in base alla sezione attuale
-   Poi per ogni sezione posso fare un suo oggetto che gestisce tutti i leti componenti, magari dividendoli in file
-
-   Sezioni:
-   1. iniziale, scelta pades (in caso visibile) o cades.
-   *. schermata di loading.
-   2. cades, pades non visibile -> pass e conferma.
-   3. pades visibile. logo o solo testo e usa campo o posiziona firma:
-       if CAMPO -> 3.1 seleziona campo, logo se necessario.
-       if POS   -> 3.2 seleziona poszione, logo se necessario, pagina e coordinate verticali e orizzontali.
-
-
        TODO: aggiungi uno stato al background per memorizzare se c'è gia una firma in corso in modo da ripristinare lo stato 
        del popup al loanding se necessario. Quindi all'apertura del popup leggi lo stato e in caso ripristina al loading 
        o parti dall'inizio 
-
-       FIXME: avvia piu firme consecutive e verifica se le porte vengono correttamente cancellate e riaperte 
-       (prova firme multiple dello stesso tipo e mischiate)
-
    */
 
 var signature_data = {
@@ -36,21 +18,21 @@ var signature_data = {
     image: ""
 };
 
-var background = chrome.extension.getBackgroundPage();
-var popup_message_type = background.popup_message_type;
-var _appCurrentState = background.appCurrentState;
+const background = chrome.extension.getBackgroundPage();
+const popupMessageType = background.popupMessageType;
+const appCurrentState = background.appCurrentState;
 
 class Sections {
     constructor() {
         this._section = {
-                select_signature_type: document.getElementById("select-signature-type-section"), //start
-                pass: document.getElementById("pass"), //cades or pades (no visible)
-                pades_visible: document.getElementById("pades-visible"), //visible pades
-                loading: document.getElementById("loading"), //loading
-                end: document.getElementById("operation-completed")
+                selectSignatureTypeSection: document.getElementById("select-signature-type-section"), //start
+                passwordSection: document.getElementById("pass"), //cades or pades (no visible)
+                padesVisibleSection: document.getElementById("pades-visible"), //visible pades
+                loadingSection: document.getElementById("loading"), //loading
+                endSection: document.getElementById("operation-completed")
             },
 
-            this._currentSection = this._section.select_signature_type;
+            this._currentSection = this._section.selectSignatureTypeSection;
     }
 
     get section() {
@@ -59,11 +41,6 @@ class Sections {
 
     get currentSection() {
         return this._currentSection;
-    }
-
-    goback() {
-        if (this._currentSection === this._section.pass || this._currentSection === this._section.pades_visible)
-            this.updateSection(this._section.select_signature_type);
     }
 
     /**Set the current section with a section in _section property of the object */
@@ -92,20 +69,25 @@ class Sections {
 document.addEventListener('DOMContentLoaded', function () {
     var sections = new Sections();
     const signatureTypeBtns = document.querySelectorAll('.signature-type-btns');
-    const confirm_btn = document.getElementById("confirm-btn");
-    const next_btn = document.getElementById("next-btn");
-    const back_btn = document.getElementById("back-btn");
-    const use_visible_signature_switch = document.getElementById("use-visible-signature");
-    const use_field_switch = document.getElementById('use-signature-field-checkbox');
+    const confirmBtn = document.getElementById("confirm-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const closeBtn = document.getElementById("close-btn");
+    const useVisibleSignatureSwitch = document.getElementById("use-visible-signature");
+    const useFieldSwitch = document.getElementById('use-signature-field-checkbox');
 
     (function checkCurrenState() {
-        console.log("App Current State:" + _appCurrentState)
-        if (_appCurrentState != "start") {
-            console.log("App is already in loading.");
-            sections.updateSection(sections.section.loading);
+        console.log("App Current State:" + appCurrentState);
+        if (appCurrentState == "signing") {
+            sections.updateSection(sections.section.loadingSection);
             hideConfirmButtonSection();
-            // confirm_btn.classList.add('hide');
         }
+
+        // if (_appCurrentState != "select_type") {
+        // console.log("App is already in loading.");
+        //     sections.updateSection(sections.section.loading);
+        //     hideConfirmButtonSection();
+        //     // confirm_btn.classList.add('hide');
+        // }
     }());
 
     signatureTypeBtns.forEach(el => el.addEventListener('click', selectSignatureTypeEvent));
@@ -125,22 +107,22 @@ document.addEventListener('DOMContentLoaded', function () {
             // document.getElementById("use-visible-signature").classList.remove('hide');
             el.parentElement.classList.remove("start-trasform-sign-type");
             el.parentElement.classList.add("trasform-sign-type");
-            use_visible_signature_switch.classList.remove('start-transform');
-            use_visible_signature_switch.classList.add('transform');
+            useVisibleSignatureSwitch.classList.remove('start-transform');
+            useVisibleSignatureSwitch.classList.add('transform');
         } else { //click on cades
             // document.getElementById("use-visible-signature").classList.add('hide');
             el.parentElement.classList.remove("trasform-sign-type");
             el.parentElement.classList.add("start-trasform-sign-type");
-            use_visible_signature_switch.classList.add('start-transform');
-            use_visible_signature_switch.classList.remove('transform');
+            useVisibleSignatureSwitch.classList.add('start-transform');
+            useVisibleSignatureSwitch.classList.remove('transform');
             if (document.getElementById('use-visible-signature-checkbox').checked)
                 document.getElementById('use-visible-signature-checkbox').click();
 
             signature_data.visible = false;
         }
 
-        //after first initializzation active btn confirm
-        next_btn.disabled = false;
+        //after first initializzation active btn next
+        nextBtn.disabled = false;
     }
 
     document.getElementById('use-visible-signature-checkbox').addEventListener("change", function () {
@@ -151,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    use_field_switch.addEventListener("change", function () {
+    useFieldSwitch.addEventListener("change", function () {
         if (this.checked) {
             signature_data.useField = true;
             document.getElementById('setting-no-field').classList.add('hide');
@@ -159,45 +141,44 @@ document.addEventListener('DOMContentLoaded', function () {
             //clear inputs in no-field section
             document.getElementById("page-input").value = "";
             signature_data.signatureField = document.querySelector(".select select").value;
-            confirm_btn.disabled = false;
-        } else {       //back to no-field section
+            confirmBtn.disabled = false;
+        } else { //back to no-field section
             signature_data.useField = false;
             document.getElementById('setting-no-field').classList.remove('hide');
             document.getElementById('setting-with-field').classList.add('hide');
             signature_data.signatureField = "";
-            confirm_btn.disabled = true;
+            confirmBtn.disabled = true;
         }
     });
 
-    confirm_btn.addEventListener('click', () => {
+    confirmBtn.addEventListener('click', () => {
         getTabData(sign);
-        sections.updateSection(sections.section.loading);
+        sections.updateSection(sections.section.loadingSection);
         hideConfirmButtonSection();
     });
 
-    next_btn.addEventListener('click', function () {
+    nextBtn.addEventListener('click', function () {
         // sections.hideCurrentSection();
 
         // select signature type  -> pass or pades_visible
-        if (sections.currentSection == sections.section.select_signature_type) {
+        if (sections.currentSection == sections.section.selectSignatureTypeSection) {
             if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false)) {
-                sections.updateSection(sections.section.pass);
-                back_btn.classList.remove("hidden");
-                next_btn.classList.add("hide");
-                confirm_btn.classList.remove("hide");
+                sections.updateSection(sections.section.passwordSection);
+                nextBtn.classList.add("hide");
+                confirmBtn.classList.remove("hide");
             }
             if (signature_data.type == "pades" && signature_data.visible == true) {
                 //TODO: expand for get signature field
                 getTabData(getPdfInfo);
                 // sections.updateSection(sections.section.third);
-                back_btn.classList.remove("hidden");
-                next_btn.disabled = true;
+                closeBtn.classList.remove("hidden");
+                nextBtn.disabled = true;
             }
 
             console.log("init connection with native app");
             chrome.runtime.sendMessage({
                 // action: "init",
-                action: popup_message_type.init,
+                action: popupMessageType.init,
             }, function (response) {
                 console.log("<<< received:")
                 console.log(response);
@@ -205,38 +186,32 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // pass -> Loading
-        else if (sections.currentSection == sections.section.pass) {
-            sections.updateSection(sections.section.loading);
-            // confirm_btn.classList.add('hide');
-            // back_btn.classList.add("hidden");
+        else if (sections.currentSection == sections.section.passwordSection) {
+            sections.updateSection(sections.section.loadingSection);
             hideConfirmButtonSection();
         }
 
         // pades_visible -> pass
-        else if (sections.currentSection == sections.section.pades_visible) {
-            sections.updateSection(sections.section.pass);
-            back_btn.classList.remove("hidden");
-            next_btn.classList.add("hide");
-            confirm_btn.classList.remove("hide");
+        else if (sections.currentSection == sections.section.padesVisibleSection) {
+            sections.updateSection(sections.section.passwordSection);
+            closeBtn.classList.remove("hidden");
+            nextBtn.classList.add("hide");
+            confirmBtn.classList.remove("hide");
         }
 
-        confirm_btn.disabled = true;
+        confirmBtn.disabled = true;
     });
 
-    back_btn.addEventListener("click", (e) => {
-        sections.goback(); //return to first section   
-        back_btn.classList.add("hidden"); //hide this btn
-        next_btn.classList.remove("hide");
-        next_btn.disabled = false; //active confirm btn (a signature type is already selected)
-        confirm_btn.disabled = true;
-        confirm_btn.classList.add("hide");
+    //close popup
+    closeBtn.addEventListener("click", (e) => {
+        window.close();
     })
 
     document.getElementById("pass-1").addEventListener('input', function () {
         if (this.value.length != 0) {
-            confirm_btn.disabled = false;
+            confirmBtn.disabled = false;
         } else {
-            confirm_btn.disabled = true;
+            confirmBtn.disabled = true;
         }
     });
 
@@ -278,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // download pdf and then sign it
             chrome.runtime.sendMessage({
                 // action: "download_and_sign",
-                action: popup_message_type.download_and_sign,
+                action: popupMessageType.download_and_sign,
                 url: tabData.url,
                 data: signature_data
             }, function (response) {
@@ -287,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         } else if (tabData.location == "local") {
             chrome.runtime.sendMessage({
-                action: popup_message_type.sign,
+                action: popupMessageType.sign,
                 data: signature_data
             }, function (response) {
                 console.log("<<< received:")
@@ -297,11 +272,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function getPdfInfo(tabData) {
-        sections.updateSection(sections.section.loading);
+        sections.updateSection(sections.section.loadingSection);
         hideConfirmButtonSection();
         if (tabData.location == "remote") {
             chrome.runtime.sendMessage({
-                action: popup_message_type.download_and_getInfo,
+                action: popupMessageType.download_and_getInfo,
                 url: tabData.url,
                 data: signature_data
             }, function (response) {
@@ -311,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         if (tabData.location == "local") {
             chrome.runtime.sendMessage({
-                action: popup_message_type.info,
+                action: popupMessageType.info,
                 data: signature_data
             }, function (response) {
                 console.log("<<< received:")
@@ -357,14 +332,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateSignatureFieldList(fields) {
-        sections.updateSection(sections.section.pades_visible);
-        next_btn.classList.remove("hide");
-        next_btn.disabled = true;
-        back_btn.classList.remove("hidden");
+        sections.updateSection(sections.section.padesVisibleSection);
+        nextBtn.classList.remove("hide");
+        nextBtn.disabled = true;
+        closeBtn.classList.remove("hidden");
         console.log(fields);
         // console.log(fields.fields);
         if (fields.fields == undefined) {
-            use_field_switch.disabled = true;
+            useFieldSwitch.disabled = true;
             document.querySelector("#use-signature-field p.has-text-danger").classList.remove("hide");
         } else {
             //create list of signable fields
@@ -376,6 +351,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 node.appendChild(text);
                 parent.appendChild(node);
             });
+            injectContentScript(fields);
         }
         const page_input = document.getElementById("page-input");
         //TODO: add canvas
@@ -386,12 +362,22 @@ document.addEventListener('DOMContentLoaded', function () {
             signature_data.pageNumber = parseInt(e.target.value);
 
             if (e.target.checkValidity())
-                next_btn.disabled = false;
+                nextBtn.disabled = false;
             else
-                next_btn.disabled = true;
+                nextBtn.disabled = true;
 
         });
 
+    }
+
+    function injectContentScript(fields) {
+        chrome.storage.local.set({
+            fieldsData : fields
+        }, function () {
+        });
+        chrome.tabs.executeScript({
+            file: 'contentScript.js'
+        }, function () {});
     }
 
 
@@ -401,20 +387,15 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("<<< received:")
             console.log(request);
 
-
             if (request.hasOwnProperty("state")) {
                 switch (request.state) {
                     case "end":
-                        sections.updateSection(sections.section.end);
+                        sections.updateSection(sections.section.endSection);
                         // confirm_btn.classList.add('hide');
                         hideConfirmButtonSection();
                         break;
                     case "info":
                         updateSignatureFieldList(request);
-                        break;
-                    case "update":
-                        //update signature
-                        signature_data = request.data;
                         break;
 
                     default:
@@ -429,9 +410,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function hideConfirmButtonSection() {
-        confirm_btn.classList.add('hide');
-        next_btn.classList.add("hide");
-        back_btn.classList.add("hidden");
+        confirmBtn.classList.add('hide');
+        nextBtn.classList.add("hide");
+        closeBtn.classList.add("hidden");
     }
 
 });

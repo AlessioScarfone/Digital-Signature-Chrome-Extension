@@ -2,7 +2,7 @@
     "name": "Digital Signature Tool",
     "version": "1.0",
     "description": "Extension for digital signature with PKCS#11 token",
-    "permissions": ["declarativeContent","nativeMessaging", "downloads", "tabs"],
+    "permissions": ["declarativeContent","nativeMessaging","activeTab", "downloads", "tabs","storage"],
     "background": {
       "scripts": ["background.js"],
       "persistent": false

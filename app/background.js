@@ -15,8 +15,8 @@ chrome.runtime.onInstalled.addListener(function () {
 
 const app = 'com.unical.digitalsignature.signer';
 
-//possible value of appCurrentState: start , loading 
-var appCurrentState = "start";
+//possible value of appCurrentState: signing, ready
+var appCurrentState = "ready";
 var port = null;
 
 function openConnection() {
@@ -39,7 +39,7 @@ function openConnection() {
       }, function () {});
     }
     if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end") {
-      appCurrentState = "start";
+      appCurrentState = "ready";
       chrome.runtime.sendMessage({
         state: "end",
       }, function (response) {});
@@ -66,55 +66,7 @@ function closeConnection() {
   port.disconnect();
 }
 
-//ORIGINAL
-// function downloadFileAndSign(pdfURL, data) {
-//   appCurrentState = "loading";
-//   //1) get tab url
-//   downloadPDF(pdfURL)
-
-//   //2) download pdf 
-//   function downloadPDF(pdfUrl) {
-//     console.log("Start download document...")
-//     chrome.downloads.download({
-//       url: pdfUrl
-//     }, function (downloadItemID) {
-//       getLocalPath(downloadItemID);
-//     });
-//   }
-
-
-//   //3) get download file local path
-//   function getLocalPath(downloadItemID) {
-//     console.log("GET LOCAL PATH...")
-//     chrome.downloads.search({
-//       id: downloadItemID,
-//       state: "complete"
-//     }, function (item) {
-//       if (item.length == 0) {
-//         console.log("Downloading....");
-//         sleep(1500).then(() => { //wait X second
-//           getLocalPath(downloadItemID);
-//         });
-//       } else {
-//         console.log(item[0].filename);
-//         data.filename = item[0].filename;
-//         console.log("Send message to native app...")
-//         data.action = "sign";
-//         console.log(data);
-//         port.postMessage(data);
-//       }
-//     });
-//   }
-
-//   // sleep time expects milliseconds
-//   function sleep(time) {
-//     return new Promise((resolve) => setTimeout(resolve, time));
-//   }
-// }
-
-
 function downloadFile(pdfURL, data, callback) {
-  appCurrentState = "loading";
   //1) get tab url
   downloadPDF(pdfURL)
 
@@ -157,7 +109,7 @@ function downloadFile(pdfURL, data, callback) {
 }
 
 function sendDataForSign(data) {
-  appCurrentState = "loading";
+  appCurrentState = "signing";
   console.log("Send message to native app...")
   console.log(data);
   data.action = "sign";
@@ -165,30 +117,28 @@ function sendDataForSign(data) {
 };
 
 function requestPDFInfo(data) {
-  appCurrentState = "loading";
   console.log("Send message to native app...")
   console.log(data);
 
   //update signature data of popup
   chrome.runtime.sendMessage({
-    state: "update",
+    state: popupMessageType.update,
     data: data
   }, function (response) {});
 
-  data.action = "info";
+  data.action = popupMessageType.info;
   port.postMessage(data);
 
 };
 
 
-
-var popup_message_type = {
+var popupMessageType = {
   init: 'init',
   disconnect: 'disconnect',
   download_and_sign: 'download_and_sign',
   sign: 'sign',
   download_and_getInfo: 'donwload_and_getInfo',
-  info: 'info'
+  info: 'info',
 }
 
 //listener message Popup -> Background
@@ -196,24 +146,24 @@ chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     console.log(request);
     switch (request.action) {
-      case popup_message_type.init:
+      case popupMessageType.init:
         openConnection();
         break;
-      case popup_message_type.disconnect:
+      case popupMessageType.disconnect:
         closeConnection();
         break;
 
-      case popup_message_type.download_and_sign:
+      case popupMessageType.download_and_sign:
         downloadFile(request.url, request.data, sendDataForSign);
         break;
-      case popup_message_type.sign: //used for directly sign a local file
+      case popupMessageType.sign: //used for directly sign a local file
         sendDataForSign(request.data);
         break;
 
-      case popup_message_type.download_and_getInfo: //used for directly sign a local file
+      case popupMessageType.download_and_getInfo: //used for directly sign a local file
         downloadFile(request.url, request.data, requestPDFInfo);
         break;
-      case popup_message_type.info: //used for local file
+      case popupMessageType.info: //used for local file
         requestPDFInfo(request.data)
         break;
 
