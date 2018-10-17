@@ -141,13 +141,13 @@ document.addEventListener('DOMContentLoaded', function () {
             //clear inputs in no-field section
             document.getElementById("page-input").value = "";
             signature_data.signatureField = document.querySelector(".select select").value;
-            confirmBtn.disabled = false;
+            nextBtn.disabled = false;
         } else { //back to no-field section
             signature_data.useField = false;
             document.getElementById('setting-no-field').classList.remove('hide');
             document.getElementById('setting-with-field').classList.add('hide');
             signature_data.signatureField = "";
-            confirmBtn.disabled = true;
+            nextBtn.disabled = true;
         }
     });
 
@@ -365,16 +365,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 nextBtn.disabled = false;
             else
                 nextBtn.disabled = true;
-
         });
-
     }
 
     function injectContentScript(fields) {
         chrome.storage.local.set({
-            fieldsData : fields
-        }, function () {
-        });
+            fieldsData: fields
+        }, function () {});
         chrome.tabs.executeScript({
             file: 'contentScript.js'
         }, function () {});

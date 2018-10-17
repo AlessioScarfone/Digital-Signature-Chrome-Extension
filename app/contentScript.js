@@ -13,6 +13,7 @@ chrome.storage.local.get(['fieldsData'], function (result) {
         node.appendChild(text);
         node.style.position = "absolute";
         node.style.top = "0";
+        node.style.right = el["lower-left-x"] + "px";
         body.appendChild(node);
     });
 
