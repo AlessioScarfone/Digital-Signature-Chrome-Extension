@@ -300,7 +300,7 @@ public class MiddlewareChrome {
 				}
 				finalJson.put("fields", ja);
 				
-//				doc.save(inputFile.getParent()+Files.getNameWithoutExtension(filename)+"-with-field."+Files.getFileExtension(filename));
+//				doc.save(inputFile.getParent()+Utility.separator+Files.getNameWithoutExtension(filename)+"-with-field."+Files.getFileExtension(filename));
 			}
 		} catch (IOException e) {
 			log(className, "Error to read input");
