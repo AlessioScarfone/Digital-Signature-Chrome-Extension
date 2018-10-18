@@ -169,19 +169,19 @@ public class MiddlewareChrome {
 
 	private String getPathImage(String ext) {
 		String tmpDir = System.getProperty("java.io.tmpdir");
-		String path = tmpDir + "chrome_ext_sign."+ext;
+		String path = tmpDir + "chrome_ext_sign." + ext;
 		MiddlewareChrome.log(className, "Get path image: " + tmpDir);
 		return path;
 	}
 
 	private String createImage(String img_base64) {
-		
+
 		String ext = img_base64.split("/")[1].split(";")[0];
 		String path = getPathImage(ext);
-		
-		//remove first part  (data:image/png;base64) 
+
+		// remove first part (data:image/png;base64)
 		String base64Image = img_base64.split(",")[1];
-		
+
 		try (FileOutputStream imageOutFile = new FileOutputStream(path)) {
 			// Converting a Base64 String into Image byte array
 			byte[] imageByteArray = Base64.getDecoder().decode(base64Image.getBytes(StandardCharsets.UTF_8));
@@ -286,12 +286,24 @@ public class MiddlewareChrome {
 					jo.put("lower-left-y", lowerLeftY);
 					ja.put(jo);
 					MiddlewareChrome.log(className, "page:" + pageNumber + " - " + fieldName + "[ urX:" + upperRightX
-							+ " urY:" + upperRightY + " llx:" + lowerLeftX + " lly:" + lowerLeftY);
+							+ " urY:" + upperRightY + " llx:" + lowerLeftX + " lly:" + lowerLeftY +" ]");
+
+//					PDPageContentStream contentStream = new PDPageContentStream(doc, currentPage, true, false);
+//					contentStream.beginText();
+//					contentStream.setFont(PDType1Font.TIMES_ROMAN, 10);
+//					contentStream.newLineAtOffset(lowerLeftX, upperRightY+2);
+//					String text = fieldName;
+//					contentStream.showText(text);
+//					contentStream.endText();
+//					contentStream.close();
+
 				}
 				finalJson.put("fields", ja);
+				
+//				doc.save(inputFile.getParent()+Files.getNameWithoutExtension(filename)+"-with-field."+Files.getFileExtension(filename));
 			}
 		} catch (IOException e) {
-			System.err.println("Error to read input");
+			log(className, "Error to read input");
 		}
 		finalJson.put("native_app_message", "info");
 
