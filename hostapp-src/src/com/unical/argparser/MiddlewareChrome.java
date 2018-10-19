@@ -281,7 +281,7 @@ public class MiddlewareChrome {
 					jo.put("name", fieldName);
 					jo.put("page", pageNumber);
 					jo.put("upper-right-x", upperRightX);
-					jo.put("upper-right-Y", upperRightY);
+					jo.put("upper-right-y", upperRightY);
 					jo.put("lower-left-x", lowerLeftX);
 					jo.put("lower-left-y", lowerLeftY);
 					

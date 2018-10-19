@@ -351,6 +351,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 node.appendChild(text);
                 parent.appendChild(node);
             });
+            //set zoom to 100%
+            chrome.tabs.setZoom(0, function (){console.log("zoom changed")});
             injectContentScript(fields);
         }
         const page_input = document.getElementById("page-input");
