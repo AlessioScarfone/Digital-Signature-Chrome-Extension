@@ -131,6 +131,28 @@ function requestPDFInfo(data) {
 
 };
 
+//create a connection with content script and add a zoomchange
+function zoomListener(tabId) {
+  console.log(tabId);
+
+  chrome.tabs.onZoomChange.addListener(function (ZoomChangeInfo) {
+    var port = chrome.tabs.connect(tabId, {
+      name: "content-script",
+    });
+
+    console.log("zoom change");
+    if (ZoomChangeInfo.tabId == tabId) {
+      port.postMessage({
+        action: "zoom_change",
+        oldZoom: ZoomChangeInfo.oldZoomFactor,
+        newZoom: ZoomChangeInfo.newZoomFactor
+      });
+    }
+    
+    port.disconnect();
+  });
+
+}
 
 var popupMessageType = {
   init: 'init',
@@ -139,6 +161,7 @@ var popupMessageType = {
   sign: 'sign',
   download_and_getInfo: 'donwload_and_getInfo',
   info: 'info',
+  zoom: 'zoom'
 }
 
 //listener message Popup -> Background
@@ -164,7 +187,11 @@ chrome.runtime.onMessage.addListener(
         downloadFile(request.url, request.data, requestPDFInfo);
         break;
       case popupMessageType.info: //used for local file
-        requestPDFInfo(request.data)
+        requestPDFInfo(request.data);
+        break;
+
+      case popupMessageType.zoom:
+        zoomListener(request.tabid);
         break;
 
       default:

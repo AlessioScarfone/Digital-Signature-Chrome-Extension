@@ -352,7 +352,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 parent.appendChild(node);
             });
             //set zoom to 100%
-            chrome.tabs.setZoom(0, function (){console.log("zoom changed")});
+            chrome.tabs.setZoom(0, function () {
+                console.log("zoom changed")
+            });
             injectContentScript(fields);
         }
         const page_input = document.getElementById("page-input");
@@ -371,12 +373,32 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function injectContentScript(fields) {
-        chrome.storage.local.set({
-            fieldsData: fields
-        }, function () {});
-        chrome.tabs.executeScript({
-            file: 'contentScript.js'
-        }, function () {});
+        //ask to background to create a zoom change listener
+        chrome.tabs.query({
+            active: true
+        }, function (tab) {
+            // console.log(tab[0]);
+            chrome.runtime.sendMessage({
+                // action: "init",
+                action: popupMessageType.zoom,
+                tabid: tab[0].id
+            }, function (response) {
+                console.log("<<< received:")
+                console.log(response);
+            });
+
+            //set data for content script
+            chrome.storage.local.set({
+                fieldsData: fields
+            }, function () {});
+
+            //run content script
+            chrome.tabs.executeScript({
+                file: 'contentScript.js'
+            }, function () {});
+
+
+        });
     }
 
 
