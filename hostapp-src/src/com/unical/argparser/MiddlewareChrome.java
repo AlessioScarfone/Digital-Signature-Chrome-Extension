@@ -284,9 +284,16 @@ public class MiddlewareChrome {
 					jo.put("upper-right-Y", upperRightY);
 					jo.put("lower-left-x", lowerLeftX);
 					jo.put("lower-left-y", lowerLeftY);
+					
+					float pageh = currentPage.getMediaBox().getHeight();
+					float pagew = currentPage.getMediaBox().getWidth();
+					jo.put("page-height", pageh);
+					jo.put("page-width", pagew);
+					
 					ja.put(jo);
+					
 					MiddlewareChrome.log(className, "page:" + pageNumber + " - " + fieldName + "[ urX:" + upperRightX
-							+ " urY:" + upperRightY + " llx:" + lowerLeftX + " lly:" + lowerLeftY +" ]");
+							+ " urY:" + upperRightY + " llx:" + lowerLeftX + " lly:" + lowerLeftY +" ph:"+ pageh+ " pw:"+pagew+" ]");
 
 //					PDPageContentStream contentStream = new PDPageContentStream(doc, currentPage, true, false);
 //					contentStream.beginText();
