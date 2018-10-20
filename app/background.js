@@ -15,16 +15,33 @@ chrome.runtime.onInstalled.addListener(function () {
 
 const app = 'com.unical.digitalsignature.signer';
 
+var nativeAppPort = null;
 //possible value of appCurrentState: signing, ready
 var appCurrentState = "ready";
-var port = null;
+
+var storedSignatureData = {
+  signatureData: "",
+  infoPDF: "",
+
+  empty: function () {
+    this.signatureData = "";
+    this.infoPDF = "";
+  },
+
+  isEmpty: function () {
+    if (this.signatureData == "")
+      return true;
+    return false;
+  }
+}
+
 
 function openConnection() {
-  port = chrome.runtime.connectNative(app);
+  nativeAppPort = chrome.runtime.connectNative(app);
 
-  console.log(port);
+  console.log(nativeAppPort);
 
-  port.onMessage.addListener(function (msg) {
+  nativeAppPort.onMessage.addListener(function (msg) {
     console.log("RECEIVED FROM NATIVE APP:");
     console.log(msg);
 
@@ -40,12 +57,18 @@ function openConnection() {
     }
     if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end") {
       appCurrentState = "ready";
+      storedSignatureData.empty();
       chrome.runtime.sendMessage({
         state: "end",
       }, function (response) {});
 
     }
     if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "info") {
+      storedSignatureData.infoPDF = {
+        page: msg.page,
+        fields: msg.fields
+      }
+
       //forward fields list to popup
       chrome.runtime.sendMessage({
         state: 'info',
@@ -55,15 +78,15 @@ function openConnection() {
     }
   });
 
-  port.onDisconnect.addListener(function () {
+  nativeAppPort.onDisconnect.addListener(function () {
     console.log("Disconnected: " + chrome.runtime.lastError.message);
   });
 
-  return port;
+  return nativeAppPort;
 }
 
 function closeConnection() {
-  port.disconnect();
+  nativeAppPort.disconnect();
 }
 
 function downloadFile(pdfURL, data, callback) {
@@ -113,22 +136,17 @@ function sendDataForSign(data) {
   console.log("Send message to native app...")
   console.log(data);
   data.action = "sign";
-  port.postMessage(data);
+  nativeAppPort.postMessage(data);
 };
 
 function requestPDFInfo(data) {
   console.log("Send message to native app...")
   console.log(data);
-
-  //update signature data of popup
-  chrome.runtime.sendMessage({
-    state: popupMessageType.update,
-    data: data
-  }, function (response) {});
-
   data.action = popupMessageType.info;
-  port.postMessage(data);
+  nativeAppPort.postMessage(data);
 
+  delete data.action;
+  storedSignatureData.signatureData = data;
 };
 
 //create a connection with content script and add a zoomchange
@@ -136,20 +154,20 @@ function zoomListener(tabId) {
   console.log(tabId);
 
   chrome.tabs.onZoomChange.addListener(function (ZoomChangeInfo) {
-    var port = chrome.tabs.connect(tabId, {
+    var contentScriptPort = chrome.tabs.connect(tabId, {
       name: "content-script",
     });
 
     console.log("zoom change");
     if (ZoomChangeInfo.tabId == tabId) {
-      port.postMessage({
+      contentScriptPort.postMessage({
         action: "zoom_change",
         oldZoom: ZoomChangeInfo.oldZoomFactor,
         newZoom: ZoomChangeInfo.newZoomFactor
       });
     }
-    
-    port.disconnect();
+
+    contentScriptPort.disconnect();
   });
 
 }

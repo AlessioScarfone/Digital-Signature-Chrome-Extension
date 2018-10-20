@@ -1,11 +1,6 @@
 console.log("Start...")
-/*
-       TODO: aggiungi uno stato al background per memorizzare se c'è gia una firma in corso in modo da ripristinare lo stato 
-       del popup al loanding se necessario. Quindi all'apertura del popup leggi lo stato e in caso ripristina al loading 
-       o parti dall'inizio 
-   */
 
-var signature_data = {
+var signatureData = {
     type: "",
     filename: "",
     password: "",
@@ -21,6 +16,7 @@ var signature_data = {
 const background = chrome.extension.getBackgroundPage();
 const popupMessageType = background.popupMessageType;
 const appCurrentState = background.appCurrentState;
+const backgroundStoredSignatureData = background.storedSignatureData;
 
 class Sections {
     constructor() {
@@ -44,7 +40,7 @@ class Sections {
     }
 
     /**Set the current section with a section in _section property of the object */
-    updateSection(nextSection) {
+    changeSection(nextSection) {
         for (const key in this._section) {
             if (this._section.hasOwnProperty(key)) {
                 if (this._section[key] === nextSection) {
@@ -78,8 +74,17 @@ document.addEventListener('DOMContentLoaded', function () {
     (function checkCurrenState() {
         console.log("App Current State:" + appCurrentState);
         if (appCurrentState == "signing") {
-            sections.updateSection(sections.section.loadingSection);
+            sections.changeSection(sections.section.loadingSection);
             hideConfirmButtonSection();
+        }
+        //check if exist stored data in background
+        else {
+            console.log(backgroundStoredSignatureData);
+            if (backgroundStoredSignatureData.isEmpty() == false) {
+                console.log("NEED TO RESTORE DATA");
+                signatureData = backgroundStoredSignatureData.signatureData;
+                updateSignatureFieldList(backgroundStoredSignatureData.infoPDF);
+            }
         }
 
         // if (_appCurrentState != "select_type") {
@@ -101,9 +106,9 @@ document.addEventListener('DOMContentLoaded', function () {
         //update state of selected btn
         el.classList.remove('is-outlined');
         el.classList.add('is-selected');
-        signature_data.type = el.getAttribute('data-signature-type');
+        signatureData.type = el.getAttribute('data-signature-type');
 
-        if (signature_data.type == "pades") {
+        if (signatureData.type == "pades") {
             // document.getElementById("use-visible-signature").classList.remove('hide');
             el.parentElement.classList.remove("start-trasform-sign-type");
             el.parentElement.classList.add("trasform-sign-type");
@@ -118,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (document.getElementById('use-visible-signature-checkbox').checked)
                 document.getElementById('use-visible-signature-checkbox').click();
 
-            signature_data.visible = false;
+            signatureData.visible = false;
         }
 
         //after first initializzation active btn next
@@ -127,33 +132,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('use-visible-signature-checkbox').addEventListener("change", function () {
         if (this.checked) {
-            signature_data.visible = true;
+            signatureData.visible = true;
         } else
-            signature_data.visible = false;
+            signatureData.visible = false;
     });
 
 
     useFieldSwitch.addEventListener("change", function () {
         if (this.checked) {
-            signature_data.useField = true;
+            signatureData.useField = true;
             document.getElementById('setting-no-field').classList.add('hide');
             document.getElementById('setting-with-field').classList.remove('hide');
             //clear inputs in no-field section
             document.getElementById("page-input").value = "";
-            signature_data.signatureField = document.querySelector(".select select").value;
+            signatureData.signatureField = document.querySelector(".select select").value;
             nextBtn.disabled = false;
         } else { //back to no-field section
-            signature_data.useField = false;
+            signatureData.useField = false;
             document.getElementById('setting-no-field').classList.remove('hide');
             document.getElementById('setting-with-field').classList.add('hide');
-            signature_data.signatureField = "";
+            signatureData.signatureField = "";
             nextBtn.disabled = true;
         }
     });
 
     confirmBtn.addEventListener('click', () => {
         getTabData(sign);
-        sections.updateSection(sections.section.loadingSection);
+        sections.changeSection(sections.section.loadingSection);
         hideConfirmButtonSection();
     });
 
@@ -162,15 +167,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // select signature type  -> pass or pades_visible
         if (sections.currentSection == sections.section.selectSignatureTypeSection) {
-            if (signature_data.type == "cades" || (signature_data.type == "pades" && signature_data.visible == false)) {
-                sections.updateSection(sections.section.passwordSection);
+            if (signatureData.type == "cades" || (signatureData.type == "pades" && signatureData.visible == false)) {
+                sections.changeSection(sections.section.passwordSection);
                 nextBtn.classList.add("hide");
                 confirmBtn.classList.remove("hide");
             }
-            if (signature_data.type == "pades" && signature_data.visible == true) {
-                //TODO: expand for get signature field
+            if (signatureData.type == "pades" && signatureData.visible == true) {
                 getTabData(getPdfInfo);
-                // sections.updateSection(sections.section.third);
                 closeBtn.classList.remove("hidden");
                 nextBtn.disabled = true;
             }
@@ -187,13 +190,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // pass -> Loading
         else if (sections.currentSection == sections.section.passwordSection) {
-            sections.updateSection(sections.section.loadingSection);
+            sections.changeSection(sections.section.loadingSection);
             hideConfirmButtonSection();
         }
 
         // pades_visible -> pass
         else if (sections.currentSection == sections.section.padesVisibleSection) {
-            sections.updateSection(sections.section.passwordSection);
+            sections.changeSection(sections.section.passwordSection);
             closeBtn.classList.remove("hidden");
             nextBtn.classList.add("hide");
             confirmBtn.classList.remove("hide");
@@ -217,11 +220,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // event for radio button for position of signature 
     document.querySelectorAll("input[type='radio'][name='vert-pos-radio']").forEach((el) => el.addEventListener('click', function () {
-        signature_data.verticalPosition = this.value;
+        signatureData.verticalPosition = this.value;
     }));
 
     document.querySelectorAll("input[type='radio'][name='hor-pos-radio']").forEach((el) => el.addEventListener('click', function () {
-        signature_data.horizontalPosition = this.value;
+        signatureData.horizontalPosition = this.value;
     }));
 
     const img_input = document.getElementsByClassName("file-input")[0];
@@ -230,6 +233,7 @@ document.addEventListener('DOMContentLoaded', function () {
         img_input.parentNode.parentNode.classList.remove("is-success");
         img_input.disabled = true;
         console.log(img_input.files);
+
         if (img_input.files.length > 0) {
             // document.getElementById('filename').textContent = img_input.files[0].name;
             var file = event.target.files[0];
@@ -239,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
             reader.onloadend = function () {
                 base64data = reader.result;
                 console.log(base64data);
-                signature_data.image = base64data;
+                signatureData.image = base64data;
                 img_input.parentNode.parentNode.classList.add("is-success");
                 img_input.disabled = false;
             }
@@ -247,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function sign(tabData) {
-        signature_data.password = document.getElementById("pass-1").value;
+        signatureData.password = document.getElementById("pass-1").value;
         console.log("send message sign >>> ");
         if (tabData.location == "remote") {
             // download pdf and then sign it
@@ -255,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // action: "download_and_sign",
                 action: popupMessageType.download_and_sign,
                 url: tabData.url,
-                data: signature_data
+                data: signatureData
             }, function (response) {
                 console.log("<<< received:")
                 console.log(response.ack);
@@ -263,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if (tabData.location == "local") {
             chrome.runtime.sendMessage({
                 action: popupMessageType.sign,
-                data: signature_data
+                data: signatureData
             }, function (response) {
                 console.log("<<< received:")
                 console.log(response.ack);
@@ -272,24 +276,24 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function getPdfInfo(tabData) {
-        sections.updateSection(sections.section.loadingSection);
+        sections.changeSection(sections.section.loadingSection);
         hideConfirmButtonSection();
         if (tabData.location == "remote") {
             chrome.runtime.sendMessage({
                 action: popupMessageType.download_and_getInfo,
                 url: tabData.url,
-                data: signature_data
+                data: signatureData
             }, function (response) {
-                console.log("<<< received:")
+                // console.log("<<< received:")
                 // console.log(response);
             });
         }
         if (tabData.location == "local") {
             chrome.runtime.sendMessage({
                 action: popupMessageType.info,
-                data: signature_data
+                data: signatureData
             }, function (response) {
-                console.log("<<< received:")
+                // console.log("<<< received:")
                 // console.log(response);
             });
         }
@@ -301,9 +305,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var tabData = {};
 
         //check if file is already downloaded for get pdf info
-        if (signature_data.filename != "" && !signature_data.filename.startsWith("http") && !signature_data.filename.startsWith("file")) {
+        if (signatureData.filename != "" && !signatureData.filename.startsWith("http") && !signatureData.filename.startsWith("file")) {
             tabData.location = "local";
-            tabData.url = signature_data.filename;
+            tabData.url = signatureData.filename;
             if (callback)
                 callback(tabData);
         } else {
@@ -318,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     pdfURL = pdfURL.substr("file:///".length);
                     console.log("File is local:");
                     console.log(pdfURL);
-                    signature_data.filename = pdfURL;
+                    signatureData.filename = pdfURL;
                     tabData.location = "local";
                 } else {
                     tabData.location = "remote";
@@ -332,12 +336,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateSignatureFieldList(fields) {
-        sections.updateSection(sections.section.padesVisibleSection);
+        sections.changeSection(sections.section.padesVisibleSection);
         nextBtn.classList.remove("hide");
         nextBtn.disabled = true;
         closeBtn.classList.remove("hidden");
         console.log(fields);
         // console.log(fields.fields);
+
         if (fields.fields == undefined) {
             useFieldSwitch.disabled = true;
             document.querySelector("#use-signature-field p.has-text-danger").classList.remove("hide");
@@ -357,14 +362,13 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             injectContentScript(fields);
         }
+
         const page_input = document.getElementById("page-input");
-        //TODO: add canvas
         page_input.max = fields.page;
         page_input.min = 1;
         page_input.placeholder = "1 - " + (fields.page);
         page_input.addEventListener('input', (e) => {
-            signature_data.pageNumber = parseInt(e.target.value);
-
+            signatureData.pageNumber = parseInt(e.target.value);
             if (e.target.checkValidity())
                 nextBtn.disabled = false;
             else
@@ -397,7 +401,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 file: 'contentScript.js'
             }, function () {});
 
-
         });
     }
 
@@ -411,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (request.hasOwnProperty("state")) {
                 switch (request.state) {
                     case "end":
-                        sections.updateSection(sections.section.endSection);
+                        sections.changeSection(sections.section.endSection);
                         // confirm_btn.classList.add('hide');
                         hideConfirmButtonSection();
                         break;
