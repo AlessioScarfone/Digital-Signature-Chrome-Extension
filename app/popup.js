@@ -2,11 +2,10 @@ console.log("Start...")
 
 /*
 TODO:  
- - Sposta il bottone close in un altro punto (alto a dx ??)
- - Aggiungi un bottone clear che pulisce tutti i dati e riporta alla schermata iniziale
- - nell schermata compleate mostra il path del file creato 
-    (native host app deve tornare il nome del file insime ad "end")
- - Aggiungi nome file che sto firmando nella schermata
+    - move close btn in another postion (top,right ?)
+    - add a "clear btn" that empty all data and return to first section
+    - show path of signed file in end section (background have to send the path to popup)
+    - add filename of current file used by the extension 
 */
 
 var signatureData = {
