@@ -1,5 +1,14 @@
 console.log("Start...")
 
+/*
+TODO:  
+ - Sposta il bottone close in un altro punto (alto a dx ??)
+ - Aggiungi un bottone clear che pulisce tutti i dati e riporta alla schermata iniziale
+ - nell schermata compleate mostra il path del file creato 
+    (native host app deve tornare il nome del file insime ad "end")
+ - Aggiungi nome file che sto firmando nella schermata
+*/
+
 var signatureData = {
     type: "",
     filename: "",
