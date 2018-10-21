@@ -2,12 +2,10 @@ console.log("Start...")
 
 /*
 TODO:  
-    - move close btn in another postion (top,right ?)
     - add a "clear btn" that empty all data and return to first section
     - show path of signed file in end section (background have to send the path to popup)
     - add filename of current file used by the extension 
 */
-
 var signatureData = {
     type: "",
     filename: "",
@@ -20,6 +18,9 @@ var signatureData = {
     signatureField: "",
     image: "",
 
+    /**
+     * Reset signature data.
+     */
     empty: function () {
         this.type = "";
         this.filename = "";
@@ -75,7 +76,7 @@ class Sections {
                 }
             }
         }
-        console.error("UpdateCurrentSection: No valid section");
+        console.error("changeSection: No valid section");
     }
 
     hideCurrentSection() {
@@ -92,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const clearBtn = document.getElementById("clear-btn");
     const useVisibleSignatureSwitch = document.getElementById("use-visible-signature");
     const useFieldSwitch = document.getElementById('use-signature-field-checkbox');
+    const passfield = document.getElementById("password-field");
 
     (function checkCurrenState() {
         console.log("App Current State:" + appCurrentState);
@@ -233,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // window.close();
     })
 
-    document.getElementById("pass-1").addEventListener('input', function () {
+    passfield.addEventListener('input', function () {
         if (this.value.length != 0) {
             confirmBtn.disabled = false;
         } else {
@@ -274,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function sign(tabData) {
-        signatureData.password = document.getElementById("pass-1").value;
+        signatureData.password = passfield.value;
         console.log("send message sign >>> ");
         if (tabData.location == "remote") {
             // download pdf and then sign it
