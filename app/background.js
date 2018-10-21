@@ -35,7 +35,6 @@ var storedSignatureData = {
   }
 }
 
-
 function openConnection() {
   nativeAppPort = chrome.runtime.connectNative(app);
 
@@ -44,26 +43,45 @@ function openConnection() {
   nativeAppPort.onMessage.addListener(function (msg) {
     console.log("RECEIVED FROM NATIVE APP:");
     console.log(msg);
-
+    
     //open signed pdf if is signed with pades format
-    if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end" && msg.signature_type == "pades") {
-      //open signed pdf -> if the file isn't a pdf not open
-      var path = "file:///" + msg.local_path_newFile;
-      chrome.tabs.create({
-        index: 0,
-        url: path,
-        active: false
-      }, function () {});
-    }
+    // if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end" && msg.signature_type == "pades") {
+    //   //open signed pdf -> if the file isn't a pdf not open
+    //   var path = "file:///" + msg.local_path_newFile;
+    //   chrome.tabs.create({
+    //     index: 0,
+    //     url: path,
+    //     active: false
+    //   }, function () {});
+    // }
+    // if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end") {
+    //   appCurrentState = "ready";
+    //   storedSignatureData.empty();
+    //   chrome.runtime.sendMessage({
+    //     state: "end",
+    //   }, function (response) {});
+    // }
+
     if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end") {
+      //if pades -> open signed pdf 
+      if (msg.signature_type == "pades") {
+        var path = "file:///" + msg.local_path_newFile;
+        chrome.tabs.create({
+          index: 0,
+          url: path,
+          active: false
+        }, function () {});
+      }
+
       appCurrentState = "ready";
       storedSignatureData.empty();
       chrome.runtime.sendMessage({
         state: "end",
+        localPath: msg.local_path_newFile
       }, function (response) {});
-
     }
-    if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "info") {
+
+    else if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "info") {
       storedSignatureData.infoPDF = {
         page: msg.page,
         fields: msg.fields
@@ -76,6 +94,7 @@ function openConnection() {
         fields: msg.fields
       }, function (response) {});
     }
+
   });
 
   nativeAppPort.onDisconnect.addListener(function () {

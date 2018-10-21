@@ -2,7 +2,7 @@
     --primary-color: #23d160;
 }
 
-body{
+body {
     margin: 2px;
 }
 
@@ -15,7 +15,7 @@ body{
 }
 
 .section {
-    padding:1.5rem 1.5rem !important;
+    padding: 1.5rem 1.5rem !important;
 }
 
 .bottom-hr {
@@ -32,7 +32,8 @@ body{
     padding-top: 1.2em;
 }
 
-#close-btn, #clean-btn {
+#close-btn,
+#clean-btn {
     margin-top: 4px;
 }
 
@@ -65,8 +66,6 @@ body{
     transform: translateY(15%);
 }
 
-
-/* Switch*/
 .switch label b {
     position: relative;
     bottom: 2px;
@@ -85,7 +84,7 @@ body{
     margin-left: 7px;
 }
 
-#pades-visible .file{
+#pades-visible .file {
     margin-top: 12px;
 }
 
@@ -108,13 +107,19 @@ input[type="number"]:valid+.icon #invalid-icon {
     display: none;
 }
 
+input[type="number"]:invalid+.icon #invalid-icon {
+    display: inline;
+}
+
 input[type="number"]:invalid+.icon #valid-icon {
     display: none;
 }
 
-input[type="number"]:invalid+.icon #invalid-icon {
-    display: inline;
-}
+
+
+
+
+
 
 /* Loading */
 

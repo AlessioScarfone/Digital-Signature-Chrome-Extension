@@ -2,8 +2,7 @@ console.log("Start...")
 
 /*
 TODO:  
-    - add a "clear btn" that empty all data and return to first section
-    - show path of signed file in end section (background have to send the path to popup)
+    - show path of signed file in end section (background have to send the path to popup) -> background.js line: 80
     - add filename of current file used by the extension 
 */
 var signatureData = {
@@ -230,8 +229,21 @@ document.addEventListener('DOMContentLoaded', function () {
     clearBtn.addEventListener("click", (e) => {
         backgroundStoredSignatureData.empty();
         signatureData.empty();
+
+        signatureTypeBtns.forEach(el => {
+            el.classList.add('is-outlined');
+            el.classList.remove('is-selected');
+            el.parentElement.classList.remove("trasform-sign-type");
+            el.parentElement.classList.add("start-trasform-sign-type");
+        });
+        document.getElementById('use-visible-signature-checkbox').checked = false;
+        useVisibleSignatureSwitch.classList.add('start-transform');
+        useVisibleSignatureSwitch.classList.remove('transform');
+
+        clearBtn.classList.add("hidden");
+        //go to first section
         sections.changeSection(sections.section.selectSignatureTypeSection);
-        //TODO: clear also first section (deselect button and checkbox)
+
         // window.close();
     })
 
