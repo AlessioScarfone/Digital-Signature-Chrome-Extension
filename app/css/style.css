@@ -32,11 +32,7 @@ body{
     padding-top: 1.2em;
 }
 
-#confirm-btn, #next-btn {
-    margin-right: 27px;
-}
-
-#close-btn {
+#close-btn, #clean-btn {
     margin-top: 4px;
 }
 

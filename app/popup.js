@@ -18,7 +18,20 @@ var signatureData = {
     horizontalPosition: "Left",
     pageNumber: 1,
     signatureField: "",
-    image: ""
+    image: "",
+
+    empty: function () {
+        this.type = "";
+        this.filename = "";
+        this.password = "";
+        this.visible = false;
+        this.useField = false;
+        this.verticalPosition = "Top";
+        this.horizontalPosition = "Left";
+        this.pageNumber = 1;
+        this.signatureField = "";
+        this.image = "";
+    }
 };
 
 const background = chrome.extension.getBackgroundPage();
@@ -76,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const confirmBtn = document.getElementById("confirm-btn");
     const nextBtn = document.getElementById("next-btn");
     const closeBtn = document.getElementById("close-btn");
+    const clearBtn = document.getElementById("clear-btn");
     const useVisibleSignatureSwitch = document.getElementById("use-visible-signature");
     const useFieldSwitch = document.getElementById('use-signature-field-checkbox');
 
@@ -95,12 +109,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // if (_appCurrentState != "select_type") {
-        // console.log("App is already in loading.");
-        //     sections.updateSection(sections.section.loading);
-        //     hideConfirmButtonSection();
-        //     // confirm_btn.classList.add('hide');
-        // }
     }());
 
     signatureTypeBtns.forEach(el => el.addEventListener('click', selectSignatureTypeEvent));
@@ -171,28 +179,26 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     nextBtn.addEventListener('click', function () {
-        // sections.hideCurrentSection();
-
         // select signature type  -> pass or pades_visible
         if (sections.currentSection == sections.section.selectSignatureTypeSection) {
+            //cades or not visible pades
             if (signatureData.type == "cades" || (signatureData.type == "pades" && signatureData.visible == false)) {
                 sections.changeSection(sections.section.passwordSection);
                 nextBtn.classList.add("hide");
                 confirmBtn.classList.remove("hide");
             }
+            //pades visible
             if (signatureData.type == "pades" && signatureData.visible == true) {
                 getTabData(getPdfInfo);
-                closeBtn.classList.remove("hidden");
-                nextBtn.disabled = true;
+                //UI updated by updateSignatureFieldList
             }
 
             console.log("init connection with native app");
             chrome.runtime.sendMessage({
-                // action: "init",
                 action: popupMessageType.init,
             }, function (response) {
-                console.log("<<< received:")
-                console.log(response);
+                // console.log("<<< received:")
+                // console.log(response);
             });
         }
 
@@ -216,6 +222,15 @@ document.addEventListener('DOMContentLoaded', function () {
     //close popup
     closeBtn.addEventListener("click", (e) => {
         window.close();
+    })
+
+    //close popup and clean stored data in background
+    clearBtn.addEventListener("click", (e) => {
+        backgroundStoredSignatureData.empty();
+        signatureData.empty();
+        sections.changeSection(sections.section.selectSignatureTypeSection);
+        //TODO: clear also first section (deselect button and checkbox)
+        // window.close();
     })
 
     document.getElementById("pass-1").addEventListener('input', function () {
@@ -348,6 +363,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nextBtn.classList.remove("hide");
         nextBtn.disabled = true;
         closeBtn.classList.remove("hidden");
+        clearBtn.classList.remove("hidden");
         console.log(fields);
         // console.log(fields.fields);
 
@@ -445,6 +461,7 @@ document.addEventListener('DOMContentLoaded', function () {
         confirmBtn.classList.add('hide');
         nextBtn.classList.add("hide");
         closeBtn.classList.add("hidden");
+        clearBtn.classList.add("hidden");
     }
 
 });
