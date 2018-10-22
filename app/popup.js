@@ -31,6 +31,19 @@ var signatureData = {
         this.pageNumber = 1;
         this.signatureField = "";
         this.image = "";
+    },
+
+    copy: function(data){
+        this.type = data.type;
+        this.filename = data.filename;
+        this.password = data.password;
+        this.visible = data.visible;
+        this.useField = data.useField;
+        this.verticalPosition = data.verticalPosition;
+        this.horizontalPosition = data.horizontalPosition;
+        this.pageNumber = data.pageNumber;
+        this.signatureField = data.signatureField;
+        this.image = data.image;
     }
 };
 
@@ -105,7 +118,8 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(backgroundStoredSignatureData);
             if (backgroundStoredSignatureData.isEmpty() == false) {
                 console.log("NEED TO RESTORE DATA");
-                signatureData = backgroundStoredSignatureData.signatureData;
+                // signatureData = backgroundStoredSignatureData.signatureData;
+                signatureData.copy(backgroundStoredSignatureData.signatureData);
                 updateSignatureFieldList(backgroundStoredSignatureData.infoPDF);
             }
         }
