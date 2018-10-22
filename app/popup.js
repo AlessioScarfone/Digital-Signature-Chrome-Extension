@@ -4,106 +4,105 @@ TODO:
     - show path of signed file in end section (background have to send the path to popup) -> background.js line: 80
     - add filename of current file used by the extension 
 */
-chrome.runtime.sendMessage({
-    "action": "wakeup"
-}, function (response) {
-    
-    var signatureData = {
-        type: "",
-        filename: "",
-        password: "",
-        visible: false,
-        useField: false,
-        verticalPosition: "Top",
-        horizontalPosition: "Left",
-        pageNumber: 1,
-        signatureField: "",
-        image: "",
 
-        /**
-         * Reset signature data.
-         */
-        empty: function () {
-            this.type = "";
-            this.filename = "";
-            this.password = "";
-            this.visible = false;
-            this.useField = false;
-            this.verticalPosition = "Top";
-            this.horizontalPosition = "Left";
-            this.pageNumber = 1;
-            this.signatureField = "";
-            this.image = "";
-        },
+var signatureData = {
+    type: "",
+    filename: "",
+    password: "",
+    visible: false,
+    useField: false,
+    verticalPosition: "Top",
+    horizontalPosition: "Left",
+    pageNumber: 1,
+    signatureField: "",
+    image: "",
 
-        copy: function (data) {
-            this.type = data.type;
-            this.filename = data.filename;
-            this.password = data.password;
-            this.visible = data.visible;
-            this.useField = data.useField;
-            this.verticalPosition = data.verticalPosition;
-            this.horizontalPosition = data.horizontalPosition;
-            this.pageNumber = data.pageNumber;
-            this.signatureField = data.signatureField;
-            this.image = data.image;
-        }
-    };
+    /**
+     * Reset signature data.
+     */
+    empty: function () {
+        this.type = "";
+        this.filename = "";
+        this.password = "";
+        this.visible = false;
+        this.useField = false;
+        this.verticalPosition = "Top";
+        this.horizontalPosition = "Left";
+        this.pageNumber = 1;
+        this.signatureField = "";
+        this.image = "";
+    },
+
+    copy: function (data) {
+        this.type = data.type;
+        this.filename = data.filename;
+        this.password = data.password;
+        this.visible = data.visible;
+        this.useField = data.useField;
+        this.verticalPosition = data.verticalPosition;
+        this.horizontalPosition = data.horizontalPosition;
+        this.pageNumber = data.pageNumber;
+        this.signatureField = data.signatureField;
+        this.image = data.image;
+    }
+};
 
 
+class Sections {
+    constructor() {
+        this._section = {
+                selectSignatureTypeSection: document.getElementById("select-signature-type-section"), //start
+                passwordSection: document.getElementById("pass"), //cades or pades (no visible)
+                padesVisibleSection: document.getElementById("pades-visible"), //visible pades
+                loadingSection: document.getElementById("loading"), //loading
+                endSection: document.getElementById("operation-completed")
+            },
 
-
-    const background = chrome.extension.getBackgroundPage();
-    const popupMessageType = background.popupMessageType;
-    const appCurrentState = background.appCurrentState;
-    const backgroundStoredSignatureData = background.storedSignatureData;
-
-
-    class Sections {
-        constructor() {
-            this._section = {
-                    selectSignatureTypeSection: document.getElementById("select-signature-type-section"), //start
-                    passwordSection: document.getElementById("pass"), //cades or pades (no visible)
-                    padesVisibleSection: document.getElementById("pades-visible"), //visible pades
-                    loadingSection: document.getElementById("loading"), //loading
-                    endSection: document.getElementById("operation-completed")
-                },
-
-                this._currentSection = this._section.selectSignatureTypeSection;
-        }
-
-        get section() {
-            return this._section;
-        }
-
-        get currentSection() {
-            return this._currentSection;
-        }
-
-        /**Set the current section with a section in _section property of the object */
-        changeSection(nextSection) {
-            for (const key in this._section) {
-                if (this._section.hasOwnProperty(key)) {
-                    if (this._section[key] === nextSection) {
-                        //hide "old" current section
-                        this.hideCurrentSection();
-                        this._currentSection = nextSection;
-                        //show "old" current section
-                        this._currentSection.classList.remove('hide');
-
-                        return;
-                    }
-                }
-            }
-            console.error("changeSection: No valid section");
-        }
-
-        hideCurrentSection() {
-            this._currentSection.classList.add('hide');
-        };
+            this._currentSection = this._section.selectSignatureTypeSection;
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    get section() {
+        return this._section;
+    }
+
+    get currentSection() {
+        return this._currentSection;
+    }
+
+    /**Set the current section with a section in _section property of the object */
+    changeSection(nextSection) {
+        for (const key in this._section) {
+            if (this._section.hasOwnProperty(key)) {
+                if (this._section[key] === nextSection) {
+                    //hide "old" current section
+                    this.hideCurrentSection();
+                    this._currentSection = nextSection;
+                    //show "old" current section
+                    this._currentSection.classList.remove('hide');
+
+                    return;
+                }
+            }
+        }
+        console.error("changeSection: No valid section");
+    }
+
+    hideCurrentSection() {
+        this._currentSection.classList.add('hide');
+    };
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    chrome.runtime.sendMessage({
+        "action": "wakeup"
+    }, function (response) {
+
+        const background = chrome.extension.getBackgroundPage();
+        const popupMessageType = background.popupMessageType;
+        const appCurrentState = background.appCurrentState;
+        const backgroundStoredSignatureData = background.storedSignatureData;
+
         var sections = new Sections();
         const signatureTypeBtns = document.querySelectorAll('.signature-type-btns');
         const confirmBtn = document.getElementById("confirm-btn");
