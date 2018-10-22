@@ -43,7 +43,7 @@ function openConnection() {
   nativeAppPort.onMessage.addListener(function (msg) {
     console.log("RECEIVED FROM NATIVE APP:");
     console.log(msg);
-    
+
     //open signed pdf if is signed with pades format
     // if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end" && msg.signature_type == "pades") {
     //   //open signed pdf -> if the file isn't a pdf not open
@@ -79,9 +79,7 @@ function openConnection() {
         state: "end",
         localPath: msg.local_path_newFile
       }, function (response) {});
-    }
-
-    else if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "info") {
+    } else if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "info") {
       storedSignatureData.infoPDF = {
         page: msg.page,
         fields: msg.fields
@@ -192,6 +190,7 @@ function zoomListener(tabId) {
 }
 
 var popupMessageType = {
+  wakeup: 'wakeup',
   init: 'init',
   disconnect: 'disconnect',
   download_and_sign: 'download_and_sign',
@@ -206,6 +205,9 @@ chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     console.log(request);
     switch (request.action) {
+      case popupMessageType.wakeup:
+        console.log("Background wakeup");
+        break;
       case popupMessageType.init:
         openConnection();
         break;
