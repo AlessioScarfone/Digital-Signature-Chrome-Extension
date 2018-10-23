@@ -1,9 +1,4 @@
 console.log("Start...")
-/*
-TODO:  
-    - show path of signed file in end section (background have to send the path to popup) -> background.js line: 80
-    - add filename of current file used by the extension 
-*/
 
 var signatureData = {
     type: "",
@@ -121,14 +116,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 sections.changeSection(sections.section.loadingSection);
                 hideConfirmButtonSection();
             }
-            if (appCurrentState == appStateEnum.complete) {
+            else if (appCurrentState == appStateEnum.complete) {
                 console.log("COMPLETE");
                 clearData();
             }
             //check if exist stored data in background
-            else {
-                console.log("READY");
-                console.log(backgroundStoredSignatureData);
+            else if(appCurrentState == appStateEnum.running){
+                // console.log(backgroundStoredSignatureData);
                 if (backgroundStoredSignatureData.isEmpty() == false) {
                     console.log("NEED TO RESTORE DATA");
                     // signatureData = backgroundStoredSignatureData.signatureData;

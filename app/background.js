@@ -20,10 +20,11 @@ var nativeAppPort = null;
 var StateEnum = {
   "ready": 1,
   "loading": 2,
-  "complete": 3
+  "running": 3,
+  "complete": 4
 };
 Object.freeze(StateEnum)
-var appCurrentState = StateEnum.ready;
+var appCurrentState = StateEnum.start;
 
 
 var storedSignatureData = {
@@ -61,14 +62,17 @@ function openConnection() {
           active: false
         }, function () {});
       }
-
-      appCurrentState = StateEnum.complete;
+      
       storedSignatureData.empty();
       chrome.runtime.sendMessage({
         state: "end",
         localPath: msg.local_path_newFile
       }, function (response) {});
+      
+      appCurrentState = StateEnum.complete;
+      
     } else if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "info") {
+
       storedSignatureData.infoPDF = {
         page: msg.page,
         fields: msg.fields
@@ -80,6 +84,8 @@ function openConnection() {
         page: msg.page,
         fields: msg.fields
       }, function (response) {});
+
+      appCurrentState = StateEnum.running;
     }
 
   });
@@ -96,6 +102,7 @@ function closeConnection() {
 }
 
 function downloadFile(pdfURL, data, callback) {
+  appCurrentState = StateEnum.loading;
   //1) get tab url
   downloadPDF(pdfURL)
 
@@ -146,6 +153,7 @@ function sendDataForSign(data) {
 };
 
 function requestPDFInfo(data) {
+  appCurrentState = StateEnum.loading;
   console.log("Send message to native app...")
   console.log(data);
   data.action = popupMessageType.info;
@@ -199,7 +207,7 @@ chrome.runtime.onMessage.addListener(
         console.log("Background wakeup");
         break;
       case popupMessageType.resetState:
-        appCurrentState = StateEnum.ready;
+        appCurrentState = StateEnum.start;
         break;
       case popupMessageType.init:
         openConnection();
