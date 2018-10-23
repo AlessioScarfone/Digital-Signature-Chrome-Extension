@@ -16,8 +16,15 @@ chrome.runtime.onInstalled.addListener(function () {
 const app = 'com.unical.digitalsignature.signer';
 
 var nativeAppPort = null;
-//possible value of appCurrentState: signing, ready
-var appCurrentState = "ready";
+//possible value of appCurrentState: ready, loading, complete 
+var StateEnum = {
+  "ready": 1,
+  "loading": 2,
+  "complete": 3
+};
+Object.freeze(StateEnum)
+var appCurrentState = StateEnum.ready;
+
 
 var storedSignatureData = {
   signatureData: "",
@@ -44,24 +51,6 @@ function openConnection() {
     console.log("RECEIVED FROM NATIVE APP:");
     console.log(msg);
 
-    //open signed pdf if is signed with pades format
-    // if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end" && msg.signature_type == "pades") {
-    //   //open signed pdf -> if the file isn't a pdf not open
-    //   var path = "file:///" + msg.local_path_newFile;
-    //   chrome.tabs.create({
-    //     index: 0,
-    //     url: path,
-    //     active: false
-    //   }, function () {});
-    // }
-    // if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end") {
-    //   appCurrentState = "ready";
-    //   storedSignatureData.empty();
-    //   chrome.runtime.sendMessage({
-    //     state: "end",
-    //   }, function (response) {});
-    // }
-
     if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end") {
       //if pades -> open signed pdf 
       if (msg.signature_type == "pades") {
@@ -73,7 +62,7 @@ function openConnection() {
         }, function () {});
       }
 
-      appCurrentState = "ready";
+      appCurrentState = StateEnum.complete;
       storedSignatureData.empty();
       chrome.runtime.sendMessage({
         state: "end",
@@ -149,7 +138,7 @@ function downloadFile(pdfURL, data, callback) {
 }
 
 function sendDataForSign(data) {
-  appCurrentState = "signing";
+  appCurrentState = StateEnum.loading;
   console.log("Send message to native app...")
   console.log(data);
   data.action = "sign";
@@ -197,7 +186,8 @@ var popupMessageType = {
   sign: 'sign',
   download_and_getInfo: 'donwload_and_getInfo',
   info: 'info',
-  zoom: 'zoom'
+  zoom: 'zoom',
+  resetState: "resetState"
 }
 
 //listener message Popup -> Background
@@ -207,6 +197,9 @@ chrome.runtime.onMessage.addListener(
     switch (request.action) {
       case popupMessageType.wakeup:
         console.log("Background wakeup");
+        break;
+      case popupMessageType.resetState:
+        appCurrentState = StateEnum.ready;
         break;
       case popupMessageType.init:
         openConnection();

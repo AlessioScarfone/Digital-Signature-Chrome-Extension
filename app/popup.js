@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const background = chrome.extension.getBackgroundPage();
         const popupMessageType = background.popupMessageType;
         const appCurrentState = background.appCurrentState;
+        const appStateEnum = background.StateEnum;
         const backgroundStoredSignatureData = background.storedSignatureData;
 
         var sections = new Sections();
@@ -115,12 +116,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
         (function checkCurrenState() {
             console.log("App Current State:" + appCurrentState);
-            if (appCurrentState == "signing") {
+            if (appCurrentState == appStateEnum.loading) {
+                console.log("LOADING");
                 sections.changeSection(sections.section.loadingSection);
                 hideConfirmButtonSection();
             }
+            if (appCurrentState == appStateEnum.complete) {
+                console.log("COMPLETE");
+                clearData();
+            }
             //check if exist stored data in background
             else {
+                console.log("READY");
                 console.log(backgroundStoredSignatureData);
                 if (backgroundStoredSignatureData.isEmpty() == false) {
                     console.log("NEED TO RESTORE DATA");
@@ -247,6 +254,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         //close popup and clean stored data in background
         clearBtn.addEventListener("click", (e) => {
+            clearData();
+        });
+
+        function clearData() {
             backgroundStoredSignatureData.empty();
             signatureData.empty();
 
@@ -265,8 +276,16 @@ document.addEventListener('DOMContentLoaded', function () {
             //go to first section
             sections.changeSection(sections.section.selectSignatureTypeSection);
 
+            chrome.runtime.sendMessage({
+                action: popupMessageType.resetState
+            }, function (response) {
+                // console.log("<<< received:")
+                // console.log(response.ack);
+            });
+
             // window.close();
-        })
+        }
+
 
         passfield.addEventListener('input', function () {
             if (this.value.length != 0) {
@@ -463,6 +482,21 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
+        function hideConfirmButtonSection() {
+            confirmBtn.classList.add('hide');
+            nextBtn.classList.add("hide");
+            closeBtn.classList.add("hidden");
+            clearBtn.classList.add("hidden");
+        }
+
+        function endSectionUIUpdate(localFilePath) {
+            console.log(localFilePath);
+            hideConfirmButtonSection();
+            const completeInfo = document.getElementById("complete-info");
+            completeInfo.classList.remove("hide");
+            completeInfo.textContent = "File created: " + localFilePath;
+        }
+
 
         //listener message Background -> Popup
         chrome.runtime.onMessage.addListener(
@@ -474,8 +508,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     switch (request.state) {
                         case "end":
                             sections.changeSection(sections.section.endSection);
-                            // confirm_btn.classList.add('hide');
-                            hideConfirmButtonSection();
+                            endSectionUIUpdate(request.localPath);
                             break;
                         case "info":
                             updateSignatureFieldList(request);
@@ -492,12 +525,9 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
 
-        function hideConfirmButtonSection() {
-            confirmBtn.classList.add('hide');
-            nextBtn.classList.add("hide");
-            closeBtn.classList.add("hidden");
-            clearBtn.classList.add("hidden");
-        }
+
+
+
 
     });
 });
