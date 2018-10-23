@@ -182,6 +182,7 @@ public class signer {
 			}
 		} catch (DSSException e) {
 			MiddlewareChrome.log(className, "ERROR :: Token access failed.");
+			MiddlewareChrome.getInstance().sendError("Token access failed");
 			// e.printStackTrace();
 			return;
 		}
@@ -222,6 +223,7 @@ public class signer {
 			keys = token.getKeys();
 		} catch (DSSException e) {
 			MiddlewareChrome.log(className, "ERROR :: Token access failed");
+			MiddlewareChrome.getInstance().sendError("Token acces failed");
 			// e.printStackTrace();
 			return;
 		}
@@ -265,14 +267,13 @@ public class signer {
 			jo.put("local_path_newFile", pathNewFile);
 			MiddlewareChrome.log(className, jo.toString());
 			MiddlewareChrome.getInstance().sendMessage(jo.toString());
-			
-			//delete created image from base64
-			MiddlewareChrome.log(className,ArgsParser.getInstance().getUseVisibleSignatureImage().getAbsolutePath());
-			if(ArgsParser.getInstance().getUseVisibleSignatureImage().exists())
+
+			// delete created image from base64
+			MiddlewareChrome.log(className, ArgsParser.getInstance().getUseVisibleSignatureImage().getAbsolutePath());
+			if (ArgsParser.getInstance().getUseVisibleSignatureImage().exists())
 				ArgsParser.getInstance().getUseVisibleSignatureImage().delete();
-			
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -215,6 +215,19 @@ public class MiddlewareChrome {
 		System.out.flush();
 	}
 
+	public void sendError(String message) {
+
+		try {
+			JSONObject jo = new JSONObject();
+			jo.put("native_app_message", "error");
+			jo.put("error", message);
+			getInstance().sendMessage(jo.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	private int getInt(byte[] bytes) {
 		return (bytes[3] << 24) & 0xff000000 | (bytes[2] << 16) & 0x00ff0000 | (bytes[1] << 8) & 0x0000ff00
 				| (bytes[0] << 0) & 0x000000ff;
@@ -284,17 +297,20 @@ public class MiddlewareChrome {
 					jo.put("upper-right-y", upperRightY);
 					jo.put("lower-left-x", lowerLeftX);
 					jo.put("lower-left-y", lowerLeftY);
-					
+
 					float pageh = currentPage.getMediaBox().getHeight();
 					float pagew = currentPage.getMediaBox().getWidth();
 					jo.put("page-height", pageh);
 					jo.put("page-width", pagew);
-					
-					ja.put(jo);
-					
-					MiddlewareChrome.log(className, "page:" + pageNumber + " - " + fieldName + "[ urX:" + upperRightX
-							+ " urY:" + upperRightY + " llx:" + lowerLeftX + " lly:" + lowerLeftY +" ph:"+ pageh+ " pw:"+pagew+" ]");
 
+					ja.put(jo);
+
+					MiddlewareChrome.log(className,
+							"page:" + pageNumber + " - " + fieldName + "[ urX:" + upperRightX + " urY:" + upperRightY
+									+ " llx:" + lowerLeftX + " lly:" + lowerLeftY + " ph:" + pageh + " pw:" + pagew
+									+ " ]");
+
+					// Create a new pdf with field name
 //					PDPageContentStream contentStream = new PDPageContentStream(doc, currentPage, true, false);
 //					contentStream.beginText();
 //					contentStream.setFont(PDType1Font.TIMES_ROMAN, 10);
@@ -306,7 +322,7 @@ public class MiddlewareChrome {
 
 				}
 				finalJson.put("fields", ja);
-				
+
 //				doc.save(inputFile.getParent()+Utility.separator+Files.getNameWithoutExtension(filename)+"-with-field."+Files.getFileExtension(filename));
 			}
 		} catch (IOException e) {

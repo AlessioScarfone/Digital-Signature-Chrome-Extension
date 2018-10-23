@@ -62,15 +62,15 @@ function openConnection() {
           active: false
         }, function () {});
       }
-      
+
       storedSignatureData.empty();
       chrome.runtime.sendMessage({
         state: "end",
         localPath: msg.local_path_newFile
       }, function (response) {});
-      
+
       appCurrentState = StateEnum.complete;
-      
+
     } else if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "info") {
 
       storedSignatureData.infoPDF = {
@@ -86,6 +86,10 @@ function openConnection() {
       }, function (response) {});
 
       appCurrentState = StateEnum.running;
+      
+    } else if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "error") {
+      console.log("ERROR:" + msg.error);
+      //TODO: show error in UI
     }
 
   });

@@ -1,5 +1,9 @@
 console.log("Start...")
 
+/**
+ * TODO: add text of loading
+ */
+
 var signatureData = {
     type: "",
     filename: "",
