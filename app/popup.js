@@ -270,6 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
             closeBtn.classList.remove("hidden");
             nextBtn.classList.remove("hide");
 
+            confirmBtn.classList.add("hide");
             clearBtn.classList.add("hidden");
             nextBtn.disabled = true;
             //go to first section
