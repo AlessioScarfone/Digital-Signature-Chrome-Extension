@@ -1,8 +1,6 @@
 console.log("Start...")
 
-/**
- * TODO: add text of loading
- */
+/**TODO: test of deleted file */
 
 var signatureData = {
     type: "",
@@ -265,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 el.parentElement.classList.add("start-trasform-sign-type");
             });
             document.getElementById('use-visible-signature-checkbox').checked = false;
+            passfield.value = "";
             useVisibleSignatureSwitch.classList.add('start-transform');
             useVisibleSignatureSwitch.classList.remove('transform');
 

@@ -53,48 +53,49 @@ function openConnection() {
     console.log("RECEIVED FROM NATIVE APP:");
     console.log(msg);
 
-    if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "end") {
-      //if pades -> open signed pdf 
-      if (msg.signature_type == "pades") {
-        var path = "file:///" + msg.local_path_newFile;
-        chrome.tabs.create({
-          index: 0,
-          url: path,
-          active: false
-        }, function () {});
+    if (msg.hasOwnProperty("native_app_message")) {
+      if (msg.native_app_message == "end") {
+        //if pades -> open signed pdf 
+        if (msg.signature_type == "pades") {
+          var path = "file:///" + msg.local_path_newFile;
+          chrome.tabs.create({
+            index: 0,
+            url: path,
+            active: false
+          }, function () {});
+        }
+
+        storedSignatureData.empty();
+        chrome.runtime.sendMessage({
+          state: "end",
+          localPath: msg.local_path_newFile
+        }, function (response) {});
+
+        appCurrentState = StateEnum.complete;
+      } else if (msg.native_app_message == "info") {
+
+        storedSignatureData.infoPDF = {
+          page: msg.page,
+          fields: msg.fields
+        }
+
+        //forward fields list to popup
+        chrome.runtime.sendMessage({
+          state: 'info',
+          page: msg.page,
+          fields: msg.fields
+        }, function (response) {});
+
+        appCurrentState = StateEnum.running;
+
+      } else if (msg.native_app_message == "error") {
+        console.log("ERROR:" + msg.error);
+        appCurrentState = StateEnum.error;
+        chrome.runtime.sendMessage({
+          state: 'error',
+          error: msg.error
+        }, function (response) {});
       }
-
-      storedSignatureData.empty();
-      chrome.runtime.sendMessage({
-        state: "end",
-        localPath: msg.local_path_newFile
-      }, function (response) {});
-
-      appCurrentState = StateEnum.complete;
-
-    } else if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "info") {
-
-      storedSignatureData.infoPDF = {
-        page: msg.page,
-        fields: msg.fields
-      }
-
-      //forward fields list to popup
-      chrome.runtime.sendMessage({
-        state: 'info',
-        page: msg.page,
-        fields: msg.fields
-      }, function (response) {});
-
-      appCurrentState = StateEnum.running;
-
-    } else if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "error") {
-      console.log("ERROR:" + msg.error);
-      appCurrentState = StateEnum.error;
-      chrome.runtime.sendMessage({
-        state: 'error',
-        error: msg.error
-      }, function (response) {});
     }
 
   });
@@ -217,7 +218,9 @@ chrome.runtime.onMessage.addListener(
         break;
       case popupMessageType.resetState:
         appCurrentState = StateEnum.start;
-        sendResponse({appstate:appCurrentState})
+        sendResponse({
+          appstate: appCurrentState
+        })
         break;
       case popupMessageType.init:
         openConnection();

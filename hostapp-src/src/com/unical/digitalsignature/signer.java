@@ -88,8 +88,6 @@ public class signer {
 
 			if (middlewareChrome.getRequestedAction().equals(MiddlewareChrome.ACTION_SIGN)) {
 				args = middlewareChrome.createArgsList();
-				MiddlewareChrome.log(className, "" + args.length);
-				MiddlewareChrome.log(className, String.join(" ", args));
 				try {
 					middlewareChrome.sendMessage("{\"native_app_message\":\"start\"}");
 				} catch (IOException e) {
@@ -275,13 +273,15 @@ public class signer {
 				ArgsParser.getInstance().getUseVisibleSignatureImage().delete();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			MiddlewareChrome.log(className, "ERROR :: Return signature data");
+//			e.printStackTrace();
 		}
 	}
 
 	private static boolean checkFile(File inputFile) {
 		if (!inputFile.exists()) {
 			MiddlewareChrome.log(className, "ERROR :: File not exist.");
+			MiddlewareChrome.getInstance().sendError("File not exist");
 			return false;
 		}
 		if (selectedSignFormat == SignFormat.PADES && !Files.getFileExtension(inputFile.getName()).equals("pdf")) {
@@ -360,6 +360,7 @@ public class signer {
 			// TODO add MAC driver
 		} catch (IOException e) {
 			MiddlewareChrome.log(className, "ERROR :: Error in default driver extractaction");
+			MiddlewareChrome.getInstance().sendError("Error in default driver extractaction");
 			return false;
 			// e.printStackTrace();
 		}

@@ -79,16 +79,6 @@ public class MiddlewareChrome {
 		}
 	}
 
-	// ******
-
-	// FOR TEST
-	// TODO remove
-//	public MiddlewareChrome(String jsonIn) {
-//		System.out.println(PATH_LOG);
-//		jsonObject = new JSONObject(jsonIn);
-//	}
-	// ----
-
 	public String getRequestedAction() {
 		if (jsonObject.has(JSONKey.ACTION.toString())) {
 			String requestAction = jsonObject.get(JSONKey.ACTION.toString()).toString();
@@ -104,19 +94,12 @@ public class MiddlewareChrome {
 
 	public String[] createArgsList() {
 		try {
-			log(className, "start create args");
 			List<String> argsList = new ArrayList<String>();
-			log(className, jsonObject.toString());
 			String command = jsonObject.getString(JSONKey.TYPE.toString());
-			log(className, command);
 			String file = jsonObject.getString(JSONKey.FILE.toString());
-			log(className, file);
 			String pass = jsonObject.getString(JSONKey.PASSWORD.toString());
-			log(className, pass);
 			boolean visible = (boolean) jsonObject.get(JSONKey.VISIBILE.toString());
-			log(className, "visible? " + visible);
 			boolean useField = (boolean) jsonObject.get(JSONKey.USE_FIELD.toString());
-			log(className, "use field? " + useField);
 
 			String img_base64 = jsonObject.getString(JSONKey.IMAGE.toString());
 
@@ -124,7 +107,6 @@ public class MiddlewareChrome {
 			argsList.add(pass);
 			argsList.add(command);
 
-			// TODO add image
 			if (command.equals(PADES_TYPE)) {
 				// add all pades option
 				if (visible) {
@@ -187,7 +169,8 @@ public class MiddlewareChrome {
 			byte[] imageByteArray = Base64.getDecoder().decode(base64Image.getBytes(StandardCharsets.UTF_8));
 			imageOutFile.write(imageByteArray);
 		} catch (Exception e) {
-			MiddlewareChrome.log(className, "ERROR :: create image- " + e);
+			log(className, "ERROR :: create image- " + e);
+			sendError("Unable to create image");
 		}
 		return path;
 	}
@@ -216,12 +199,12 @@ public class MiddlewareChrome {
 	}
 
 	public void sendError(String message) {
-
 		try {
 			JSONObject jo = new JSONObject();
 			jo.put("native_app_message", "error");
 			jo.put("error", message);
 			getInstance().sendMessage(jo.toString());
+			System.exit(0);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -327,6 +310,7 @@ public class MiddlewareChrome {
 			}
 		} catch (IOException e) {
 			log(className, "Error to read input");
+			sendError("Error to read file");
 		}
 		finalJson.put("native_app_message", "info");
 
