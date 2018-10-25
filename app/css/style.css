@@ -28,6 +28,12 @@ body {
     margin-bottom: 15px;
 }
 
+#select-signature-type-section{
+    margin-right: 1em;
+    margin-left: 1em;
+
+}
+
 #operation-completed .title {
     padding-top: 1.2em;
 }
