@@ -54,7 +54,8 @@ class Sections {
                 passwordSection: document.getElementById("pass"), //cades or pades (no visible)
                 padesVisibleSection: document.getElementById("pades-visible"), //visible pades
                 loadingSection: document.getElementById("loading"), //loading
-                endSection: document.getElementById("operation-completed")
+                endSection: document.getElementById("operation-completed"), //operation complete
+                errorSection: document.getElementById("error-section") //error section
             },
 
             this._currentSection = this._section.selectSignatureTypeSection;
@@ -99,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const background = chrome.extension.getBackgroundPage();
         const popupMessageType = background.popupMessageType;
-        const appCurrentState = background.appCurrentState;
+        let appCurrentState = background.appCurrentState;
         const appStateEnum = background.StateEnum;
         const backgroundStoredSignatureData = background.storedSignatureData;
 
@@ -113,19 +114,23 @@ document.addEventListener('DOMContentLoaded', function () {
         const useFieldSwitch = document.getElementById('use-signature-field-checkbox');
         const passfield = document.getElementById("password-field");
 
+        const loadingMsg = document.getElementById("loading-info");
+        const errorMsg = document.getElementById("error-info");
+
         (function checkCurrenState() {
-            console.log("App Current State:" + appCurrentState);
+            // console.log("App Current State:" + appCurrentState);
+            if (appCurrentState == undefined) {
+                clearData();
+            }
             if (appCurrentState == appStateEnum.loading) {
                 console.log("LOADING");
-                sections.changeSection(sections.section.loadingSection);
-                hideConfirmButtonSection();
-            }
-            else if (appCurrentState == appStateEnum.complete) {
-                console.log("COMPLETE");
+                // sections.changeSection(sections.section.loadingSection);
+                loading("Loading ...");
+            } else if (appCurrentState == appStateEnum.complete || appCurrentState == appStateEnum.error) {
                 clearData();
             }
             //check if exist stored data in background
-            else if(appCurrentState == appStateEnum.running){
+            else if (appCurrentState == appStateEnum.running) {
                 // console.log(backgroundStoredSignatureData);
                 if (backgroundStoredSignatureData.isEmpty() == false) {
                     console.log("NEED TO RESTORE DATA");
@@ -200,8 +205,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         confirmBtn.addEventListener('click', () => {
             getTabData(sign);
-            sections.changeSection(sections.section.loadingSection);
-            hideConfirmButtonSection();
+            loading("Signing process ...");
+            // sections.changeSection(sections.section.loadingSection);
         });
 
         nextBtn.addEventListener('click', function () {
@@ -226,12 +231,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     // console.log("<<< received:")
                     // console.log(response);
                 });
-            }
-
-            // pass -> Loading
-            else if (sections.currentSection == sections.section.passwordSection) {
-                sections.changeSection(sections.section.loadingSection);
-                hideConfirmButtonSection();
             }
 
             // pades_visible -> pass
@@ -269,6 +268,9 @@ document.addEventListener('DOMContentLoaded', function () {
             useVisibleSignatureSwitch.classList.add('start-transform');
             useVisibleSignatureSwitch.classList.remove('transform');
 
+            closeBtn.classList.remove("hidden");
+            nextBtn.classList.remove("hide");
+
             clearBtn.classList.add("hidden");
             nextBtn.disabled = true;
             //go to first section
@@ -277,6 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
             chrome.runtime.sendMessage({
                 action: popupMessageType.resetState
             }, function (response) {
+                appCurrentState = response.appstate;
                 // console.log("<<< received:")
                 // console.log(response.ack);
             });
@@ -351,8 +354,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         function getPdfInfo(tabData) {
-            sections.changeSection(sections.section.loadingSection);
-            hideConfirmButtonSection();
+            loading("Retrieve information from PDF ...");
+            // sections.changeSection(sections.section.loadingSection);
             if (tabData.location == "remote") {
                 chrome.runtime.sendMessage({
                     action: popupMessageType.download_and_getInfo,
@@ -495,6 +498,17 @@ document.addEventListener('DOMContentLoaded', function () {
             completeInfo.textContent = "File created: " + localFilePath;
         }
 
+        function loading(message) {
+            hideConfirmButtonSection();
+            loadingMsg.textContent = message;
+            sections.changeSection(sections.section.loadingSection);
+        }
+
+        function showError(error) {
+            errorMsg.textContent = error;
+            sections.changeSection(sections.section.errorSection);
+            clearBtn.classList.remove("hidden");
+        }
 
         //listener message Background -> Popup
         chrome.runtime.onMessage.addListener(
@@ -510,6 +524,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             break;
                         case "info":
                             updateSignatureFieldList(request);
+                            break;
+                        case "error":
+                            showError(request.error);
                             break;
 
                         default:

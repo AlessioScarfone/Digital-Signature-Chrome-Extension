@@ -81,6 +81,7 @@ public class signer {
 					middlewareChrome.sendMessage(pdfInfo.toString());
 				} catch (IOException e) {
 					MiddlewareChrome.log(className, "ERROR :: get Info pdf");
+					MiddlewareChrome.getInstance().sendError("Unable to get information of the pdf");
 				}
 				middlewareChrome.readMessage();
 			}
@@ -223,7 +224,7 @@ public class signer {
 			keys = token.getKeys();
 		} catch (DSSException e) {
 			MiddlewareChrome.log(className, "ERROR :: Token access failed");
-			MiddlewareChrome.getInstance().sendError("Token acces failed");
+			MiddlewareChrome.getInstance().sendError("Token access failed");
 			// e.printStackTrace();
 			return;
 		}

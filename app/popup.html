@@ -123,9 +123,9 @@
       </div> <!-- END step 3 -->
 
       <!-- Loading -->
-      <div id="loading" class="hide level-item">
-        <p id="loading-info"></p>
-        <div class="lds-ring">
+      <div id="loading" class="hide">
+        <h6 id="loading-info" class="info-msg"></h6>
+        <div class="lds-ring ">
           <div></div>
           <div></div>
           <div></div>
@@ -140,15 +140,24 @@
           <i class="fas fa-check-square fa-3x"></i>
         </div>
 
-        <h6 id="complete-info" class="hide"></h6>
+        <h6 id="complete-info" class="info-msg"></h6>
+      </div>
 
+       <!-- Error -->
+       <div id="error-section" class="has-text-centered hide">
+        <h1 class="title is-5 ">Error!</h1>
+        <div class="icon has-text-danger has-text-centered">
+            <i class="fas fa-exclamation-triangle fa-3x"></i>
+        </div>
+        <h6 id="error-info" class="info-msg"></h6>
       </div>
 
       <!-- Confirm and Back Button -->
       <div class="has-text-centered" id="confirm-btn-section">
         <hr class="bottom-hr" />
 
-        <button id="close-btn" class="button is-danger is-small is-pulled-left tooltip is-tooltip-right" data-tooltip="Close Popup"> <span class="icon"><i class="fas fa-times"></i></span>
+        <button id="close-btn" class="button is-danger is-small is-pulled-left tooltip is-tooltip-right" data-tooltip="Close Popup">
+          <span class="icon"><i class="fas fa-times"></i></span>
         </button>
 
         <button class="button is-success is-outlined" id="next-btn" disabled>
@@ -158,7 +167,8 @@
           </span>
         </button>
 
-        <button id="clear-btn" class="button is-info is-outlined is-small is-pulled-right tooltip is-tooltip-left hidden" data-tooltip="Clear stored data"> <span class="icon"><i class="far fa-trash-alt"></i></span>
+        <button id="clear-btn" class="button is-info is-outlined is-small is-pulled-right tooltip is-tooltip-left hidden"
+          data-tooltip="Clear stored data"> <span class="icon"><i class="far fa-trash-alt"></i></span>
         </button>
 
         <button id="confirm-btn" class="button is-success is-outlined hide" disabled>Confirm</button>

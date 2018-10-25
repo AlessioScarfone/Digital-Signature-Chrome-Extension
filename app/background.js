@@ -16,12 +16,13 @@ chrome.runtime.onInstalled.addListener(function () {
 const app = 'com.unical.digitalsignature.signer';
 
 var nativeAppPort = null;
-//possible value of appCurrentState: ready, loading, complete 
+//possible value of appCurrentState
 var StateEnum = {
   "ready": 1,
   "loading": 2,
   "running": 3,
-  "complete": 4
+  "complete": 4,
+  "error": 5
 };
 Object.freeze(StateEnum)
 var appCurrentState = StateEnum.start;
@@ -86,10 +87,14 @@ function openConnection() {
       }, function (response) {});
 
       appCurrentState = StateEnum.running;
-      
+
     } else if (msg.hasOwnProperty("native_app_message") && msg.native_app_message == "error") {
       console.log("ERROR:" + msg.error);
-      //TODO: show error in UI
+      appCurrentState = StateEnum.error;
+      chrome.runtime.sendMessage({
+        state: 'error',
+        error: msg.error
+      }, function (response) {});
     }
 
   });
@@ -212,6 +217,7 @@ chrome.runtime.onMessage.addListener(
         break;
       case popupMessageType.resetState:
         appCurrentState = StateEnum.start;
+        sendResponse({appstate:appCurrentState})
         break;
       case popupMessageType.init:
         openConnection();
