@@ -15,7 +15,9 @@ chrome.runtime.onInstalled.addListener(function () {
 
 const app = 'com.unical.digitalsignature.signer';
 
+//port with native app
 var nativeAppPort = null;
+
 //possible value of appCurrentState
 var StateEnum = {
   ready: "ready",
@@ -27,8 +29,9 @@ var StateEnum = {
   complete: "complete"
 };
 Object.freeze(StateEnum)
-var appCurrentState = StateEnum.start;
 
+//state of the app
+var appCurrentState = StateEnum.start;
 
 var storedSignatureData = {
   signatureData: "",
@@ -47,6 +50,9 @@ var storedSignatureData = {
   }
 }
 
+/**
+ * Open connection with native app and set message listeners.
+ */
 function openConnection() {
   nativeAppPort = chrome.runtime.connectNative(app);
 
@@ -110,10 +116,19 @@ function openConnection() {
   return nativeAppPort;
 }
 
+/**
+ * Close connection with native app.
+ */
 function closeConnection() {
   nativeAppPort.disconnect();
 }
 
+/**
+ * Dowload the pdf, get local path of downloaded file and call callback.
+ * @param {string} pdfURL - url of the pdf
+ * @param {*} data - signature data
+ * @param {function(data):void} callback - callback
+ */
 function downloadFile(pdfURL, data, callback) {
   appCurrentState = StateEnum.downloadFile;
   //1) get tab url
@@ -157,6 +172,10 @@ function downloadFile(pdfURL, data, callback) {
   }
 }
 
+/**
+ * Send data to native app for signing
+ * @param {*} data - data to send to native app for signing 
+ */
 function sendDataForSign(data) {
   appCurrentState = StateEnum.signing;
   console.log("Send message to native app...")
@@ -165,6 +184,10 @@ function sendDataForSign(data) {
   nativeAppPort.postMessage(data);
 };
 
+/**
+ * Send data to native app for ask information about pdf like: fields and pages number
+ * @param {*} data - data to send to native app
+ */
 function requestPDFInfo(data) {
   appCurrentState = StateEnum.info;
   console.log("Send message to native app...")
@@ -176,6 +199,11 @@ function requestPDFInfo(data) {
   updateSignatureDataPopup("filename", storedSignatureData.signatureData.filename);
 };
 
+/**
+ * Send a message to the Popup for update its signature data
+ * @param {string} fieldToUpdate : field of signature data to update
+ * @param {*} value : new value
+ */
 function updateSignatureDataPopup(fieldToUpdate, value) {
   chrome.runtime.sendMessage({
     state: 'updateSignatureData',
@@ -184,7 +212,10 @@ function updateSignatureDataPopup(fieldToUpdate, value) {
   }, function (response) {});
 }
 
-//create a connection with content script and add a zoomchange
+ /** create a connection with content script and add a zoomchange 
+ * 
+ * @param {*} tabId - id of the tab to which attach listener
+ */
 function zoomListener(tabId) {
   console.log(tabId);
 
@@ -207,6 +238,9 @@ function zoomListener(tabId) {
 
 }
 
+/**
+ * types of message from the popup that background script can handle
+ */
 var popupMessageType = {
   wakeup: 'wakeup',
   init: 'init',
