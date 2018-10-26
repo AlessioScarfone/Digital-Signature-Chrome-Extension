@@ -18,11 +18,13 @@ const app = 'com.unical.digitalsignature.signer';
 var nativeAppPort = null;
 //possible value of appCurrentState
 var StateEnum = {
-  "ready": 1,
-  "loading": 2,
-  "running": 3,
-  "complete": 4,
-  "error": 5
+  ready: "ready",
+  downloadFile: "downloadFile",
+  running: "running",
+  signing:"signing",
+  info:"info",
+  error: "error",
+  complete: "complete"
 };
 Object.freeze(StateEnum)
 var appCurrentState = StateEnum.start;
@@ -31,6 +33,7 @@ var appCurrentState = StateEnum.start;
 var storedSignatureData = {
   signatureData: "",
   infoPDF: "",
+  localpath: "",
 
   empty: function () {
     this.signatureData = "";
@@ -112,7 +115,7 @@ function closeConnection() {
 }
 
 function downloadFile(pdfURL, data, callback) {
-  appCurrentState = StateEnum.loading;
+  appCurrentState = StateEnum.downloadFile;
   //1) get tab url
   downloadPDF(pdfURL)
 
@@ -155,7 +158,7 @@ function downloadFile(pdfURL, data, callback) {
 }
 
 function sendDataForSign(data) {
-  appCurrentState = StateEnum.loading;
+  appCurrentState = StateEnum.signing;
   console.log("Send message to native app...")
   console.log(data);
   data.action = "sign";
@@ -163,15 +166,23 @@ function sendDataForSign(data) {
 };
 
 function requestPDFInfo(data) {
-  appCurrentState = StateEnum.loading;
+  appCurrentState = StateEnum.info;
   console.log("Send message to native app...")
   console.log(data);
   data.action = popupMessageType.info;
   nativeAppPort.postMessage(data);
-
   delete data.action;
   storedSignatureData.signatureData = data;
+  updateSignatureDataPopup("filename", storedSignatureData.signatureData.filename);
 };
+
+function updateSignatureDataPopup(fieldToUpdate, value) {
+  chrome.runtime.sendMessage({
+    state: 'updateSignatureData',
+    fieldToUpdate: fieldToUpdate,
+    value: value
+  }, function (response) {});
+}
 
 //create a connection with content script and add a zoomchange
 function zoomListener(tabId) {

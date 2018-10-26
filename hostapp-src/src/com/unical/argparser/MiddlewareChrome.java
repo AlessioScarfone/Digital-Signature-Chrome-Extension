@@ -206,7 +206,6 @@ public class MiddlewareChrome {
 			getInstance().sendMessage(jo.toString());
 			System.exit(0);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

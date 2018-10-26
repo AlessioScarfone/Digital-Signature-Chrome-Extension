@@ -153,7 +153,7 @@ public abstract class AbstractSignFactory implements ISignFactory {
 					+ Files.getFileExtension(newfilename);
 			c++;
 		}
-		return currentName;
+		return currentName.replaceAll("\\s+","");
 	}
 
 	public String writeFile(String dir, String newfilename, DSSDocument signedDocument) {

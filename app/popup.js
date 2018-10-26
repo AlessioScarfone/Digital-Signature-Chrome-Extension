@@ -1,7 +1,6 @@
 console.log("Start...")
 
-/**TODO: test of deleted file */
-
+//Object that include all needed data for signature process
 var signatureData = {
     type: "",
     filename: "",
@@ -44,7 +43,9 @@ var signatureData = {
     }
 };
 
-
+/**
+ * Object that contain a reference to the various section of the UI and handle the logic for change the current visible section 
+ */
 class Sections {
     constructor() {
         this._section = {
@@ -85,105 +86,63 @@ class Sections {
         console.error("changeSection: No valid section");
     }
 
+    /**hide current visible section */
     hideCurrentSection() {
         this._currentSection.classList.add('hide');
     };
 }
 
+const MessageType = {
+    info: "Retrieve information from PDF ...",
+    signing: "Signing process ...",
+    downloadFile: "Downloading file ..."
+}
+
 
 document.addEventListener('DOMContentLoaded', function () {
+    //Wake up background script
     chrome.runtime.sendMessage({
         "action": "wakeup"
     }, function (response) {
 
+        //variables related with background script
         const background = chrome.extension.getBackgroundPage();
-        const popupMessageType = background.popupMessageType;
-        let appCurrentState = background.appCurrentState;
+        const popupMessageType = background.popupMessageType; //types of message from the popup that background script can handle
         const appStateEnum = background.StateEnum;
         const backgroundStoredSignatureData = background.storedSignatureData;
+        let appCurrentState = background.appCurrentState;
 
         var sections = new Sections();
+
+        // Buttons
         const signatureTypeBtns = document.querySelectorAll('.signature-type-btns');
         const confirmBtn = document.getElementById("confirm-btn");
         const nextBtn = document.getElementById("next-btn");
         const closeBtn = document.getElementById("close-btn");
         const clearBtn = document.getElementById("clear-btn");
-        const useVisibleSignatureSwitch = document.getElementById("use-visible-signature");
-        const useFieldSwitch = document.getElementById('use-signature-field-checkbox');
+        //Switch
+        const useVisibleSignatureSwitchContainer = document.getElementById("use-visible-signature");
+        const useVisibleSignatureSwitchCheckbox = document.getElementById('use-visible-signature-checkbox');
+        const useFieldSwitchCheckbox = document.getElementById('use-signature-field-checkbox');
+        //Field
         const passfield = document.getElementById("password-field");
-
+        const img_input = document.getElementsByClassName("file-input")[0];
+        //Message
         const loadingMsg = document.getElementById("loading-info");
         const errorMsg = document.getElementById("error-info");
 
-        (function checkCurrenState() {
-            // console.log("App Current State:" + appCurrentState);
-            if (appCurrentState == undefined) {
-                clearData();
-            }
-            if (appCurrentState == appStateEnum.loading) {
-                console.log("LOADING");
-                // sections.changeSection(sections.section.loadingSection);
-                loading("Loading ...");
-            } else if (appCurrentState == appStateEnum.complete || appCurrentState == appStateEnum.error) {
-                clearData();
-            }
-            //check if exist stored data in background
-            else if (appCurrentState == appStateEnum.running) {
-                // console.log(backgroundStoredSignatureData);
-                if (backgroundStoredSignatureData.isEmpty() == false) {
-                    console.log("NEED TO RESTORE DATA");
-                    // signatureData = backgroundStoredSignatureData.signatureData;
-                    signatureData.copy(backgroundStoredSignatureData.signatureData);
-                    updateSignatureFieldList(backgroundStoredSignatureData.infoPDF);
-                }
-            }
-
-        }());
+        checkCurrenState();
 
         signatureTypeBtns.forEach(el => el.addEventListener('click', selectSignatureTypeEvent));
 
-        function selectSignatureTypeEvent() {
-            var el = this;
-            signatureTypeBtns.forEach(e => {
-                e.classList.add('is-outlined');
-                e.classList.remove('is-selected')
-            });
-            //update state of selected btn
-            el.classList.remove('is-outlined');
-            el.classList.add('is-selected');
-            signatureData.type = el.getAttribute('data-signature-type');
-
-            if (signatureData.type == "pades") {
-                // document.getElementById("use-visible-signature").classList.remove('hide');
-                el.parentElement.classList.remove("start-trasform-sign-type");
-                el.parentElement.classList.add("trasform-sign-type");
-                useVisibleSignatureSwitch.classList.remove('start-transform');
-                useVisibleSignatureSwitch.classList.add('transform');
-            } else { //click on cades
-                // document.getElementById("use-visible-signature").classList.add('hide');
-                el.parentElement.classList.remove("trasform-sign-type");
-                el.parentElement.classList.add("start-trasform-sign-type");
-                useVisibleSignatureSwitch.classList.add('start-transform');
-                useVisibleSignatureSwitch.classList.remove('transform');
-                if (document.getElementById('use-visible-signature-checkbox').checked)
-                    document.getElementById('use-visible-signature-checkbox').click();
-
-                signatureData.visible = false;
-            }
-
-            //after first initializzation active btn next
-            nextBtn.disabled = false;
-        }
-
-        document.getElementById('use-visible-signature-checkbox').addEventListener("change", function () {
+        useVisibleSignatureSwitchCheckbox.addEventListener("change", function () {
             if (this.checked) {
                 signatureData.visible = true;
             } else
                 signatureData.visible = false;
         });
 
-
-        useFieldSwitch.addEventListener("change", function () {
+        useFieldSwitchCheckbox.addEventListener("change", function () {
             if (this.checked) {
                 signatureData.useField = true;
                 document.getElementById('setting-no-field').classList.add('hide');
@@ -203,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         confirmBtn.addEventListener('click', () => {
             getTabData(sign);
-            loading("Signing process ...");
+            showLoading(MessageType.signing);
             // sections.changeSection(sections.section.loadingSection);
         });
 
@@ -252,42 +211,6 @@ document.addEventListener('DOMContentLoaded', function () {
             clearData();
         });
 
-        function clearData() {
-            backgroundStoredSignatureData.empty();
-            signatureData.empty();
-
-            signatureTypeBtns.forEach(el => {
-                el.classList.add('is-outlined');
-                el.classList.remove('is-selected');
-                el.parentElement.classList.remove("trasform-sign-type");
-                el.parentElement.classList.add("start-trasform-sign-type");
-            });
-            document.getElementById('use-visible-signature-checkbox').checked = false;
-            passfield.value = "";
-            useVisibleSignatureSwitch.classList.add('start-transform');
-            useVisibleSignatureSwitch.classList.remove('transform');
-
-            closeBtn.classList.remove("hidden");
-            nextBtn.classList.remove("hide");
-
-            confirmBtn.classList.add("hide");
-            clearBtn.classList.add("hidden");
-            nextBtn.disabled = true;
-            //go to first section
-            sections.changeSection(sections.section.selectSignatureTypeSection);
-
-            chrome.runtime.sendMessage({
-                action: popupMessageType.resetState
-            }, function (response) {
-                appCurrentState = response.appstate;
-                // console.log("<<< received:")
-                // console.log(response.ack);
-            });
-
-            // window.close();
-        }
-
-
         passfield.addEventListener('input', function () {
             if (this.value.length != 0) {
                 confirmBtn.disabled = false;
@@ -305,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
             signatureData.horizontalPosition = this.value;
         }));
 
-        const img_input = document.getElementsByClassName("file-input")[0];
+
         const reader = new FileReader();
         img_input.addEventListener('change', (e) => {
             img_input.parentNode.parentNode.classList.remove("is-success");
@@ -328,6 +251,110 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+
+        /* ------------------------------------------------------------------------------------------------------------ */
+
+        function selectSignatureTypeEvent() {
+            var el = this;
+            signatureTypeBtns.forEach(e => {
+                e.classList.add('is-outlined');
+                e.classList.remove('is-selected')
+            });
+            //update state of selected btn
+            el.classList.remove('is-outlined');
+            el.classList.add('is-selected');
+            signatureData.type = el.getAttribute('data-signature-type');
+
+            if (signatureData.type == "pades") {
+                // document.getElementById("use-visible-signature").classList.remove('hide');
+                el.parentElement.classList.remove("start-trasform-sign-type");
+                el.parentElement.classList.add("trasform-sign-type");
+                useVisibleSignatureSwitchContainer.classList.remove('start-transform');
+                useVisibleSignatureSwitchContainer.classList.add('transform');
+            } else { //click on cades
+                // document.getElementById("use-visible-signature").classList.add('hide');
+                el.parentElement.classList.remove("trasform-sign-type");
+                el.parentElement.classList.add("start-trasform-sign-type");
+                useVisibleSignatureSwitchContainer.classList.add('start-transform');
+                useVisibleSignatureSwitchContainer.classList.remove('transform');
+                if (useVisibleSignatureSwitchCheckbox.checked)
+                    useVisibleSignatureSwitchCheckbox.click();
+
+                signatureData.visible = false;
+            }
+
+            //after first initializzation active btn next
+            nextBtn.disabled = false;
+        }
+
+        /**
+         * Check app state and if is needed, restore state from background script
+         */
+        function checkCurrenState() {
+            // console.log("App Current State:" + appCurrentState);
+            if (appCurrentState == undefined) {
+                clearData();
+            }
+            if (appCurrentState == appStateEnum.signing || appCurrentState == appStateEnum.downloadFile || appCurrentState == appStateEnum.info) {
+                console.log("LOADING");
+                // sections.changeSection(sections.section.loadingSection);
+                showLoading(MessageType[appCurrentState]);
+            } else if (appCurrentState == appStateEnum.complete || appCurrentState == appStateEnum.error) {
+                clearData();
+            }
+            //check if exist stored data in background
+            else if (appCurrentState == appStateEnum.running) {
+                // console.log(backgroundStoredSignatureData);
+                if (backgroundStoredSignatureData.isEmpty() == false) {
+                    console.log("NEED TO RESTORE DATA");
+                    // signatureData = backgroundStoredSignatureData.signatureData;
+                    signatureData.copy(backgroundStoredSignatureData.signatureData);
+                    updateSignatureFieldList(backgroundStoredSignatureData.infoPDF);
+                }
+            }
+        };
+
+        /** Clear all stored data and reset the app to the initial state */
+        function clearData() {
+            backgroundStoredSignatureData.empty();
+            signatureData.empty();
+
+            signatureTypeBtns.forEach(el => {
+                el.classList.add('is-outlined');
+                el.classList.remove('is-selected');
+                el.parentElement.classList.remove("trasform-sign-type");
+                el.parentElement.classList.add("start-trasform-sign-type");
+            });
+            useVisibleSignatureSwitchCheckbox.checked = false;
+            passfield.value = "";
+            useVisibleSignatureSwitchContainer.classList.add('start-transform');
+            useVisibleSignatureSwitchContainer.classList.remove('transform');
+
+            closeBtn.classList.remove("hidden");
+            nextBtn.classList.remove("hide");
+
+            confirmBtn.classList.add("hide");
+            clearBtn.classList.add("hidden");
+            nextBtn.disabled = true;
+            //go to first section
+            sections.changeSection(sections.section.selectSignatureTypeSection);
+
+            chrome.runtime.sendMessage({
+                action: popupMessageType.resetState
+            }, function (response) {
+                appCurrentState = response.appstate;
+                // console.log("<<< received:")
+                // console.log(response.ack);
+            });
+
+            // window.close();
+        }
+
+        /**
+         * Sign the pdf. This method usually is used as callback for 'getTabData' function.
+         * If the file in the active tab is remote, before ask information download it.
+         * @param {{location: "local" | "remote", url: string}} tabData - data of the tab
+         */
         function sign(tabData) {
             signatureData.password = passfield.value;
             console.log("send message sign >>> ");
@@ -353,8 +380,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        /**
+         * Get PDF info like: page number and fields. This method usually is used for "pades visible signature" 
+         * and normally is used as callback for 'getTabData' function.
+         * If the file in the active tab is remote, before ask information download it.
+         * @param {{location: "local" | "remote", url: string}} tabData - data of the tab
+         */
         function getPdfInfo(tabData) {
-            loading("Retrieve information from PDF ...");
+            showLoading(MessageType.info);
             // sections.changeSection(sections.section.loadingSection);
             if (tabData.location == "remote") {
                 chrome.runtime.sendMessage({
@@ -377,7 +410,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-
+        /** 
+         * Get information about active browser tab.
+         * Check if the file is local or you need to download it and after call a callback.
+         * 
+         *  @param {function(tabData):void} callback - A callback to run that that receive as input the tabData {location:"local"|"remote", url: "urlOfFile"}.
+         *  tabData.url may be a local path on the machine or a URL
+         */
         function getTabData(callback) {
             console.log("GET TAB URL...")
             var tabData = {};
@@ -400,6 +439,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         pdfURL = pdfURL.substr("file:///".length);
                         console.log("File is local:");
                         console.log(pdfURL);
+                        //restore all space that browser transform in
+                        pdfURL = pdfURL.replace(/%20/g, ' ');
                         signatureData.filename = pdfURL;
                         tabData.location = "local";
                     } else {
@@ -413,22 +454,26 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        function updateSignatureFieldList(fields) {
+        /**
+         * Fill visible signature section with data of fields and of pdf
+         * @param {} fieldsData - field and pdf data 
+         */
+        function updateSignatureFieldList(fieldsData) {
             sections.changeSection(sections.section.padesVisibleSection);
             nextBtn.classList.remove("hide");
             nextBtn.disabled = true;
             closeBtn.classList.remove("hidden");
             clearBtn.classList.remove("hidden");
-            console.log(fields);
+            // console.log(fields);
             // console.log(fields.fields);
 
-            if (fields.fields == undefined) {
-                useFieldSwitch.disabled = true;
+            if (fieldsData.fields == undefined) {
+                useFieldSwitchCheckbox.disabled = true;
                 document.querySelector("#use-signature-field p.has-text-danger").classList.remove("hide");
             } else {
                 //create list of signable fields
                 let parent = document.querySelector("#setting-with-field .select select");
-                fields.fields.forEach(el => {
+                fieldsData.fields.forEach(el => {
                     // console.log(el);
                     let node = document.createElement("option");
                     let text = document.createTextNode(el.name);
@@ -439,13 +484,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 chrome.tabs.setZoom(0, function () {
                     console.log("zoom changed")
                 });
-                injectContentScript(fields);
+                injectContentScript(fieldsData);
             }
 
             const page_input = document.getElementById("page-input");
-            page_input.max = fields.page;
+            page_input.max = fieldsData.page;
             page_input.min = 1;
-            page_input.placeholder = "1 - " + (fields.page);
+            page_input.placeholder = "1 - " + (fieldsData.page);
             page_input.addEventListener('input', (e) => {
                 signatureData.pageNumber = parseInt(e.target.value);
                 if (e.target.checkValidity())
@@ -455,7 +500,11 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        function injectContentScript(fields) {
+        /**
+         * Inject content script that show fields name on the pdf. This may modify the look and the dimension of the pdf embedded reader
+         * @param {} fieldsData - field and pdf data 
+         */
+        function injectContentScript(fieldsData) {
             //ask to background to create a zoom change listener
             chrome.tabs.query({
                 active: true
@@ -472,7 +521,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 //set data for content script
                 chrome.storage.local.set({
-                    fieldsData: fields
+                    fieldsData: fieldsData
                 }, function () {});
 
                 //run content script
@@ -490,6 +539,10 @@ document.addEventListener('DOMContentLoaded', function () {
             clearBtn.classList.add("hidden");
         }
 
+        /**
+         * Show end section with path of signed file
+         * @param {string} localFilePath - local path of signed file
+         */
         function endSectionUIUpdate(localFilePath) {
             console.log(localFilePath);
             hideConfirmButtonSection();
@@ -498,16 +551,34 @@ document.addEventListener('DOMContentLoaded', function () {
             completeInfo.textContent = "File created: " + localFilePath;
         }
 
-        function loading(message) {
+        /**
+         * Fill loading message section and show it
+         * @param {string} message - loading message to show
+         */
+        function showLoading(message) {
             hideConfirmButtonSection();
             loadingMsg.textContent = message;
             sections.changeSection(sections.section.loadingSection);
         }
 
-        function showError(error) {
-            errorMsg.textContent = error;
+        /**
+         * Fill error message section and show it
+         * @param {string} errorMessage- error message to show 
+         */
+        function showError(errorMessage) {
+            errorMsg.textContent = errorMessage;
             sections.changeSection(sections.section.errorSection);
             clearBtn.classList.remove("hidden");
+        }
+
+        /**
+         * Update signature data
+         * @param {string} field - property of signature data object to update
+         * @param {*} value - new value
+         */
+        function updateSignatureData(field, value) {
+            signatureData[field] = value;
+            // console.log(signatureData);
         }
 
         //listener message Background -> Popup
@@ -528,7 +599,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         case "error":
                             showError(request.error);
                             break;
-
+                        case "updateSignatureData":
+                            updateSignatureData(request.fieldToUpdate, request.value);
                         default:
                             break;
                     }
@@ -539,10 +611,5 @@ document.addEventListener('DOMContentLoaded', function () {
                 // });
             });
 
-
-
-
-
-
-    });
-});
+    }); //close wake up message callback
+}); //close DOMContentLoaded
