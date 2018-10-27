@@ -25,7 +25,7 @@ const fieldNameRounding = { //px
 
     /**
      * Check if the document contains both horizontal and vertical pages
-     * @param {*} pages - list of pages 
+     * @param {*[]} pages - list of pages 
      */
     checkIfMixOrientation: function (pages) {
         if (pages.length == 1) return false;
@@ -47,7 +47,7 @@ const fieldNameRounding = { //px
 
     /**
      * Calculate the adjustment for field position in vertical page. It is used if the pdf contain both horizontal and vertical pages
-     * @param {*} pages - list of pages
+     * @param {*[]} pages - list of pages
      */
     calculateMixOrientationAdjustment: function (pages) {
         let vpage = getAVerticalPage(pages);
@@ -230,7 +230,7 @@ function addPercentage(value, percentage, start = value, roundvalue = 0) {
 
 /**
  * Check if a page is vertical 
- * @param {*} pages - list of pages
+ * @param {*[]} pages - list of pages
  * @param {number} pageindex - index of page in pages list
  */
 function isVertical(pages, pageIndex) {
@@ -241,7 +241,7 @@ function isVertical(pages, pageIndex) {
 
 /**
  * return the first vertical page in the document
- * @param {*} pages - list of pages
+ * @param {*[]} pages - list of pages
  */
 function getAVerticalPage(pages) {
     for (let index = 0; index < pages.length; index++) {
@@ -252,7 +252,7 @@ function getAVerticalPage(pages) {
 }
 /**
  * return the first horizontal page in the document
- * @param {*} pages - list of pages
+ * @param {*[]} pages - list of pages
  */
 function getAnHorizontalPage(pages) {
     for (let index = 0; index < pages.length; index++) {
@@ -263,7 +263,7 @@ function getAnHorizontalPage(pages) {
 }
 
 /** Return the maximum width of pages in pt.
- * @param {*} pages - list of pages 
+ * @param {*[]} pages - list of pages 
  */
 function getMaxWidth(pages) {
     let max = 0;
@@ -277,7 +277,7 @@ function getMaxWidth(pages) {
 
 
 /** Return the maximum height of pages in pt.
- * @param {*} pages - list of pages 
+ * @param {*[]} pages - list of pages 
  */
 function getMaxHeight(pages) {
     let max = 0;
@@ -291,7 +291,7 @@ function getMaxHeight(pages) {
 
 /**
  * Calculate  the total height of the pdf in pt
- * @param {*} pages  - list of pages 
+ * @param {*[]} pages  - list of pages 
  * @param {number} spaceBetweenPages - space between pages in browser viewer
  * @param {number} headerSpace - space for the header of the browser viewer 
  */
@@ -305,7 +305,7 @@ function getTotalHeightOfPDF(pages, spaceBetweenPages = 0, headerSpace = 0) {
 
 /**
  * Calculate the distance between start of document and selected page. Note: page is counted from 0
- * @param {*} pages - list of pages 
+ * @param {*[]} pages - list of pages 
  * @param {number} pageindex - page to reach
  * @param {number} spaceBetweenPages - space between pages in browser viewer
  * @param {number} headerSpace - space for the header of the browser viewer 

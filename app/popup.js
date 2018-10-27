@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         /**
          * Fill visible signature section with data of fields and of pdf
-         * @param {} fieldsData - field and pdf data 
+         * @param {*} fieldsData - field and pdf data 
          */
         function updateSignatureFieldList(fieldsData) {
             sections.changeSection(sections.section.padesVisibleSection);
@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         /**
          * Inject content script that show fields name on the pdf. This may modify the look and the dimension of the pdf embedded reader
-         * @param {} pdfInfo - field and pdf data 
+         * @param {*} pdfInfo - field and pdf data 
          */
         function injectContentScript(pdfInfo) {
             //ask to background to create a zoom change listener
