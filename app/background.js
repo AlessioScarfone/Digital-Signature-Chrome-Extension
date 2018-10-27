@@ -23,8 +23,8 @@ var StateEnum = {
   ready: "ready",
   downloadFile: "downloadFile",
   running: "running",
-  signing:"signing",
-  info:"info",
+  signing: "signing",
+  info: "info",
   error: "error",
   complete: "complete"
 };
@@ -84,14 +84,16 @@ function openConnection() {
       } else if (msg.native_app_message == "info") {
 
         storedSignatureData.infoPDF = {
-          page: msg.page,
+          pageNumber: msg.pageNumber,
+          pages: msg.pages,
           fields: msg.fields
         }
 
         //forward fields list to popup
         chrome.runtime.sendMessage({
           state: 'info',
-          page: msg.page,
+          pageNumber: msg.pageNumber,
+          pages: msg.pages,
           fields: msg.fields
         }, function (response) {});
 
@@ -212,11 +214,11 @@ function updateSignatureDataPopup(fieldToUpdate, value) {
   }, function (response) {});
 }
 
- /** create a connection with content script and add a zoomchange 
+/** create a connection with content script and add a zoomchange 
  * 
  * @param {*} tabId - id of the tab to which attach listener
  */
-function zoomListener(tabId) {
+function createZoomListener(tabId) {
   console.log(tabId);
 
   chrome.tabs.onZoomChange.addListener(function (ZoomChangeInfo) {
@@ -289,7 +291,7 @@ chrome.runtime.onMessage.addListener(
         break;
 
       case popupMessageType.zoom:
-        zoomListener(request.tabid);
+        createZoomListener(request.tabid);
         break;
 
       default:

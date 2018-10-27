@@ -246,8 +246,8 @@ public class MiddlewareChrome {
 	}
 
 	public JSONObject getPdfInfo() {
-		JSONArray ja = new JSONArray();
 		JSONObject finalJson = new JSONObject();
+		JSONArray jsonFieldsArray = new JSONArray();
 		String filename = jsonObject.getString(JSONKey.FILE.toString());
 		File inputFile = new File(filename);
 		PDDocument doc;
@@ -256,7 +256,8 @@ public class MiddlewareChrome {
 			PDDocumentCatalog pdCatalog = doc.getDocumentCatalog();
 			PDAcroForm pdAcroForm = pdCatalog.getAcroForm();
 			PDPageTree allPages = doc.getDocumentCatalog().getPages();
-			finalJson.put("page", doc.getNumberOfPages());
+			int numberOfPages = doc.getNumberOfPages();
+			finalJson.put("pageNumber", numberOfPages);
 			if (pdAcroForm != null) {
 				// get all fields
 				List<PDField> fields = pdAcroForm.getFields();
@@ -272,40 +273,43 @@ public class MiddlewareChrome {
 					float upperRightY = rectangle.getUpperRightY();
 					float lowerLeftX = rectangle.getLowerLeftX();
 					float lowerLeftY = rectangle.getLowerLeftY();
-					JSONObject jo = new JSONObject();
-					jo.put("name", fieldName);
-					jo.put("page", pageNumber);
-					jo.put("upper-right-x", upperRightX);
-					jo.put("upper-right-y", upperRightY);
-					jo.put("lower-left-x", lowerLeftX);
-					jo.put("lower-left-y", lowerLeftY);
+					JSONObject jF = new JSONObject();
+					jF.put("name", fieldName);
+					jF.put("page", pageNumber);
+					jF.put("upper-right-x", upperRightX);
+					jF.put("upper-right-y", upperRightY);
+					jF.put("lower-left-x", lowerLeftX);
+					jF.put("lower-left-y", lowerLeftY);
 
 					float pageh = currentPage.getMediaBox().getHeight();
 					float pagew = currentPage.getMediaBox().getWidth();
-					jo.put("page-height", pageh);
-					jo.put("page-width", pagew);
+					jF.put("page-height", pageh);
+					jF.put("page-width", pagew);
 
-					ja.put(jo);
+					jsonFieldsArray.put(jF);
 
-					MiddlewareChrome.log(className,
-							"page:" + pageNumber + " - " + fieldName + "[ urX:" + upperRightX + " urY:" + upperRightY
-									+ " llx:" + lowerLeftX + " lly:" + lowerLeftY + " ph:" + pageh + " pw:" + pagew
-									+ " ]");
-
-					// Create a new pdf with field name
-//					PDPageContentStream contentStream = new PDPageContentStream(doc, currentPage, true, false);
-//					contentStream.beginText();
-//					contentStream.setFont(PDType1Font.TIMES_ROMAN, 10);
-//					contentStream.newLineAtOffset(lowerLeftX, upperRightY+2);
-//					String text = fieldName;
-//					contentStream.showText(text);
-//					contentStream.endText();
-//					contentStream.close();
+//					MiddlewareChrome.log(className,
+//							"page:" + pageNumber + " - " + fieldName + "[ urX:" + upperRightX + " urY:" + upperRightY
+//									+ " llx:" + lowerLeftX + " lly:" + lowerLeftY + " ph:" + pageh + " pw:" + pagew
+//									+ " ]");
 
 				}
-				finalJson.put("fields", ja);
+				
+				// get data about pages
+				JSONArray jsonPagesArray = new JSONArray();
+				for (int i = 0; i < numberOfPages; i++) {
+					PDPage page = allPages.get(i);
+					JSONObject jP = new JSONObject();
+					float pageh = page.getMediaBox().getHeight();
+					float pagew = page.getMediaBox().getWidth();
+					jP.put("page-height", pageh);
+					jP.put("page-width", pagew);
 
-//				doc.save(inputFile.getParent()+Utility.separator+Files.getNameWithoutExtension(filename)+"-with-field."+Files.getFileExtension(filename));
+					jsonPagesArray.put(jP);
+				}
+				
+				finalJson.put("pages", jsonPagesArray);
+				finalJson.put("fields", jsonFieldsArray);
 			}
 		} catch (IOException e) {
 			log(className, "Error to read input");

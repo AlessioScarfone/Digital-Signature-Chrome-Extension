@@ -464,8 +464,7 @@ document.addEventListener('DOMContentLoaded', function () {
             nextBtn.disabled = true;
             closeBtn.classList.remove("hidden");
             clearBtn.classList.remove("hidden");
-            // console.log(fields);
-            // console.log(fields.fields);
+            console.log(fieldsData);
 
             if (fieldsData.fields == undefined) {
                 useFieldSwitchCheckbox.disabled = true;
@@ -488,9 +487,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const page_input = document.getElementById("page-input");
-            page_input.max = fieldsData.page;
+            page_input.max = fieldsData.pageNumber;
             page_input.min = 1;
-            page_input.placeholder = "1 - " + (fieldsData.page);
+            page_input.placeholder = "1 - " + (fieldsData.pageNumber);
             page_input.addEventListener('input', (e) => {
                 signatureData.pageNumber = parseInt(e.target.value);
                 if (e.target.checkValidity())
@@ -502,9 +501,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         /**
          * Inject content script that show fields name on the pdf. This may modify the look and the dimension of the pdf embedded reader
-         * @param {} fieldsData - field and pdf data 
+         * @param {} pdfInfo - field and pdf data 
          */
-        function injectContentScript(fieldsData) {
+        function injectContentScript(pdfInfo) {
             //ask to background to create a zoom change listener
             chrome.tabs.query({
                 active: true
@@ -521,7 +520,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 //set data for content script
                 chrome.storage.local.set({
-                    fieldsData: fieldsData
+                    pdfInfo: pdfInfo
                 }, function () {});
 
                 //run content script
