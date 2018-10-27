@@ -207,9 +207,8 @@ chrome.runtime.onConnect.addListener(function (port) {
                 }
 
                 el.style.top = addPercentage(top, originalField.startY, zoomval, fieldNameRounding.y) + "pt";
-                el.style.left = addPercentage(left, originalField.startX, zoomval, fieldNameRounding.x) + "pt";
+                el.style.left = addPercentage(left, originalField.startX - topoint(fieldNameRounding.x), zoomval, fieldNameRounding.x) + "pt";
             });
-            // }
 
         });
     }
