@@ -12,6 +12,7 @@ var signatureData = {
     pageNumber: 1,
     signatureField: "",
     image: "",
+    tabUrl: "",
 
     /**
      * Reset signature data.
@@ -27,6 +28,7 @@ var signatureData = {
         this.pageNumber = 1;
         this.signatureField = "";
         this.image = "";
+        this.tabUrl = "";
     },
 
     copy: function (data) {
@@ -40,6 +42,7 @@ var signatureData = {
         this.pageNumber = data.pageNumber;
         this.signatureField = data.signatureField;
         this.image = data.image;
+        this.tabUrl = data.tabUrl;
     }
 };
 
@@ -304,12 +307,21 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             //check if exist stored data in background
             else if (appCurrentState == appStateEnum.running) {
-                // console.log(backgroundStoredSignatureData);
+                console.log(backgroundStoredSignatureData);
                 if (backgroundStoredSignatureData.isEmpty() == false) {
                     console.log("NEED TO RESTORE DATA");
-                    // signatureData = backgroundStoredSignatureData.signatureData;
-                    signatureData.copy(backgroundStoredSignatureData.signatureData);
-                    updateSignatureFieldList(backgroundStoredSignatureData.infoPDF);
+                    chrome.tabs.query({
+                        active: true,
+                        currentWindow: true
+                    }, function (tab) {
+                        if (tab[0].url == backgroundStoredSignatureData.signatureData.tabUrl) {
+                            signatureData.copy(backgroundStoredSignatureData.signatureData);
+                            updateSignatureFieldList(backgroundStoredSignatureData.infoPDF);
+                        } else {
+                            console.log("Stored data in background belong to a different document. Clear stored data.")
+                            clearData();
+                        }
+                    });
                 }
             }
         };
@@ -433,6 +445,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     currentWindow: true
                 }, function (tab) {
                     var pdfURL = tab[0].url;
+                    signatureData.tabUrl = tab[0].url;
                     console.log(pdfURL);
                     if (pdfURL.startsWith("file:///")) {
                         // file is local
