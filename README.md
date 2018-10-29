@@ -8,6 +8,7 @@ This project aim to create an integration of digital signature, with pkcs#11 tok
 The extension interact with a native application developed in java which has the purpose of directly interact with the cryptographic harware. 
 The user through the extension can signing a document (PDF) openend in a browser tab.
 The software support CAdES and PAdES signature (both visible and not visible type).
+The app hallow to sign document  online files (the app download the document, sign it and create a new signed file) or local files.
 
 ### 2. The native application
 
@@ -24,18 +25,25 @@ The fundamental change is the adjunct of a middleware object that read the messa
 
 ----
 
-### 4. Project Structure  :construction_worker: :computer:
+### 4. Project Structure
 
 **Folder structure:**
 - **app**: contains the source of the chrome extension.
 - **hostapp-src**: contains the source code of the native application.
 - **hostapp-dist**: contains all the files necessary for installing and running the application. 
 
-Chrome extension get data from browser and pass it to native application using [Chrome Native Messaging](https://developer.chrome.com/extensions/nativeMessaging). A middleware parse the received message from the browser and prepare data for l'applicazione nativa che si occuperà di firmare il documento e restituire i dati necessari all'estensione.
+Chrome extension gets data from browser and pass it to native application using [Chrome Native Messaging](https://developer.chrome.com/extensions/nativeMessaging). A middleware parse the received message from the browser and prepare data for l'applicazione nativa che si occuperà di firmare il documento e restituire i dati necessari all'estensione.
 
 
 ####  4.1. Chrome Extension structure
 **Work in progress...** :construction_worker: :computer:
+
+**Extension components:**
+- **Popup/Page Action**:(activable only on a tab that contains a pdf) the UI of the extension, which can be activated only on the tabs that contain a pdf. Allows the user to choose the type of signatures and enter the necessary data such as password, field to sign etc.
+the script is also responsible for downloading the file and injection the content script if necessary.
+- **Background Script**: script that manages communication with the native app and provides storage services to restore the state of the popup and data. (Allows the user to temporarily close the popup and finish the operation later)
+- **Content Script**: (used only for PAgES visible signature). The browser viewer of pdf not show names of signature fields, so this script add the name of the field "above" the pdf viewer.
+
 
 -----
 
