@@ -2,6 +2,8 @@
 
 > **Sorry, README under construction...** :construction_worker: 
 
+<p align="center"> <img src="app/icon/icon128.png"> </p>
+  
 ### 1. Introduction
 
 This project aim to create an integration of digital signature, with pkcs#11 token, within Chrome browser.
@@ -48,7 +50,7 @@ Chrome extension gets data from browser and pass it to native application using 
 - **Popup/Page Action**:(activable only on a tab that contains a pdf) the UI of the extension, which can be activated only on the tabs that contain a pdf. Allows the user to choose the type of signatures and enter the necessary data such as password, field to sign etc.
 the script is also responsible for downloading the file and injection the content script if necessary.
 - **Background Script**: script that manages communication with the native app and provides storage services to restore the state of the popup and data. (Allows the user to temporarily close the popup and finish the operation later)
-- **Content Script**: (used only for PAgES visible signature). The browser viewer of pdf not show names of signature fields, so this script add the name of the field "above" the pdf viewer.
+- **Content Script**: (used only for PAdES visible signature). The browser viewer of pdf not show names of signature fields, so this script add the name of the field "above" the pdf viewer.
 
 > For details about Chrome Extension Architecture: (https://developer.chrome.com/extensions/overview)
 
