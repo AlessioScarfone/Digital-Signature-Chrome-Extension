@@ -13,6 +13,7 @@ The software support CAdES and PAdES signature (both visible and not visible typ
 
 The native application is an adapted version of my cli tool [https://github.com/AlessioScarfone/Java-Digital-Signature], slightly modified to communicate with a chrome extension.
 The fundamental change is the adjunct of a middleware object that read the messages from the extension, in JSON format, and format them for adapt to command line parameters and return the response to the browser.
+
 ----
 
 ### Installation
@@ -21,7 +22,8 @@ The fundamental change is the adjunct of a middleware object that read the messa
 ### Usage
 **Work in progress...** :construction_worker: :computer:
 
----- 
+----
+
 ### Technical detail and project structure
 #### Project Structure
 **Work in progress...** :construction_worker: :computer:
