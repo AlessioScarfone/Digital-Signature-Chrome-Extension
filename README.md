@@ -2,37 +2,39 @@
 
 #### > Sorry, README under construction... :construction_worker: 
 
-### Introduction
+### 1. Introduction
 
 This project aim to create an integration of digital signature, with pkcs#11 token, within Chrome browser.
 The extension interact with a native application developed in java which has the purpose of directly interact with the cryptographic harware. 
 The user through the extension can signing a document (PDF) openend in a browser tab.
 The software support CAdES and PAdES signature (both visible and not visible type).
 
-### The native application
+### 2. The native application
 
 The native application is an adapted version of my cli tool [https://github.com/AlessioScarfone/Java-Digital-Signature], slightly modified to communicate with a chrome extension.
 The fundamental change is the adjunct of a middleware object that read the messages from the extension, in JSON format, and format them for adapt to command line parameters and return the response to the browser.
 
 ----
 
-### Installation
+### 3. Installation
 **Work in progress...** :construction_worker: :computer:
 
-### Usage
+### 4. Usage
 **Work in progress...** :construction_worker: :computer:
 
 ----
 
-### Project Structure  :construction_worker: :computer:
+### 4. Project Structure  :construction_worker: :computer:
 
-Folder structure:
+**Folder structure:**
 - **app**: contains the source of the chrome extension.
 - **hostapp-src**: contains the source code of the native application.
 - **hostapp-dist**: contains all the files necessary for installing and running the application. 
 
+Chrome extension get data from browser and pass it to native application using [Chrome Native Messaging](https://developer.chrome.com/extensions/nativeMessaging). A middleware parse the received message from the browser and prepare data for l'applicazione nativa che si occuperà di firmare il documento e restituire i dati necessari all'estensione.
 
-###  Chrome Extension structure
+
+####  4.1. Chrome Extension structure
 **Work in progress...** :construction_worker: :computer:
 
 -----
