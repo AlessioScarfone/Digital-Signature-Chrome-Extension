@@ -1,6 +1,6 @@
 # Digital-Signature-Chrome-Extension
 
-#### > Sorry, README under construction... :construction_worker: 
+> **Sorry, README under construction...** :construction_worker: 
 
 ### 1. Introduction
 
@@ -20,8 +20,14 @@ The fundamental change is the adjunct of a middleware object that read the messa
 ### 3. Installation
 **Work in progress...** :construction_worker: :computer:
 
+**Prerequisites:**
+- Chrome Browser
+- Java 8
+- Token PKCS #11
+
 ### 4. Usage
 **Work in progress...** :construction_worker: :computer:
+
 
 ----
 
@@ -43,6 +49,8 @@ Chrome extension gets data from browser and pass it to native application using 
 the script is also responsible for downloading the file and injection the content script if necessary.
 - **Background Script**: script that manages communication with the native app and provides storage services to restore the state of the popup and data. (Allows the user to temporarily close the popup and finish the operation later)
 - **Content Script**: (used only for PAgES visible signature). The browser viewer of pdf not show names of signature fields, so this script add the name of the field "above" the pdf viewer.
+
+> For details about Chrome Extension Architecture: (https://developer.chrome.com/extensions/overview)
 
 
 -----
