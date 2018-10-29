@@ -30,10 +30,28 @@ The fundamental change is the adjunct of a middleware object that read the messa
 ### 4. Usage
 **Work in progress...** :construction_worker: :computer:
 
+<ol>
+  <li>Open pdf with browser (local or online file).</li>
+  <li>Click on extension icon, this will open a popup.</li>
+  <li>Select the type of signature you want:</li>
+  4.1. <b>CAdES or PAdES not visible </b>
+  <ol> 
+    <li>Insert password.</li>
+    <li>The extension will download the file (if is online) and sign the pdf.</li>
+  </ol>
+  4.2. <b>PAdES visible signature</b>
+  <ol> 
+    <li>The extension will download the file (if is online) and retrieve informations about pdf,like page number and signature fields.</li>
+    <li>Configure the setting for visible signature: page and position or if some fields is present, you can select the preferred field to use for signature.</li>
+    <li>Go to next step and insert password and sign the pdf.</li>
+  </ol>
+ 5. At the end of procedure you will see a confirm message or, if any problem will rise, you will see an error message.
+    
+</ol>
 
 ----
 
-### 4. Project Structure
+### 5. Project Structure
 
 **Folder structure:**
 - **app**: contains the source of the chrome extension.
@@ -43,7 +61,7 @@ The fundamental change is the adjunct of a middleware object that read the messa
 Chrome extension gets data from browser and pass it to native application using [Chrome Native Messaging](https://developer.chrome.com/extensions/nativeMessaging). A middleware parse the received message from the browser and prepare data for l'applicazione nativa che si occuperà di firmare il documento e restituire i dati necessari all'estensione.
 
 
-####  4.1. Chrome Extension structure
+####  5.1. Chrome Extension structure
 **Work in progress...** :construction_worker: :computer:
 
 **Extension components:**
