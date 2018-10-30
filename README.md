@@ -41,7 +41,7 @@ The fundamental change is the adding of a middleware object that read the messag
   </ol>
   4.2. <b>PAdES visible signature</b>
   <ol> 
-    <li>The extension will download the file (if is online) and retrieve informations about pdf,like page number and signature fields.</li>
+    <li>The extension will download the file (if is online) and retrieve informations about pdf, like page number and signature fields.</li>
     <li>Configure the setting for visible signature: page and position or if some fields is present, you can select the preferred field to use for signature.</li>
     <li>Go to next step and insert password and sign the pdf.</li>
   </ol>
@@ -65,8 +65,8 @@ Chrome extension gets data from browser and pass it to native application using 
 **Work in progress...** :construction_worker: :computer:
 
 **Extension components:**
-- **Popup/Page Action**:(activable only on a tab that contains a pdf) the UI of the extension, which can be activated only on the tabs that contain a pdf. Allows the user to choose the type of signatures and enter the necessary data such as password, field to sign etc.
-the script is also responsible for downloading the file and injection the content script if necessary.
+- **Popup/Page Action**: the UI of the extension, which can be activated only on the tabs that contain a pdf. Allows the user to choose the type of signatures and enter the necessary data such as password, field to sign etc.
+The script is also responsible for downloading the file and injection the content script if necessary.
 - **Background Script**: script that manages communication with the native app and provides storage services to restore the state of the popup and data. (Allows the user to temporarily close the popup and finish the operation later)
 - **Content Script**: (used only for PAdES visible signature). The browser viewer of pdf not show names of signature fields, so this script add the name of the field "above" the pdf viewer.
 
