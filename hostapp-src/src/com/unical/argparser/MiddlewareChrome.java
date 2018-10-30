@@ -61,13 +61,20 @@ public class MiddlewareChrome {
 		log(className, "Start");
 
 	}
-
+	
+	/**
+	 * Return the singleton instance of MiddlewareChrome
+	 * @return the instance
+	 */
 	public static MiddlewareChrome getInstance() {
 		if (instance == null)
 			instance = new MiddlewareChrome();
 		return instance;
 	}
 
+	/**
+	 * Read message from Chrome Extension and  fill a json object in the middleware.
+	 */
 	public void readMessage() {
 		log(className, "Read Message");
 		try {
@@ -79,6 +86,16 @@ public class MiddlewareChrome {
 		}
 	}
 
+	/**
+	 * Get the action to perform. The action request arrive from the Chrome Extension.
+	 * The allowed values are:
+	 * <ul> 
+	 * <li>ACTION_INFO = "info"</li>
+	 * <li>ACTION_SIGN = "sign"</li>
+	 * <li> ACTION_NULL = "null"</li>
+	 * </ul>
+	 * @return a string that identify the action
+	 */
 	public String getRequestedAction() {
 		if (jsonObject.has(JSONKey.ACTION.toString())) {
 			String requestAction = jsonObject.get(JSONKey.ACTION.toString()).toString();
@@ -92,6 +109,11 @@ public class MiddlewareChrome {
 
 	}
 
+	/**
+	 * Transform the JSON data received from the Chrome extension in a list of arguments to pass 
+	 * to the ArgParse for execute of the signature procedure.
+	 * @return array of string with the arguments.
+	 */
 	public String[] createArgsList() {
 		try {
 			List<String> argsList = new ArrayList<String>();
@@ -192,12 +214,20 @@ public class MiddlewareChrome {
 		return new String(b, "UTF-8");
 	}
 
+	/**
+	 * @param message
+	 * @throws IOException
+	 */
 	public void sendMessage(String message) throws IOException {
 		System.out.write(getBytes(message.length()));
 		System.out.write(message.getBytes("UTF-8"));
 		System.out.flush();
 	}
 
+	/**
+	 * Send an error message to the Chrome Extension
+	 * @param message message of error to send
+	 */
 	public void sendError(String message) {
 		try {
 			JSONObject jo = new JSONObject();
@@ -224,6 +254,11 @@ public class MiddlewareChrome {
 		return bytes;
 	}
 
+	/**
+	 * Writing to log file. 
+	 * @param sender identify who write message.
+	 * @param message
+	 */
 	public static void log(String sender, String message) {
 		File file = new File(System.getProperty("user.dir"), LOG_FILE_NAME);
 		try {
@@ -240,11 +275,15 @@ public class MiddlewareChrome {
 			bufferedWriter.write(dateFormat.format(date) + ", " + sender + ": " + message + "\r\n");
 			bufferedWriter.close();
 		} catch (Exception e) {
-			log("Middleware", "ERROR ==> Method (log)" + e.getMessage());
-			e.printStackTrace();
+			
 		}
 	}
 
+	/**
+	 * Build a JSONObject that contains informations about the pdf.
+	 * The information are: total number of pages, list of pages and data about fields (page, position in the page, name).
+	 * @return JSON with the informations
+	 */
 	public JSONObject getPdfInfo() {
 		JSONObject finalJson = new JSONObject();
 		JSONArray jsonFieldsArray = new JSONArray();
