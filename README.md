@@ -58,7 +58,7 @@ The fundamental change is the adjunct of a middleware object that read the messa
 - **hostapp-src**: contains the source code of the native application.
 - **hostapp-dist**: contains all the files necessary for installing and running the application. 
 
-Chrome extension gets data from browser and pass it to native application using [Chrome Native Messaging](https://developer.chrome.com/extensions/nativeMessaging). A middleware parse the received message from the browser and prepare data for l'applicazione nativa che si occuperà di firmare il documento e restituire i dati necessari all'estensione.
+Chrome extension gets data from browser and pass it to native application using [Chrome Native Messaging](https://developer.chrome.com/extensions/nativeMessaging). A middleware parse the received message from the browser and prepare data for the native application that will sign the document and return the data needed for the extension.
 
 
 ####  5.1. Chrome Extension structure
