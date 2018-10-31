@@ -20,7 +20,6 @@ The fundamental change is the adding of a middleware object that read the messag
 ----
 
 ### 3. Installation
-**Work in progress...** :construction_worker: :computer:
 
 **Prerequisites:**
 - Chrome Browser
@@ -57,13 +56,10 @@ Get copy the ID (look at the image), you will need it later..
 
 - After this run the `install_host.bat` script that will create some registry key that are necessary for use native application.
 
-** NOW YOU CAN USE THE APPLICATION ** 
+**NOW YOU CAN USE THE APPLICATION** 
 
-**NOTE:** for **uninstall** the application is enough remove the extension from chrome and run `uninstall_host.bat`
+> **NOTE:** for **uninstall** the application is enough remove the extension from chrome and run `uninstall_host.bat`
 
-
-
-  
 
 ### 4. Usage
 **Work in progress...** :construction_worker: :computer:
