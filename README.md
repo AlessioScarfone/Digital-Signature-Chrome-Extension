@@ -43,7 +43,7 @@ At this point in the extension list will appear the loaded extension.
 
 ![Loaded_Ext](./readme-image/loaded-ext.PNG)
 
-Get copy the ID (look at the image), you will need it later..
+Copy the ID (look at the image), you will need it later..
 
 **STEP 3: INSTALL NATIVE APP**
 
