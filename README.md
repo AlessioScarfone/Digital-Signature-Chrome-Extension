@@ -42,12 +42,24 @@ Create a folder that contain the folders: **app** and **hostapp-dist**.
 - Click no "**Load Unpacked**" and select the "**app**" folder.
 At this point in the extension list will appear the loaded extension.
 
+![Loaded_Ext](./readme-image/loaded-ext.PNG)
+
 Get copy the ID (look at the image), you will need it later..
 
-**STEP 3: INSTALL NATIVE APP"
+**STEP 3: INSTALL NATIVE APP**
 
-WORK IN PROGRESS....
+- Go into **hostapp-dist** filder
+- open manifest.json file and modify the "allowed_origins" value with your loaded extension ID.
 
+"allowed_origins": [
+    "chrome-extension://YOUR_EXTESION_ID/"
+  ]
+
+- After this run the `install_host.bat` script that will create some registry key that are necessary for use native application.
+
+** NOW YOU CAN USE THE APPLICATION ** 
+
+**NOTE:** for **uninstall** the application is enough remove the extension from chrome and run `uninstall_host.bat`
 
 
 
