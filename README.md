@@ -27,6 +27,32 @@ The fundamental change is the adding of a middleware object that read the messag
 - Java 8
 - Token PKCS #11
 
+**Step 1:  DOWNLOAD REQUIRED FILES**
+
+The necessary folders of the project for the installation are: 
+- **app**: it contains the extension source code and will be used as *Unpacked Extension*.
+- **hostapp-dist**: it contains all file for the native application.
+
+Create a folder that contain the folders: **app** and **hostapp-dist**.
+
+**Step 2:  INSTALL THE CHROME EXTENSION**
+
+- Open Chrome and  enter `chrome://extensions/` into your address bar.
+- Click on the “developer mode” toggle in the upper-right corner.
+- Click no "**Load Unpacked**" and select the "**app**" folder.
+At this point in the extension list will appear the loaded extension.
+
+Get copy the ID (look at the image), you will need it later..
+
+**STEP 3: INSTALL NATIVE APP"
+
+WORK IN PROGRESS....
+
+
+
+
+  
+
 ### 4. Usage
 **Work in progress...** :construction_worker: :computer:
 
