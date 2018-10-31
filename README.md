@@ -47,7 +47,7 @@ Copy the ID (look at the image), you will need it later..
 
 **:three: : INSTALL NATIVE APP**
 
-- Go into **hostapp-dist** filder
+- Go into **hostapp-dist** folder
 - open manifest.json file and modify the "allowed_origins" value with your loaded extension ID.
 
 "allowed_origins": [
