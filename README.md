@@ -26,7 +26,7 @@ The fundamental change is the adding of a middleware object that read the messag
 - Java 8
 - Token PKCS #11
 
-**Step 1:  DOWNLOAD REQUIRED FILES**
+**:one: :  DOWNLOAD REQUIRED FILES**
 
 The necessary folders of the project for the installation are: 
 - **app**: it contains the extension source code and will be used as *Unpacked Extension*.
@@ -34,7 +34,7 @@ The necessary folders of the project for the installation are:
 
 Create a folder that contain the folders: **app** and **hostapp-dist**.
 
-**Step 2:  INSTALL THE CHROME EXTENSION**
+**:two: :  INSTALL THE CHROME EXTENSION**
 
 - Open Chrome and  enter `chrome://extensions/` into your address bar.
 - Click on the “developer mode” toggle in the upper-right corner.
@@ -45,7 +45,7 @@ At this point in the extension list will appear the loaded extension.
 
 Copy the ID (look at the image), you will need it later..
 
-**STEP 3: INSTALL NATIVE APP**
+**:three: : INSTALL NATIVE APP**
 
 - Go into **hostapp-dist** filder
 - open manifest.json file and modify the "allowed_origins" value with your loaded extension ID.
@@ -56,7 +56,7 @@ Copy the ID (look at the image), you will need it later..
 
 - After this run the `install_host.bat` script that will create some registry key that are necessary for use native application.
 
-**NOW YOU CAN USE THE APPLICATION** 
+**NOW YOU CAN USE THE APPLICATION :smile:** 
 
 > **NOTE:** for **uninstall** the application is enough remove the extension from chrome and run `uninstall_host.bat`
 
