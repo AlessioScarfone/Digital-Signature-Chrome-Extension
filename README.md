@@ -62,7 +62,6 @@ Copy the ID (look at the image), you will need it later..
 
 
 ### 4. Usage
-**Work in progress...** :construction_worker: :computer:
 
 <ol>
   <li>Open pdf with browser (local or online file).</li>
@@ -82,6 +81,8 @@ Copy the ID (look at the image), you will need it later..
  5. At the end of procedure you will see a confirm message or, if any problem will rise, you will see an error message.
     
 </ol>
+
+**NOTE:**  if the pdf contains signable fields and you have selected "PAdES visible signature", the app may modify the look of the chrome pdf viewer for add the name of the fields "above"  the  pdf ,trying the use more accurate position and respecting the zoom.
 
 ----
 
