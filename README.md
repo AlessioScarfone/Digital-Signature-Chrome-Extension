@@ -26,7 +26,7 @@ The fundamental change is the adding of a middleware object that read the messag
 - Java 8
 - Token PKCS #11
 
-**Step 1:  DOWNLOAD REQUIRED FILES**
+**:one: :  DOWNLOAD REQUIRED FILES**
 
 The necessary folders of the project for the installation are: 
 - **app**: it contains the extension source code and will be used as *Unpacked Extension*.
@@ -34,7 +34,7 @@ The necessary folders of the project for the installation are:
 
 Create a folder that contain the folders: **app** and **hostapp-dist**.
 
-**Step 2:  INSTALL THE CHROME EXTENSION**
+**:two: :  INSTALL THE CHROME EXTENSION**
 
 - Open Chrome and  enter `chrome://extensions/` into your address bar.
 - Click on the “developer mode” toggle in the upper-right corner.
@@ -45,9 +45,9 @@ At this point in the extension list will appear the loaded extension.
 
 Copy the ID (look at the image), you will need it later..
 
-**STEP 3: INSTALL NATIVE APP**
+**:three: : INSTALL NATIVE APP**
 
-- Go into **hostapp-dist** filder
+- Go into **hostapp-dist** folder
 - open manifest.json file and modify the "allowed_origins" value with your loaded extension ID.
 
 "allowed_origins": [
@@ -56,13 +56,12 @@ Copy the ID (look at the image), you will need it later..
 
 - After this run the `install_host.bat` script that will create some registry key that are necessary for use native application.
 
-**NOW YOU CAN USE THE APPLICATION** 
+**NOW YOU CAN USE THE APPLICATION :smile:** 
 
 > **NOTE:** for **uninstall** the application is enough remove the extension from chrome and run `uninstall_host.bat`
 
 
 ### 4. Usage
-**Work in progress...** :construction_worker: :computer:
 
 <ol>
   <li>Open pdf with browser (local or online file).</li>
@@ -82,6 +81,8 @@ Copy the ID (look at the image), you will need it later..
  5. At the end of procedure you will see a confirm message or, if any problem will rise, you will see an error message.
     
 </ol>
+
+**NOTE:**  if the pdf contains signable fields and you have selected "PAdES visible signature", the app may modify the look of the chrome pdf viewer for add the name of the fields "above"  the  pdf ,trying the use more accurate position and respecting the zoom.
 
 ----
 
