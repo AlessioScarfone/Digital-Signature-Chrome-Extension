@@ -1,7 +1,5 @@
 # Digital-Signature-Chrome-Extension
 
-> **Sorry, README under construction...** :construction_worker: 
-
 <p align="center"> <img src="app/icon/icon128.png"> </p>
   
 ### 1. Introduction
@@ -30,13 +28,13 @@ The fundamental change is the adding of a middleware object that read the messag
 
 The necessary folders of the project for the installation are: 
 - **app**: it contains the extension source code and will be used as *Unpacked Extension*.
-- **hostapp-dist**: it contains all file for the native application.
+- **hostapp-dist**: it contains all files for the native application.
 
-Create a folder that contain the folders: **app** and **hostapp-dist**.
+Create a folder that contains them.
 
 **:two: :  INSTALL THE CHROME EXTENSION**
 
-- Open Chrome and  enter `chrome://extensions/` into your address bar.
+- Open Chrome and enter `chrome://extensions/` into your address bar.
 - Click on the “developer mode” toggle in the upper-right corner.
 - Click no "**Load Unpacked**" and select the "**app**" folder.
 At this point in the extension list will appear the loaded extension.
@@ -54,7 +52,7 @@ Copy the ID (look at the image), you will need it later..
     "chrome-extension://YOUR_EXTESION_ID/"
   ]
 
-- After this run the `install_host.bat` script that will create some registry key that are necessary for use native application.
+- After this run the `install_host.bat` script that will create some registry key that are necessary for using the native application.
 
 **NOW YOU CAN USE THE APPLICATION :smile:** 
 
@@ -75,7 +73,7 @@ Copy the ID (look at the image), you will need it later..
   4.2. <b>PAdES visible signature</b>
   <ol> 
     <li>The extension will download the file (if is online) and retrieve informations about pdf, like page number and signature fields.</li>
-    <li>Configure the setting for visible signature: page and position or if some fields is present, you can select the preferred field to use for signature.</li>
+    <li>Configure the setting for visible signature: page and position or if some fields are present, you can select the preferred field to use for signature.</li>
     <li>Go to next step and insert password and sign the pdf.</li>
   </ol>
  5. At the end of procedure you will see a confirm message or, if any problem will rise, you will see an error message.
