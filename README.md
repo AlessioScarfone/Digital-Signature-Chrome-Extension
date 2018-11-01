@@ -7,10 +7,10 @@
 ### 1. Introduction
 
 The aim of this project is to create an integration of digital signature, with pkcs#11 token, within Chrome browser.
-The extension interacts with a native application developed in java which has the purpose of directly interact with the cryptographic harware. 
+The extension interact with a native application developed in java which has the purpose of directly interact with the cryptographic harware. 
 The user through the extension can sign a document (PDF) opened in a browser tab.
 The software supports CAdES and PAdES signature (both visible and not visible type).
-The app allows to sign both online document (the app download the document, sign it and create a new signed file) and local files.
+The app allows to sign both online document and local files.
 
 ### 2. Native application
 
