@@ -93,7 +93,7 @@ Copy the ID (look at the image), you will need it later..
 - **hostapp-src**: contains the source code of the native application.
 - **hostapp-dist**: contains all the files necessary for installing and running the application. 
 
-Chrome extension gets data from browser and pass it to native application using [Chrome Native Messaging](https://developer.chrome.com/extensions/nativeMessaging). A middleware parse the received message from the browser and prepare data for the native application that will sign the document and return the data needed for the extension.
+Chrome extension gets data from browser and pass it to native application using [Chrome Native Messaging](https://developer.chrome.com/extensions/nativeMessaging). A middleware parses the received message from the browser and prepare data for the native application that will sign the document and return the data needed for the extension.
 
 
 ####  5.1. Chrome Extension structure
