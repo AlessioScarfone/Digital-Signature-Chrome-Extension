@@ -21,6 +21,7 @@ import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDField;
+import org.apache.pdfbox.pdmodel.interactive.form.PDSignatureField;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -364,7 +365,7 @@ public class MiddlewareChrome {
 		List<PDField> fields_empty = new ArrayList<PDField>();
 		for (PDField pdField : fields) {
 			// show only empty fields
-			if (pdField.getValueAsString().isEmpty()) {
+			if (pdField.getValueAsString().isEmpty() && pdField instanceof PDSignatureField) {
 				fields_empty.add(pdField);
 			}
 		}
