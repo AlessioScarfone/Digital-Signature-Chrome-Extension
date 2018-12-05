@@ -80,7 +80,7 @@ public class MiddlewareChrome {
 		log(className, "Read Message");
 		try {
 			String jsonIn = readMessage(System.in);
-			log(className, "Host received " + jsonIn);
+//			log(className, "Host received " + jsonIn);
 			jsonObject = new JSONObject(jsonIn);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -93,7 +93,7 @@ public class MiddlewareChrome {
 	 * <ul> 
 	 * <li>ACTION_INFO = "info"</li>
 	 * <li>ACTION_SIGN = "sign"</li>
-	 * <li> ACTION_NULL = "null"</li>
+	 * <li>ACTION_NULL = "null"</li>
 	 * </ul>
 	 * @return a string that identify the action
 	 */
