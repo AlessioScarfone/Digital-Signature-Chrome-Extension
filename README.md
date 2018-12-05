@@ -52,7 +52,7 @@ Copy the ID (look at the image), you will need it later..
     "chrome-extension://YOUR_EXTESION_ID/"
   ]
 
-- After this run the `install_host.bat` script that will create some registry key that are necessary for using the native application.
+- After this, run the `install_host.bat` script that will create some registry key that are necessary for using the native application.
 
 **NOW YOU CAN USE THE APPLICATION :smile:** 
 
@@ -87,9 +87,9 @@ Copy the ID (look at the image), you will need it later..
 ### 5. Project Structure
 
 **Folder structure:**
-- **app**: contains the source of the chrome extension.
-- **hostapp-src**: contains the source code of the native application.
-- **hostapp-dist**: contains all the files necessary for installing and running the application. 
+- **app**: it contains the source of the chrome extension.
+- **hostapp-src**:  it contains the source code of the native application.
+- **hostapp-dist**: it contains all the files necessary for installing and running the application. 
 
 Chrome extension gets data from browser and pass it to native application using [Chrome Native Messaging](https://developer.chrome.com/extensions/nativeMessaging). A middleware parses the received message from the browser and prepare data for the native application that will sign the document and return the data needed for the extension.
 
@@ -100,8 +100,8 @@ Chrome extension gets data from browser and pass it to native application using 
 **Extension components:**
 - **Popup/Page Action**: the UI of the extension, which can be activated only on the tabs that contain a pdf. Allows the user to choose the type of signatures and enter the necessary data such as password, field to sign etc.
 The script is also responsible for downloading the file and injection the content script if necessary.
-- **Background Script**: script that manages communication with the native app and provides storage services to restore the state of the popup and data. (Allows the user to temporarily close the popup and finish the operation later)
-- **Content Script**: (used only for PAdES visible signature). The browser viewer of pdf not show names of signature fields, so this script add the name of the field "above" the pdf viewer.
+- **Background Script**: the script that manages communication with the native app and provides storage services to restore the state of the popup and data. (Allows the user to temporarily close the popup and finish the operation later)
+- **Content Script**: (used only for PAdES visible signature). The PDF browser viewer does not show names of signature fields, so this script adds the name of the fields "above" the pdf viewer.
 
 > For details about Chrome Extension Architecture: https://developer.chrome.com/extensions/overview
 
