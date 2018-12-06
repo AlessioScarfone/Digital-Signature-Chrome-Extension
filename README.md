@@ -100,8 +100,11 @@ Chrome extension gets data from browser and pass it to native application using 
 **Extension components:**
 - **Popup/Page Action**: the UI of the extension, which can be activated only on the tabs that contain a pdf. Allows the user to choose the type of signatures and enter the necessary data such as password, field to sign etc.
 The script is also responsible for downloading the file and injection the content script if necessary.
-- **Background Script**: the script that manages communication with the native app and provides storage services to restore the state of the popup and data. (Allows the user to temporarily close the popup and finish the operation later)
+- **Background Script**: the script that manages communication with the native app and provides storage services to restore the state of the popup and data. (Allows the user to temporarily close the popup and finish the operation later).
 - **Content Script**: (used only for PAdES visible signature). The PDF browser viewer does not show names of signature fields, so this script adds the name of the fields "above" the pdf viewer.
+- **Native Application**: a Java application that deals with the creation of thesignature and communication with the token. The native application commu-nicates exclusively with the"Background Script"and it responds to two typesof requests:"sign a file"or"analyze a file"to extract information thatcan later be used to execute a signature (visible PAdES).
+
+
 
 > For details about Chrome Extension Architecture: https://developer.chrome.com/extensions/overview
 
