@@ -28,7 +28,31 @@ body {
     margin-bottom: 15px;
 }
 
-#select-signature-type-section{
+.label-with-icon {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.label-with-icon label {
+    margin-right: 5px;
+}
+
+.label-with-icon .icon {
+    margin-bottom: .25em;
+}
+
+.label-with-icon > .icon > svg {
+    height: 0.8em;
+    width: 0.8em;
+}
+
+.file-cta{
+font-size: 0.9em;
+}
+
+#select-signature-type-section {
     margin-right: 1em;
     margin-left: 1em;
 
@@ -39,7 +63,7 @@ body {
 }
 
 #close-btn,
-#clean-btn {
+#clear-btn {
     margin-top: 4px;
     margin-bottom: 1.2em;
 }
@@ -100,29 +124,29 @@ input[type="number"] {
 }
 
 /* validation icon */
-input[type="number"]+.icon {
+input[type="number"]+span .icon {
     left: 5px;
     position: relative;
-    bottom: 3px;
+    bottom: -1px;
 }
 
-input[type="number"]:valid+.icon #valid-icon {
+input[type="number"]:valid+span  #valid-icon {
     display: inline;
 }
 
-input[type="number"]:valid+.icon #invalid-icon {
+input[type="number"]:valid+span #invalid-icon {
     display: none;
 }
 
-input[type="number"]:invalid+.icon #invalid-icon {
+input[type="number"]:invalid+span #invalid-icon {
     display: inline;
 }
 
-input[type="number"]:invalid+.icon #valid-icon {
+input[type="number"]:invalid+span #valid-icon {
     display: none;
 }
 
-#loading{
+#loading {
     margin-left: 15px;
     margin-right: 15px;
     display: flex;
@@ -131,7 +155,7 @@ input[type="number"]:invalid+.icon #valid-icon {
     align-items: center;
 }
 
-.info-msg{
+.info-msg {
     text-align: center;
 }
 

@@ -181,7 +181,6 @@ function downloadFile(pdfURL, data, callback) {
 function sendDataForSign(data) {
   appCurrentState = StateEnum.signing;
   console.log("Send message to native app...")
-  console.log(data);
   data.action = "sign";
   nativeAppPort.postMessage(data);
 };
@@ -193,7 +192,7 @@ function sendDataForSign(data) {
 function requestPDFInfo(data) {
   appCurrentState = StateEnum.info;
   console.log("Send message to native app...")
-  console.log(data);
+  // console.log(data);
   data.action = popupMessageType.info;
   nativeAppPort.postMessage(data);
   delete data.action;
@@ -219,7 +218,7 @@ function updateSignatureDataPopup(fieldToUpdate, value) {
  * @param {*} tabId - id of the tab to which attach listener
  */
 function createZoomListener(tabId) {
-  console.log(tabId);
+  // console.log(tabId);
 
   chrome.tabs.onZoomChange.addListener(function (ZoomChangeInfo) {
     var contentScriptPort = chrome.tabs.connect(tabId, {
@@ -258,7 +257,6 @@ var popupMessageType = {
 //listener message Popup -> Background
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
-    console.log(request);
     switch (request.action) {
       case popupMessageType.wakeup:
         console.log("Background wakeup");

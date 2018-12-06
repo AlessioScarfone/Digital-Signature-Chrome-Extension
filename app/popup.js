@@ -130,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
         //Field
         const passfield = document.getElementById("password-field");
         const img_input = document.getElementsByClassName("file-input")[0];
+        const page_input = document.getElementById("page-input");
         //Message
         const loadingMsg = document.getElementById("loading-info");
         const errorMsg = document.getElementById("error-info");
@@ -219,6 +220,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 confirmBtn.disabled = false;
             } else {
                 confirmBtn.disabled = true;
+            }
+        });
+
+        passfield.addEventListener("keyup",event => {
+            event.preventDefault();
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13 && confirmBtn.disabled == false) {
+              // Trigger confirm button click
+              confirmBtn.click();
             }
         });
 
@@ -339,6 +349,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             useVisibleSignatureSwitchCheckbox.checked = false;
             passfield.value = "";
+            page_input.value = "";
+
             useVisibleSignatureSwitchContainer.classList.add('start-transform');
             useVisibleSignatureSwitchContainer.classList.remove('transform');
 
@@ -494,12 +506,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 //set zoom to 100%
                 chrome.tabs.setZoom(0, function () {
-                    console.log("zoom changed")
+                    console.log("set zoom to 100%");
                 });
                 injectContentScript(fieldsData);
             }
 
-            const page_input = document.getElementById("page-input");
+           
             page_input.max = fieldsData.pageNumber;
             page_input.min = 1;
             page_input.placeholder = "1 - " + (fieldsData.pageNumber);
