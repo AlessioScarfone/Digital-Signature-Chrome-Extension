@@ -1,7 +1,7 @@
 # Digital-Signature-Chrome-Extension
 
 <p align="center"> <img src="app/icon/icon128.png"> </p>
-  
+
 ### 1. Introduction
 
 The aim of this project is to create an integration of digital signature, with pkcs#11 token, within Chrome browser.
@@ -49,7 +49,7 @@ Copy the ID (look at the image), you will need it later..
 - open manifest.json file and modify the "allowed_origins" value with your loaded extension ID.
 
 "allowed_origins": [
-    "chrome-extension://YOUR_EXTESION_ID/"
+​    "chrome-extension://YOUR_EXTESION_ID/"
   ]
 
 - After this, run the `install_host.bat` script that will create some registry key that are necessary for using the native application.
@@ -77,7 +77,7 @@ Copy the ID (look at the image), you will need it later..
     <li>Go to next step and insert password and sign the pdf.</li>
   </ol>
  5. At the end of procedure you will see a confirm message or, if any problem will rise, you will see an error message.
-    
+
 </ol>
 
 **NOTE:**  if the pdf contains signable fields and you have selected "PAdES visible signature", the app may modify the look of the chrome pdf viewer for add the name of the fields "above"  the  pdf ,trying the use more accurate position and respecting the zoom.
@@ -99,15 +99,15 @@ Chrome extension gets data from browser and pass it to native application using 
 
 **Extension components:**
 - **Popup/Page Action**: the UI of the extension, which can be activated only on the tabs that contain a pdf. Allows the user to choose the type of signatures and enter the necessary data such as password, field to sign etc.
-The script is also responsible for downloading the file and injection the content script if necessary.
+  The script is also responsible for downloading the file and injection the content script if necessary.
 - **Background Script**: the script that manages communication with the native app and provides storage services to restore the state of the popup and data. (Allows the user to temporarily close the popup and finish the operation later).
 - **Content Script**: (used only for PAdES visible signature). The PDF browser viewer does not show names of signature fields, so this script adds the name of the fields "above" the pdf viewer.
 - **Native Application**: a Java application that deals with the creation of thesignature and communication with the token. The native application commu-nicates exclusively with the"Background Script"and it responds to two typesof requests:"sign a file"or"analyze a file"to extract information thatcan later be used to execute a signature (visible PAdES).
 
+<p align="center"> <img src="readme-image/ExtensionArchitecture.PNG"> </p>
 
 
 > For details about Chrome Extension Architecture: https://developer.chrome.com/extensions/overview
-
 
 -----
 
