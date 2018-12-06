@@ -4,16 +4,16 @@
 
 ### 1. Introduction
 
-The aim of this project is to create an integration of digital signature, with pkcs#11 token, within Chrome browser.
-The extension interact with a native application developed in java which has the purpose of directly interact with the cryptographic harware. 
+The aim of this project is to create an integration of digital signature (Qualified Digital Signature), with PKCS#11 token, within the Chrome browser.
+The extension interacts with a native application developed in JAVA which has the purpose of directly interacting with the cryptographic hardware. 
 The user through the extension can sign a document (PDF) opened in a browser tab.
-The software supports CAdES and PAdES signature (both visible and not visible type).
+The software supports CAdES and PAdES signature (both visible and not visible).
 The app allows to sign both online document and local files.
 
 ### 2. Native application
 
 The native application is an adapted version of my cli tool ( https://github.com/AlessioScarfone/Java-Digital-Signature ), slightly modified to communicate with a chrome extension.
-The fundamental change is the adding of a middleware object that read the messages from the extension, in JSON format, and format them for adapt to command line parameters and return the response to the browser.
+The fundamental change is the adding of a middleware object that read the messages from the extension, in JSON format, and formats them to adapt to the command line parameters and return the response to the browser.
 
 ----
 
@@ -80,7 +80,7 @@ Copy the ID (look at the image), you will need it later..
 
 </ol>
 
-**NOTE:**  if the pdf contains signable fields and you have selected "PAdES visible signature", the app may modify the look of the chrome pdf viewer for add the name of the fields "above"  the  pdf ,trying the use more accurate position and respecting the zoom.
+**NOTE:**  if the pdf contains signable fields and you have selected "PAdES visible signature", the app may modify the look of the chrome pdf viewer to add the name of the fields "above"  the  pdf. It tries to use the most precise position and respecting the zoom.
 
 ----
 
@@ -91,7 +91,7 @@ Copy the ID (look at the image), you will need it later..
 - **hostapp-src**:  it contains the source code of the native application.
 - **hostapp-dist**: it contains all the files necessary for installing and running the application. 
 
-Chrome extension gets data from browser and pass it to native application using [Chrome Native Messaging](https://developer.chrome.com/extensions/nativeMessaging). A middleware parses the received message from the browser and prepare data for the native application that will sign the document and return the data needed for the extension.
+Chrome extension gets data from browser and passes it to the native application via [Chrome Native Messaging](https://developer.chrome.com/extensions/nativeMessaging). A middleware parses the received message from the browser and prepares data for the native application that will sign the document and return the data needed for the extension.
 
 
 ####  5.1. Chrome Extension structure
