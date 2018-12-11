@@ -284,11 +284,30 @@ public class signer {
 			MiddlewareChrome.getInstance().sendError("File not exist");
 			return false;
 		}
-		if (selectedSignFormat == SignFormat.PADES && !Files.getFileExtension(inputFile.getName()).equals("pdf")) {
+//		if (selectedSignFormat == SignFormat.PADES && !Files.getFileExtension(inputFile.getName()).equals("pdf")) {
+		if (selectedSignFormat == SignFormat.PADES && !isPDF(inputFile)) {
 			MiddlewareChrome.log(className, "ERROR :: File is not a pdf.");
 			return false;
 		}
 		return true;
+	}
+
+	private static boolean isPDF(File inputFile) {
+		byte[] fileContent;
+		try {
+			fileContent = Files.toByteArray(inputFile);
+			if (fileContent != null && fileContent.length > 4 && fileContent[0] == 0x25 && // %
+					fileContent[1] == 0x50 && // P
+					fileContent[2] == 0x44 && // D
+					fileContent[3] == 0x46 && // F
+					fileContent[4] == 0x2d) { // -
+				return true;
+			}
+		} catch (IOException e) {
+			System.err.println("Unable to check if the file is a pdf.");
+//			e.printStackTrace();
+		}
+		return false;
 	}
 
 	private static boolean setDriver(File file) {

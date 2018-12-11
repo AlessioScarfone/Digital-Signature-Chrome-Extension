@@ -147,10 +147,17 @@ public abstract class AbstractSignFactory implements ISignFactory {
 		// check if file already exist
 		String dir = getOutputDirectory();
 		int c = 1;
+		String originalFileName = Files.getNameWithoutExtension(newfilename);
+		String originalExt = Files.getFileExtension(originalFileName);
 		String currentName = newfilename;
 		while (new File(Utility.buildFilePath(dir,currentName)).exists()) {
-			currentName = Files.getNameWithoutExtension(newfilename) + "(" + c + ")."
-					+ Files.getFileExtension(newfilename);
+			if (Files.getFileExtension(newfilename).equals("p7m")) {
+				// if the file is in cades format it has two extensions.The original
+				// and the p7m extension, then adds the counter before the first extension
+				currentName = Files.getNameWithoutExtension(originalFileName) + "(" + c + ")." + originalExt + ".p7m";
+			} else {
+				currentName = originalFileName + "(" + c + ")." + Files.getFileExtension(newfilename);
+			}
 			c++;
 		}
 		return currentName.replaceAll("\\s+","");
