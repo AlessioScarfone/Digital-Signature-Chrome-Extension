@@ -572,7 +572,9 @@ document.addEventListener('DOMContentLoaded', function () {
             hideConfirmButtonSection();
             const completeInfo = document.getElementById("complete-info");
             completeInfo.classList.remove("hide");
-            completeInfo.textContent = "File created: " + localFilePath;
+            // completeInfo.textContent = "File created: " + localFilePath;
+            completeInfo.textContent = localFilePath;
+            completeInfo.setAttribute('href',localFilePath);
         }
 
         /**
