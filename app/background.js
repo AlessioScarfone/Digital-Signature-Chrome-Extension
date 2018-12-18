@@ -182,6 +182,7 @@ function downloadFile(pdfURL, data, callback) {
  * @param {*} data - data to send to native app for signing 
  */
 function sendDataForSign(data) {
+  // console.log(data);
   appCurrentState = StateEnum.signing;
   console.log("Send message to native app...")
   data.action = "sign";

@@ -491,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function () {
             clearBtn.classList.remove("hidden");
             console.log(fieldsData);
 
-            if (fieldsData.fields == undefined) {
+            if (fieldsData.fields == undefined || fieldsData.fields.length == 0) {
                 useFieldSwitchCheckbox.disabled = true;
                 document.querySelector("#use-signature-field p.has-text-danger").classList.remove("hide");
             } else {
@@ -504,6 +504,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     node.appendChild(text);
                     parent.appendChild(node);
                 });
+
+                parent.addEventListener("change",()=>{
+                    signatureData.signatureField = parent.value;
+                });
+
                 //set zoom to 100%
                 chrome.tabs.setZoom(0, function () {
                     console.log("set zoom to 100%");
