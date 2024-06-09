@@ -2,6 +2,14 @@
 
 <p align="center"> <img src="app/icon/icon128.png"> </p>
 
+---
+## Support me
+If you find my work useful and would like to contribute, consider supporting me.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G5Z4O75)
+
+---
+
 ### 1. Introduction
 
 The aim of this project is to create an integration of digital signature (Qualified Digital Signature), with PKCS#11 token, within the Chrome browser.
